@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIB - Digitales Fahrtenbuch</title>
+    <style>
+        /* Design & Layout */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: #f0f2f5; 
+        }
+        .container { 
+            max-width: 900px; 
+            margin: auto; 
+            background: white; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+        }
+        h2 { 
+            color: #1a73e8; 
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        /* Formular Styling */
+        form { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            margin-bottom: 30px; 
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .full-width { grid-column: span 2; }
+        label { font-weight: bold; font-size: 0.9em; margin-bottom: 5px; display: block; }
+        input { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            box-sizing: border-box; 
+        }
+        button.submit-btn { 
+            background-color: #28a745; 
+            color: white; 
+            border: none; 
+            padding: 12px; 
+            font-size: 16px; 
+            font-weight: bold;
+            cursor: pointer; 
+            border-radius: 5px; 
+            transition: background 0.3s;
+        }
+        button.submit-btn:hover { background-color: #218838; }
+
+        /* Tabellen Styling */
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 10px; 
+        }
+        th, td { 
+            border-bottom: 1px solid #eee; 
+            padding: 15px; 
+            text-align: left; 
+        }
+        th { background-color: #1a73e8; color: white; }
+        tr:hover { background-color: #f1f1f1; }
+        
+        .delete-btn { 
+            background: #dc3545; 
+            color: white; 
+            border: none; 
+            padding: 6px 12px; 
+            cursor: pointer; 
+            border-radius: 4px; 
+        }
+        .delete-btn:hover { background: #c82333; }
+        .km-diff { font-weight: bold; color: #555; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Fahrten-Informations-Buch (FIB)</h2>
+    
+    <form id="fibForm">
+        <div>
+            <label>Datum</label>
+            <input type="date" id="datum" required>
+        </div>
+        <div>
+            <label>Fahrer</label>
+            <input type="text" id="fahrer" placeholder="Vorname Nachname" required>
+        </div>
+        <div>
+            <label>KM-Stand Start</label>
+            <input type="number" id="kmStart" placeholder="z.B. 45000" required>
+        </div>
+        <div>
+            <label>KM-Stand Ende</label>
+            <input type="number" id="kmEnde" placeholder="z.B. 45120" required>
+        </div>
+        <div class="full-width">
+            <label>Zweck der Fahrt / Route</label>
+            <input type="text" id="zweck" placeholder="z.B. Kundenbesuch Meier, Berlin" required>
+        </div>
+        <button type="submit" class="submit-btn full-width">Eintrag ins Fahrtenbuch speichern</button>
+    </form>
+
+    <table id="fibTable">
+        <thead>
+            <tr>
+                <th>Datum</th>
+                <th>Fahrer</th>
+                <th>Distanz</th>
+                <th>Zweck</th>
+                <th>Aktion</th>
+            </tr>
+        </thead>
+        <tbody>
+            </tbody>
+    </table>
+</div>
+
+<script>
+    const fibForm = document.getElementById('fibForm');
+    const fibTableBody = document.querySelector('#fibTable tbody');
+
+    // 1. Beim Starten der Seite: Vorhandene Daten laden
+    document.addEventListener('DOMContentLoaded', loadEntries);
+
+    // 2. Formular-Verarbeitung
+    fibForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Daten aus den Feldern holen
+        const entry = {
+            id: Date.now(), // Eindeutige ID für das Löschen
+            datum: document.getElementById('datum').value,
+            fahrer: document.getElementById('fahrer').value,
+            kmStart: parseFloat(document.getElementById('kmStart').value),
+            kmEnde: parseFloat(document.getElementById('kmEnde').value),
+            zweck: document.getElementById('zweck').value
+        };
+
+        // Einfache Validierung
+        if (entry.kmEnde < entry.kmStart) {
+            alert("Fehler: Der End-Kilometerstand darf nicht niedriger sein als der Start-Kilometerstand!");
+            return;
+        }
+
+        saveEntry(entry);      // In LocalStorage speichern
+        addTableRow(entry);    // In Tabelle anzeigen
+        fibForm.reset();       // Formular leeren
+    });
+
+    // Funktion: Zeile zur Tabelle hinzufügen
+    function addTableRow(entry) {
+        const diff = entry.kmEnde - entry.kmStart;
+        const row = fibTableBody.insertRow();
+        row.setAttribute('data-id', entry.id);
+
+        row.innerHTML = `
+            <td>${formatDate(entry.datum)}</td>
+            <td>${entry.fahrer}</td>
+            <td class="km-diff">${diff} km</td>
+            <td>${entry.zweck}</td>
+            <td><button class="delete-btn" onclick="deleteEntry(${entry.id})">Löschen</button></td>
+        `;
+    }
+
+    // Funktion: In LocalStorage speichern
+    function saveEntry(entry) {
+        let entries = JSON.parse(localStorage.getItem('fibEntries')) || [];
+        entries.push(entry);
+        localStorage.setItem('fibEntries', JSON.stringify(entries));
+    }
+
+    // Funktion: Alle Einträge aus LocalStorage laden
+    function loadEntries() {
+        let entries = JSON.parse(localStorage.getItem('fibEntries')) || [];
+        // Sortieren nach Datum (optional)
+        entries.sort((a, b) => new Date(b.datum) - new Date(a.datum));
+        entries.forEach(addTableRow);
+    }
+
+    // Funktion: Eintrag löschen
+    function deleteEntry(id) {
+        if (confirm("Möchtest du diesen Eintrag wirklich löschen?")) {
+            let entries = JSON.parse(localStorage.getItem('fibEntries')) || [];
+            entries = entries.filter(e => e.id !== id);
+            localStorage.setItem('fibEntries', JSON.stringify(entries));
+            
+            // Zeile aus der UI entfernen
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            if (row) row.remove();
+        }
+    }
+
+    // Hilfsfunktion: Datum schöner formatieren (DD.MM.YYYY)
+    function formatDate(dateString) {
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        return new Date(dateString).toLocaleDateString('de-DE', options);
+    }
+</script>
+
+</body>
+</html>
