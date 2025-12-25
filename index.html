@@ -3,212 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIB - Digitales Fahrtenbuch</title>
+    <title>LSPD - Secure Login</title>
     <style>
-        /* Design & Layout */
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; 
-            padding: 20px; 
-            background-color: #f0f2f5; 
+        /* Grunddesign & Hintergrund */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0b0e14; /* Sehr dunkles Blau/Schwarz */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #ffffff;
         }
-        .container { 
-            max-width: 900px; 
-            margin: auto; 
-            background: white; 
-            padding: 30px; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-        }
-        h2 { 
-            color: #1a73e8; 
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        
-        /* Formular Styling */
-        form { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px; 
-            margin-bottom: 30px; 
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-        }
-        .full-width { grid-column: span 2; }
-        label { font-weight: bold; font-size: 0.9em; margin-bottom: 5px; display: block; }
-        input { 
-            width: 100%; 
-            padding: 10px; 
-            border: 1px solid #ccc; 
-            border-radius: 5px; 
-            box-sizing: border-box; 
-        }
-        button.submit-btn { 
-            background-color: #28a745; 
-            color: white; 
-            border: none; 
-            padding: 12px; 
-            font-size: 16px; 
-            font-weight: bold;
-            cursor: pointer; 
-            border-radius: 5px; 
-            transition: background 0.3s;
-        }
-        button.submit-btn:hover { background-color: #218838; }
 
-        /* Tabellen Styling */
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 10px; 
+        /* Das Login-Fenster */
+        .login-card {
+            background-color: #161b22; /* Etwas helleres Dunkelgrau */
+            width: 400px;
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid #30363d;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
         }
-        th, td { 
-            border-bottom: 1px solid #eee; 
-            padding: 15px; 
-            text-align: left; 
+
+        /* Titel-Stil (LSPD Penal Code Look) */
+        .login-card h1 {
+            font-size: 24px;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-transform: uppercase;
         }
-        th { background-color: #1a73e8; color: white; }
-        tr:hover { background-color: #f1f1f1; }
-        
-        .delete-btn { 
-            background: #dc3545; 
-            color: white; 
-            border: none; 
-            padding: 6px 12px; 
-            cursor: pointer; 
-            border-radius: 4px; 
+
+        .login-card h1 span {
+            color: #ff4d8d; /* Das typische LSPD Pink */
         }
-        .delete-btn:hover { background: #c82333; }
-        .km-diff { font-weight: bold; color: #555; }
+
+        /* Eingabefelder */
+        .input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            color: #8b949e;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #ff4d8d; /* Pinker Rahmen bei Klick */
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            transition: opacity 0.3s;
+        }
+
+        .btn-login {
+            background-color: #ff4d8d;
+            color: white;
+        }
+
+        .btn-cancel {
+            background-color: #238636; /* Oder ein Blau-Ton: #1f6feb */
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        /* Kleiner Footer */
+        .version {
+            font-size: 10px;
+            color: #484f58;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Fahrten-Informations-Buch (FIB)</h2>
-    
-    <form id="fibForm">
-        <div>
-            <label>Datum</label>
-            <input type="date" id="datum" required>
-        </div>
-        <div>
-            <label>Fahrer</label>
-            <input type="text" id="fahrer" placeholder="Vorname Nachname" required>
-        </div>
-        <div>
-            <label>KM-Stand Start</label>
-            <input type="number" id="kmStart" placeholder="z.B. 45000" required>
-        </div>
-        <div>
-            <label>KM-Stand Ende</label>
-            <input type="number" id="kmEnde" placeholder="z.B. 45120" required>
-        </div>
-        <div class="full-width">
-            <label>Zweck der Fahrt / Route</label>
-            <input type="text" id="zweck" placeholder="z.B. Kundenbesuch Meier, Berlin" required>
-        </div>
-        <button type="submit" class="submit-btn full-width">Eintrag ins Fahrtenbuch speichern</button>
-    </form>
+    <div class="login-card">
+        <h1>LSPD <span>Secure Login</span></h1>
+        
+        <form>
+            <div class="input-group">
+                <label>Benutzername / Dienstnummer</label>
+                <input type="text" placeholder="Officer ID eingeben..." required>
+            </div>
 
-    <table id="fibTable">
-        <thead>
-            <tr>
-                <th>Datum</th>
-                <th>Fahrer</th>
-                <th>Distanz</th>
-                <th>Zweck</th>
-                <th>Aktion</th>
-            </tr>
-        </thead>
-        <tbody>
-            </tbody>
-    </table>
-</div>
+            <div class="input-group">
+                <label>Passwort</label>
+                <input type="password" placeholder="••••••••" required>
+            </div>
 
-<script>
-    const fibForm = document.getElementById('fibForm');
-    const fibTableBody = document.querySelector('#fibTable tbody');
+            <button type="submit" class="btn btn-login">Login</button>
+            <button type="button" class="btn btn-cancel">Abbrechen</button>
+        </form>
 
-    // 1. Beim Starten der Seite: Vorhandene Daten laden
-    document.addEventListener('DOMContentLoaded', loadEntries);
-
-    // 2. Formular-Verarbeitung
-    fibForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        // Daten aus den Feldern holen
-        const entry = {
-            id: Date.now(), // Eindeutige ID für das Löschen
-            datum: document.getElementById('datum').value,
-            fahrer: document.getElementById('fahrer').value,
-            kmStart: parseFloat(document.getElementById('kmStart').value),
-            kmEnde: parseFloat(document.getElementById('kmEnde').value),
-            zweck: document.getElementById('zweck').value
-        };
-
-        // Einfache Validierung
-        if (entry.kmEnde < entry.kmStart) {
-            alert("Fehler: Der End-Kilometerstand darf nicht niedriger sein als der Start-Kilometerstand!");
-            return;
-        }
-
-        saveEntry(entry);      // In LocalStorage speichern
-        addTableRow(entry);    // In Tabelle anzeigen
-        fibForm.reset();       // Formular leeren
-    });
-
-    // Funktion: Zeile zur Tabelle hinzufügen
-    function addTableRow(entry) {
-        const diff = entry.kmEnde - entry.kmStart;
-        const row = fibTableBody.insertRow();
-        row.setAttribute('data-id', entry.id);
-
-        row.innerHTML = `
-            <td>${formatDate(entry.datum)}</td>
-            <td>${entry.fahrer}</td>
-            <td class="km-diff">${diff} km</td>
-            <td>${entry.zweck}</td>
-            <td><button class="delete-btn" onclick="deleteEntry(${entry.id})">Löschen</button></td>
-        `;
-    }
-
-    // Funktion: In LocalStorage speichern
-    function saveEntry(entry) {
-        let entries = JSON.parse(localStorage.getItem('fibEntries')) || [];
-        entries.push(entry);
-        localStorage.setItem('fibEntries', JSON.stringify(entries));
-    }
-
-    // Funktion: Alle Einträge aus LocalStorage laden
-    function loadEntries() {
-        let entries = JSON.parse(localStorage.getItem('fibEntries')) || [];
-        // Sortieren nach Datum (optional)
-        entries.sort((a, b) => new Date(b.datum) - new Date(a.datum));
-        entries.forEach(addTableRow);
-    }
-
-    // Funktion: Eintrag löschen
-    function deleteEntry(id) {
-        if (confirm("Möchtest du diesen Eintrag wirklich löschen?")) {
-            let entries = JSON.parse(localStorage.getItem('fibEntries')) || [];
-            entries = entries.filter(e => e.id !== id);
-            localStorage.setItem('fibEntries', JSON.stringify(entries));
-            
-            // Zeile aus der UI entfernen
-            const row = document.querySelector(`tr[data-id="${id}"]`);
-            if (row) row.remove();
-        }
-    }
-
-    // Hilfsfunktion: Datum schöner formatieren (DD.MM.YYYY)
-    function formatDate(dateString) {
-        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-        return new Date(dateString).toLocaleDateString('de-DE', options);
-    }
-</script>
+        <div class="version">V.2.0 PINK - SYSTEM ACCESS ONLY</div>
+    </div>
 
 </body>
 </html>
