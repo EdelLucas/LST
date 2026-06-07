@@ -156,6 +156,7 @@ nav::before{
 .vw{display:none;flex-direction:column;gap:22px}
 .vw.on{display:flex;animation:vwIn .22s cubic-bezier(.4,0,.2,1)}
 @keyframes vwIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 
 /* ── HERO ── */
 .hero{
@@ -1020,80 +1021,120 @@ nav::before{
 
 <!-- ═ LOGIN MODAL ═ -->
 <div class="mb" id="login-mb">
-  <div class="modal lm" style="width:460px">
-    <div class="modal-t">🔐 FIB — Portal Login</div>
+  <div class="modal" style="width:420px">
 
-    <!-- DISCORD LOGIN (PRIMARY) -->
-    <div id="panel-discord">
-      <div style="text-align:center;padding:8px 0 20px">
-        <div style="width:64px;height:64px;border-radius:16px;background:rgba(88,101,242,.15);border:1px solid rgba(88,101,242,.4);display:inline-flex;align-items:center;justify-content:center;font-size:30px;margin-bottom:14px">
-          <svg width="32" height="32" viewBox="0 0 127.14 96.36" fill="#5865F2"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
-        </div>
-        <div style="font-size:16px;font-weight:600;color:var(--t1);margin-bottom:6px">Mit Discord einloggen</div>
-        <div style="font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:20px">Dein Discord-Account wird mit deinem FIB-Profil verknüpft. Kein Passwort nötig.</div>
-        <button onclick="discordLogin()" style="
-          display:inline-flex;align-items:center;gap:10px;
-          background:#5865F2;color:#fff;border:none;
-          padding:13px 28px;border-radius:9px;cursor:pointer;
-          font-family:var(--fn);font-size:15px;font-weight:600;
-          transition:all .2s;width:100%;justify-content:center;
-        " onmouseover="this.style.background='#4752c4'" onmouseout="this.style.background='#5865F2'">
-          <svg width="20" height="20" viewBox="0 0 127.14 96.36" fill="white"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
-          Mit Discord einloggen
-        </button>
-      </div>
-
-      <!-- SETUP NOTICE wenn noch nicht konfiguriert -->
-      <div id="discord-setup-notice" style="background:rgba(180,140,40,.08);border:1px solid rgba(180,140,40,.25);border-radius:8px;padding:14px;margin-top:4px;display:none">
-        <div style="font-size:12px;font-weight:600;color:var(--gold3);margin-bottom:6px">⚙️ Supabase noch nicht eingerichtet</div>
-        <div style="font-size:12px;color:var(--t2);line-height:1.6">Trage deine Supabase URL und den Anon Key oben im Script-Block ein. Bis dahin nutze den Abteilungs-Login.</div>
-      </div>
-
-      <div style="display:flex;align-items:center;gap:10px;margin:16px 0">
-        <div style="flex:1;height:1px;background:var(--line2)"></div>
-        <span style="font-size:11px;color:var(--t3);font-family:var(--fm)">ODER</span>
-        <div style="flex:1;height:1px;background:var(--line2)"></div>
-      </div>
-
-      <button onclick="switchLoginTab('dept')" style="
-        width:100%;background:transparent;border:1px solid var(--line2);
-        color:var(--t2);padding:9px;border-radius:8px;cursor:pointer;
-        font-family:var(--fn);font-size:13px;transition:all .15s;
-      " onmouseover="this.style.borderColor='var(--line3)';this.style.color='var(--t1)'" onmouseout="this.style.borderColor='var(--line2)';this.style.color='var(--t2)'">
-        🏛 Abteilungs-Login (Fallback)
-      </button>
+    <!-- HEADER -->
+    <div style="text-align:center;margin-bottom:22px">
+      <div style="font-size:20px;font-weight:700;color:var(--t1);letter-spacing:.02em">FIB Portal</div>
+      <div style="font-size:12px;color:var(--t3);font-family:var(--fm);margin-top:3px;letter-spacing:.08em">ZUGANG ERFORDERLICH</div>
     </div>
 
-    <!-- DEPT LOGIN (FALLBACK) -->
-    <div id="panel-dept" style="display:none">
-      <button onclick="switchLoginTab('discord')" style="
-        display:flex;align-items:center;gap:6px;background:none;border:none;
-        color:var(--t3);cursor:pointer;font-size:12px;font-family:var(--fn);
-        margin-bottom:14px;padding:0;
-      ">← Zurück zum Discord Login</button>
-      <div style="font-size:12px;color:var(--t3);font-family:var(--fm);letter-spacing:.08em;margin-bottom:10px">ABTEILUNG WÄHLEN</div>
-      <div class="dept-grid" style="margin-bottom:14px">
-        <div class="dg-item dg-td" data-d="TD" onclick="selD('TD')"><div class="dg-ico">🎓</div><div class="dg-name">TD</div><div class="dg-desc">TRAINING DIVISION</div></div>
-        <div class="dg-item dg-hr" data-d="HR" onclick="selD('HR')"><div class="dg-ico">👥</div><div class="dg-name">HR</div><div class="dg-desc">HUMAN RESOURCES</div></div>
-        <div class="dg-item dg-fb" data-d="FIBCO" onclick="selD('FIBCO')"><div class="dg-ico">🗂</div><div class="dg-name">FIBCO</div><div class="dg-desc">COMMAND OFFICE</div></div>
-        <div class="dg-item dg-lk" data-d="Leaderschaft" onclick="selD('Leaderschaft')"><div class="dg-ico">⭐</div><div class="dg-name">LEADERSCHAFT</div><div class="dg-desc">VOLLZUGRIFF</div></div>
+    <!-- DISCORD (PRIMÄR) -->
+    <div id="lp-discord">
+      <button onclick="discordLogin()" style="
+        display:flex;align-items:center;justify-content:center;gap:12px;
+        width:100%;padding:14px;border-radius:9px;border:none;
+        background:#5865F2;color:#fff;cursor:pointer;
+        font-family:var(--fn);font-size:15px;font-weight:700;
+        transition:all .2s;margin-bottom:14px;
+      " onmouseover="this.style.background='#4752c4';this.style.transform='translateY(-2px)'"
+         onmouseout="this.style.background='#5865F2';this.style.transform='none'">
+        <svg width="22" height="17" viewBox="0 0 127.14 96.36" fill="white">
+          <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+        </svg>
+        Mit Discord einloggen
+      </button>
+
+      <div style="font-size:12px;color:var(--t3);text-align:center;line-height:1.6;margin-bottom:16px">
+        Dein Discord-Account wird mit deinem FIB-Profil verknüpft.<br>
+        Kein Passwort nötig. Kein Account? Wende dich an die <span style="color:var(--gold3)">Leaderschaft</span>.
       </div>
-      <div class="ff" style="margin-bottom:6px">
+
+      <!-- Divider -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div style="flex:1;height:1px;background:var(--line2)"></div>
+        <span style="font-size:11px;color:var(--t3);font-family:var(--fm)">ODER FALLBACK</span>
+        <div style="flex:1;height:1px;background:var(--line2)"></div>
+      </div>
+
+      <!-- Tabs für Fallback -->
+      <div style="display:flex;gap:6px;margin-bottom:14px">
+        <button onclick="loginTab('member')" style="flex:1;padding:8px;border-radius:7px;border:1px solid var(--line2);background:transparent;color:var(--t2);cursor:pointer;font-family:var(--fn);font-size:12px;transition:.15s"
+          onmouseover="this.style.borderColor='var(--line3)';this.style.color='var(--t1)'"
+          onmouseout="this.style.borderColor='var(--line2)';this.style.color='var(--t2)'">
+          👤 Mitglied-Login
+        </button>
+        <button onclick="loginTab('dept')" style="flex:1;padding:8px;border-radius:7px;border:1px solid var(--line2);background:transparent;color:var(--t2);cursor:pointer;font-family:var(--fn);font-size:12px;transition:.15s"
+          onmouseover="this.style.borderColor='var(--line3)';this.style.color='var(--t1)'"
+          onmouseout="this.style.borderColor='var(--line2)';this.style.color='var(--t2)'">
+          🏛 Abteilungs-Login
+        </button>
+      </div>
+    </div>
+
+    <!-- PANEL: MITGLIED LOGIN -->
+    <div id="lp-member" style="display:none">
+      <button onclick="loginTab('discord')" style="display:flex;align-items:center;gap:6px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:12px;font-family:var(--fn);margin-bottom:14px;padding:0">← Zurück</button>
+      <div class="fg" style="gap:12px;margin-bottom:14px">
+        <div class="ff">
+          <div class="fl">Agenten-ID</div>
+          <input class="fi" id="li-id" placeholder="z.B. 123456" autocomplete="username"
+            onkeydown="if(event.key==='Enter')document.getElementById('li-pw').focus()">
+        </div>
+        <div class="ff">
+          <div class="fl">Passwort</div>
+          <div style="position:relative">
+            <input class="fi" type="password" id="li-pw" placeholder="Dein Passwort"
+              autocomplete="current-password" style="padding-right:40px"
+              onkeydown="if(event.key==='Enter')doMemberLogin()">
+            <span onclick="togglePw('li-pw',this)"
+              style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:14px;color:var(--t3);user-select:none">👁</span>
+          </div>
+        </div>
+      </div>
+      <div id="li-err" style="font-size:12px;color:var(--red2);font-family:var(--fm);min-height:16px;margin-bottom:10px;text-align:center"></div>
+      <button onclick="doMemberLogin()" class="btn btn-gold" style="width:100%;justify-content:center;font-size:15px;padding:12px">Einloggen</button>
+    </div>
+
+    <!-- PANEL: ABTEILUNGS LOGIN -->
+    <div id="lp-dept" style="display:none">
+      <button onclick="loginTab('discord')" style="display:flex;align-items:center;gap:6px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:12px;font-family:var(--fn);margin-bottom:14px;padding:0">← Zurück</button>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+        <div class="dg-item dg-td" data-d="TD" onclick="selD('TD')">
+          <div class="dg-ico">🎓</div><div class="dg-name">TD</div><div class="dg-desc">TRAINING DIVISION</div>
+        </div>
+        <div class="dg-item dg-hr" data-d="HR" onclick="selD('HR')">
+          <div class="dg-ico">👥</div><div class="dg-name">HR</div><div class="dg-desc">HUMAN RESOURCES</div>
+        </div>
+        <div class="dg-item dg-fb" data-d="FIBCO" onclick="selD('FIBCO')">
+          <div class="dg-ico">🗂</div><div class="dg-name">FIBCO</div><div class="dg-desc">COMMAND OFFICE</div>
+        </div>
+        <div class="dg-item dg-lk" data-d="Leaderschaft" onclick="selD('Leaderschaft')">
+          <div class="dg-ico">⭐</div><div class="dg-name">LEADERSCHAFT</div><div class="dg-desc">VOLLZUGRIFF</div>
+        </div>
+      </div>
+      <div class="ff" style="margin-bottom:10px">
         <div class="fl">Abteilungs-Passwort</div>
-        <input class="fi" type="password" id="pw" placeholder="Passwort ..." onkeydown="if(event.key==='Enter')doLogin()">
+        <div style="position:relative">
+          <input class="fi" type="password" id="pw" placeholder="Passwort ..."
+            style="padding-right:40px" onkeydown="if(event.key==='Enter')doLogin()">
+          <span onclick="togglePw('pw',this)"
+            style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:14px;color:var(--t3);user-select:none">👁</span>
+        </div>
       </div>
-      <div style="font-size:11px;color:var(--t3);font-family:var(--fm);line-height:2;margin-top:6px">
+      <div class="le" id="login-err"></div>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="btn btn-ghost" onclick="closeLogin()" style="flex:1">Abbrechen</button>
+        <button class="btn btn-blue" onclick="doLogin()" style="flex:2">Einloggen</button>
+      </div>
+      <div style="font-size:11px;color:var(--t3);font-family:var(--fm);margin-top:12px;line-height:1.9;text-align:center">
         TD: <span style="color:var(--cyan2)">td2026</span> &nbsp;·&nbsp;
         HR: <span style="color:var(--amber2)">hr2026</span> &nbsp;·&nbsp;
         FIBCO: <span style="color:var(--purple2)">fibco2026</span> &nbsp;·&nbsp;
         Leaderschaft: <span style="color:var(--gold2)">leitung2026</span>
       </div>
-      <div class="le" id="login-err"></div>
-      <div class="modal-act">
-        <button class="btn btn-ghost" onclick="closeLogin()">Abbrechen</button>
-        <button class="btn btn-blue" onclick="doLogin()">Einloggen</button>
-      </div>
     </div>
+
   </div>
 </div>
 
@@ -1110,142 +1151,10 @@ nav::before{
 <div class="toast" id="toast"></div>
 
 <script>
-// ╔══════════════════════════════════════════════════════╗
-// ║          SUPABASE + DISCORD KONFIGURATION            ║
-// ║  Trage hier deine eigenen Werte ein!                 ║
-// ╚══════════════════════════════════════════════════════╝
-const SUPABASE_URL  = 'DEINE_SUPABASE_URL';        // z.B. https://xyz.supabase.co
-const SUPABASE_ANON = 'DEIN_SUPABASE_ANON_KEY';    // langer JWT-String aus Supabase
-
-// Discord-Rollen → FIB-Abteilungen (Discord Role IDs aus deinem Server)
-// Leaderschaft-Discord-User IDs die Vollzugriff bekommen:
-const LEADERSCHAFT_IDS = [
-  // 'DISCORD_USER_ID_1',
-  // 'DISCORD_USER_ID_2',
-];
-// Discord Role ID → FIB Abteilung (optional, für Rollen-basiertes System)
-const ROLE_MAP = {
-  // 'ROLE_ID_TD':    'TD',
-  // 'ROLE_ID_HR':    'HR',
-  // 'ROLE_ID_FIBCO': 'FIBCO',
-};
-// ══════════════════════════════════════════════════════
-
-// Supabase client (lazy load)
-let _supabase = null;
-async function getSupabase() {
-  if(_supabase) return _supabase;
-  if(!window.supabase) {
-    await new Promise((res,rej)=>{
-      const s=document.createElement('script');
-      s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
-      s.onload=res; s.onerror=rej;
-      document.head.appendChild(s);
-    });
-  }
-  if(SUPABASE_URL==='DEINE_SUPABASE_URL') return null; // nicht konfiguriert
-  _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-  return _supabase;
-}
-
-// ═══ DISCORD LOGIN ═══
-async function discordLogin() {
-  const sb = await getSupabase();
-  if(!sb) {
-    // Supabase nicht konfiguriert → Hinweis zeigen
-    document.getElementById('discord-setup-notice').style.display='block';
-    toast('Supabase noch nicht konfiguriert — nutze den Abteilungs-Login.','amber');
-    return;
-  }
-  closeLogin();
-  toast('Discord wird geöffnet...','blue');
-  const {error} = await sb.auth.signInWithOAuth({
-    provider:'discord',
-    options:{
-      redirectTo: window.location.href,
-      scopes: 'identify guilds.members.read',
-    }
-  });
-  if(error) toast('Discord Login fehlgeschlagen: '+error.message,'red');
-}
-
-// Session nach Redirect wiederherstellen
-async function checkSession() {
-  const sb = await getSupabase();
-  if(!sb) return;
-  const {data:{session}} = await sb.auth.getSession();
-  if(session) {
-    await handleDiscordSession(session);
-  }
-  // Auth state listener
-  sb.auth.onAuthStateChange(async (event, session)=>{
-    if(event==='SIGNED_IN' && session) await handleDiscordSession(session);
-    if(event==='SIGNED_OUT') doLogout();
-  });
-}
-
-async function handleDiscordSession(session) {
-  const user = session.user;
-  const discordId = user.user_metadata?.provider_id || user.identities?.[0]?.id;
-  const discordName = user.user_metadata?.full_name || user.user_metadata?.name || 'Unbekannt';
-  const discordAvatar = user.user_metadata?.avatar_url || '';
-
-  // Rolle bestimmen
-  let userDept = 'Mitglied';
-  let userRank = 18;
-  if(LEADERSCHAFT_IDS.includes(discordId)) {
-    userDept = 'Leaderschaft';
-    userRank = 30;
-  } else {
-    // In Supabase nachschlagen ob dem User eine Rolle zugeteilt wurde
-    const sb2 = await getSupabase();
-    if(sb2) {
-      const {data} = await sb2.from('fib_members').select('*').eq('discord_id', discordId).single();
-      if(data) {
-        userDept = data.dept || 'Mitglied';
-        userRank = data.rank_n || 18;
-      } else {
-        // Kein Eintrag → kein Zugang
-        toast(`⛔ ${discordName} — kein FIB-Zugang. Wende dich an die Leaderschaft.`,'red');
-        const sb3 = await getSupabase();
-        if(sb3) await sb3.auth.signOut();
-        return;
-      }
-    }
-  }
-
-  currentMember = {
-    name: discordName,
-    agentId: discordId,
-    dept: userDept,
-    rankN: userRank,
-    avatar: discordAvatar,
-    discordId,
-    isDiscord: true,
-  };
-  dept = userDept;
-  openPortalAsMember(currentMember);
-  toast(`Willkommen, ${discordName}! ✅`,'green');
-  logAdd(`Discord-Login: ${discordName} (${discordId}) · ${userDept}`);
-}
-
-async function discordLogout() {
-  const sb = await getSupabase();
-  if(sb) await sb.auth.signOut();
-  doLogout();
-}
-
-// Tab switch (discord ↔ dept)
-function switchLoginTab(tab) {
-  const isDiscord = tab==='discord';
-  document.getElementById('panel-discord').style.display = isDiscord?'':'none';
-  document.getElementById('panel-dept').style.display    = isDiscord?'none':'';
-}
-
 // ═══════════════════════════════════════════════
 // DATA
 // ═══════════════════════════════════════════════
-const PW = {TD:'td2026',HR:'hr2026',FIBCO:'fibco2026',Leaderschaft:'leitung2026'};
+const PW={TD:'td2026',HR:'hr2026',FIBCO:'fibco2026',Leaderschaft:'leitung2026'};
 const AUSB_LIST=['Grundausbildung','Erste Hilfe Kurs','Officer Prüfung','Ortskunde Plus','Fahrtauglichkeitsprüfung','Fahrsicherheit','Tactical Shooting Training','Senior Officer Prüfung','AUB Streifen Schulung','Leitstellen Prüfung','Jura Prüfung','Verhandlungs-/ Einsatzleitung Prüfung','Flugausbildung / Overwatch','TOW Ausbildung (Abschlepper)'];
 const RL={30:'30. Director of FIB',29:'29. Deputy Director of FIB',28:'28. Assistant Director of FIB',27:'27. Divisional Director',26:'26. Inspector of the FIB',25:'25. Supervisory Head Agent',24:'24. Supervisory Agent',23:'23. Special Agent in Charge',22:'22. Division Chief',21:'21. Deputy Division Chief',20:'20. Senior Special Agent',19:'19. Tactical Operator',18:'18. Department Specialist'};
 const RC={30:'r30',29:'r30',28:'r28',27:'r27',26:'r26',25:'r25',24:'r24',23:'r23',22:'r22',21:'r21',20:'r20',19:'r20',18:'r18'};
@@ -1253,71 +1162,75 @@ const DC={'Leaderschaft':'dv-l','Curator of Dmsns':'dv-c','High Command Lead':'d
 const AC={FIBCO:'#818cf8',CID:'#f87171',CIRG:'#4ade80',HR:'#fb923c',PR:'#f472b6',TD:'#38bdf8',LAW:'#bef264',IA:'#fbbf24'};
 const AGENTS=[];
 
-// ═══════════════════════════════════════════════
 // STATE
-// ═══════════════════════════════════════════════
-let dept=null, selDept=null, currentMember=null;
+let dept=null,selDept=null,currentMember=null;
 function ld(k,d=[]){try{return JSON.parse(localStorage.getItem('fib_'+k))||d}catch{return d}}
 function sv(k,v){localStorage.setItem('fib_'+k,JSON.stringify(v))}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5).toUpperCase()}
 function now(){return new Date().toLocaleDateString('de-DE')+' '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}
 
-// ═══ MEMBER LOGIN HELPERS ═══
 const DEPT_CFG={
   TD:{col:'var(--cyan2)',bg:'rgba(6,182,212,.1)',border:'rgba(6,182,212,.35)'},
   HR:{col:'var(--amber2)',bg:'rgba(245,158,11,.1)',border:'rgba(245,158,11,.35)'},
   FIBCO:{col:'var(--purple2)',bg:'rgba(139,92,246,.1)',border:'rgba(139,92,246,.35)'},
   Leaderschaft:{col:'var(--gold2)',bg:'rgba(202,138,4,.12)',border:'rgba(202,138,4,.4)'},
-  Mitglied:{col:'var(--gold3)',bg:'rgba(180,140,40,.1)',border:'rgba(180,140,40,.35)'},
+  Mitglied:{col:'var(--t2)',bg:'rgba(100,100,120,.1)',border:'rgba(100,100,120,.3)'},
 };
-// Abteilungs-Passwörter (unveränderlich)
-// Mitglieder-Logins werden in localStorage gespeichert: [{name, agentId, pw, dept, rankN, div}]
+
+// MEMBER HELPERS — Passwörter als SHA-256 Hash
+async function hashPw(pw){const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(pw));return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');}
 function getMembers(){return ld('members',[]);}
 function saveMember(m){const ms=getMembers();const idx=ms.findIndex(x=>x.agentId===m.agentId);if(idx>=0)ms[idx]=m;else ms.push(m);sv('members',ms);}
-function findMember(agentId,pw){return getMembers().find(m=>m.agentId===agentId&&m.pw===pw)||null;}
-function createMemberAccount(name,agentId,pw,dept2,rankN,div){
+async function findMember(agentId,pw){const h=await hashPw(pw);return getMembers().find(m=>m.agentId===agentId&&m.pwHash===h)||null;}
+async function createMemberAccount(name,agentId,pw,dept2,rankN,div){
+  if(!name||!agentId||!pw){toast('Alle Felder ausfüllen!','red');return false;}
   if(getMembers().find(m=>m.agentId===agentId)){toast('Agent-ID bereits vergeben!','red');return false;}
-  saveMember({name,agentId,pw,dept:dept2,rankN:rankN||18,div:div||'Abteilungsarma',created:now()});
-  toast(`Account für ${name} erstellt!`,'green');
-  return true;
+  const pwHash=await hashPw(pw);
+  saveMember({name,agentId,pwHash,dept:dept2||'Mitglied',rankN:parseInt(rankN)||18,div:div||'—',created:now()});
+  toast('Account für '+name+' erstellt!','green');return true;
 }
 
 // CLOCK
 setInterval(()=>{const el=document.getElementById('nav-clock');if(el)el.textContent=new Date().toLocaleTimeString('de-DE')},1000);
 
-// LOGIN TAB SWITCH
-function switchLoginTab(tab){
-  const isP=tab==='personal';
-  document.getElementById('panel-personal').style.display=isP?'':'none';
-  document.getElementById('panel-dept').style.display=isP?'none':'';
-  const tp=document.getElementById('tab-personal');
-  const td=document.getElementById('tab-dept');
-  tp.style.cssText=`flex:1;text-align:center;padding:8px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:${isP?'600':'500'};background:${isP?'var(--card2)':'transparent'};color:${isP?'var(--t1)':'var(--t2)'};transition:.15s`;
-  td.style.cssText=`flex:1;text-align:center;padding:8px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:${isP?'500':'600'};background:${isP?'transparent':'var(--card2)'};color:${isP?'var(--t2)':'var(--t1)'};transition:.15s`;
+// LOGIN TAB
+function loginTab(tab){
+  const panels=['lp-discord','lp-member','lp-dept'];
+  panels.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  const show=tab==='discord'?'lp-discord':tab==='member'?'lp-member':'lp-dept';
+  const el=document.getElementById(show);if(el)el.style.display='';
+  if(tab==='member')setTimeout(()=>document.getElementById('li-id')?.focus(),50);
+  if(tab==='dept')setTimeout(()=>document.getElementById('pw')?.focus(),50);
 }
 
-// MEMBER LOGIN
-function doMemberLogin(){
-  const agentId=document.getElementById('m-agentid')?.value.trim();
-  const pw=document.getElementById('m-pw')?.value;
-  const err=document.getElementById('m-login-err');
+// PASSWORT TOGGLE
+function togglePw(inputId,btn){const el=document.getElementById(inputId);if(!el)return;el.type=el.type==='password'?'text':'password';btn.textContent=el.type==='password'?'👁':'🙈';}
+
+// MITGLIED LOGIN
+async function doMemberLogin(){
+  const agentId=document.getElementById('li-id')?.value.trim();
+  const pw=document.getElementById('li-pw')?.value;
+  const err=document.getElementById('li-err');
+  if(err)err.textContent='';
   if(!agentId||!pw){if(err)err.textContent='⚠ Bitte alle Felder ausfüllen.';return;}
-  const m=findMember(agentId,pw);
+  const m=await findMember(agentId,pw);
   if(!m){if(err)err.textContent='⚠ Agenten-ID oder Passwort falsch.';return;}
   currentMember=m;dept=m.dept||'Mitglied';
+  if(document.getElementById('li-id'))document.getElementById('li-id').value='';
+  if(document.getElementById('li-pw'))document.getElementById('li-pw').value='';
   closeLogin();
   openPortalAsMember(m);
-  toast(`Willkommen, ${m.name}!`,'green');
-  logAdd(`Mitglied-Login: ${m.name} (ID: ${m.agentId})`);
+  toast('Willkommen, '+m.name+'! ✅','green');
+  logAdd('Login: '+m.name+' (ID: '+m.agentId+') · '+m.dept);
 }
 
 function openPortalAsMember(m){
-  const cfg=DEPT_CFG[m.dept]||{col:'var(--gold3)',bg:'rgba(180,140,40,.1)',border:'rgba(180,140,40,.35)'};
+  const cfg=DEPT_CFG[m.dept]||DEPT_CFG.Mitglied;
   const badge=document.getElementById('nav-badge');
   badge.textContent=m.name;
-  badge.style.cssText=`display:inline-flex;color:${cfg.col};background:${cfg.bg};border:1px solid ${cfg.border};font-family:var(--fm);font-size:11px;font-weight:600;padding:4px 13px;border-radius:20px;letter-spacing:.05em`;
+  badge.style.cssText='display:inline-flex;color:'+cfg.col+';background:'+cfg.bg+';border:1px solid '+cfg.border+';font-family:var(--fm);font-size:11px;font-weight:600;padding:4px 13px;border-radius:20px;letter-spacing:.05em';
   const pill=document.getElementById('login-pill');
-  pill.innerHTML=`<span class="lp-dot">👤</span> ${m.name} <span style="font-size:11px;opacity:.6;margin-left:4px">Ausloggen</span>`;
+  pill.innerHTML='<span class="lp-dot">👤</span> '+m.name+' <span style="font-size:11px;opacity:.6;margin-left:4px">Ausloggen</span>';
   pill.className='login-pill out';pill.onclick=doLogout;
   buildMemberSidebar(m);
   document.querySelectorAll('.vw').forEach(v=>v.classList.remove('on'));
@@ -1329,17 +1242,143 @@ function openPortalAsMember(m){
 function buildMemberSidebar(m){
   const sb=document.getElementById('sidebar');
   const isL=m.dept==='Leaderschaft';
-  let h=`<div class="sg">MEIN BEREICH</div>`;
+  let h='<div class="sg">MEIN BEREICH</div>';
   h+=si('pv-member-home','🏠','Übersicht');
   h+=si('pv-member-logs','📋','Meine Logs');
-  if(isL||m.dept==='TD'){h+=`<div class="sg" style="color:var(--cyan2)">TRAINING DIVISION</div>`;h+=si('pv-td-ausb','🎓','Ausbildungen');h+=si('pv-td-agenten','👤','Agenten');}
-  if(isL||m.dept==='HR'){h+=`<div class="sg" style="color:var(--amber2)">HUMAN RESOURCES</div>`;h+=si('pv-hr-list','👥','Mitarbeiter');h+=si('pv-hr-add','➕','Hinzufügen');h+=si('pv-hr-strikes','⚠️','Strikes');}
-  if(isL||m.dept==='FIBCO'){h+=`<div class="sg" style="color:var(--purple2)">FIBCO</div>`;h+=si('pv-fb-akten','🗂','Fallakten');h+=si('pv-fb-create','➕','Akte erstellen');h+=si('pv-fb-archiv','📦','Archiv');h+=si('pv-dienst','📅','Dienstplan');}
-  if(isL){h+=`<div class="sg" style="color:var(--gold2)">LEUDERSCHAFT</div>`;h+=si('pv-ankuend','📢','Ankündigungen');h+=si('pv-accounts','👤','Accounts');}
-  h+=`<div class="sg">SYSTEM</div>`;h+=si('pv-log','📝','Protokoll');
+  if(isL||m.dept==='TD'){h+='<div class="sg" style="color:var(--cyan2)">TRAINING DIVISION</div>';h+=si('pv-td-ausb','🎓','Ausbildungen');h+=si('pv-td-agenten','👤','Agenten');}
+  if(isL||m.dept==='HR'){h+='<div class="sg" style="color:var(--amber2)">HUMAN RESOURCES</div>';h+=si('pv-hr-list','👥','Mitarbeiter');h+=si('pv-hr-add','➕','Hinzufügen');h+=si('pv-hr-strikes','⚠️','Strikes');}
+  if(isL||m.dept==='FIBCO'){h+='<div class="sg" style="color:var(--purple2)">FIBCO</div>';h+=si('pv-fb-akten','🗂','Fallakten');h+=si('pv-fb-create','➕','Akte erstellen');h+=si('pv-fb-archiv','📦','Archiv');h+=si('pv-dienst','📅','Dienstplan');}
+  if(isL){h+='<div class="sg" style="color:var(--gold2)">LEADERSCHAFT</div>';h+=si('pv-ankuend','📢','Ankündigungen');h+=si('pv-accounts','👤','Accounts');}
+  h+='<div class="sg">SYSTEM</div>';h+=si('pv-log','📝','Protokoll');
   sb.innerHTML=h;
 }
 
+// ╔══════════════════════════════════════════════════════╗
+// ║           SUPABASE + DISCORD KONFIGURATION           ║
+// ╚══════════════════════════════════════════════════════╝
+const SUPABASE_URL  = 'https://expttnyskasmxwiqkaky.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4cHR0bnlza2FzbXh3aXFrYWt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4Mzc1NjksImV4cCI6MjA5NjQxMzU2OX0.3q78VZYVxVTxvy4K2UmjCI5OOpoJWR8DGQkxRVozh58';
+const NETLIFY_URL   = 'https://lst-grand.netlify.app/';
+
+// Discord User-IDs die automatisch Leaderschaft-Vollzugriff bekommen
+const LEADERSCHAFT_IDS = [
+  '1226929673309655112',
+];
+
+// ── Supabase Client (lazy load) ──
+let _sb = null;
+async function getSB() {
+  if (_sb) return _sb;
+  if (!window.supabase) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+      s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+  _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  return _sb;
+}
+
+// ── Discord OAuth Login ──
+async function discordLogin() {
+  const sb = await getSB();
+  toast('Discord wird geöffnet...', 'blue');
+  const { error } = await sb.auth.signInWithOAuth({
+    provider: 'discord',
+    options: {
+      redirectTo: NETLIFY_URL,
+      scopes: 'identify',
+    }
+  });
+  if (error) toast('Fehler: ' + error.message, 'red');
+}
+
+// ── Session nach Redirect prüfen ──
+async function checkSession() {
+  const sb = await getSB();
+
+  // Auth State Listener (fängt Redirect nach Discord-Login ab)
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      await handleDiscordUser(session);
+    }
+    if (event === 'SIGNED_OUT') {
+      doLogout();
+    }
+  });
+
+  // Bestehende Session beim Seitenaufruf prüfen
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) await handleDiscordUser(session);
+}
+
+// ── Discord User verarbeiten ──
+async function handleDiscordUser(session) {
+  const user = session.user;
+  const discordId   = user.user_metadata?.provider_id
+                   || user.identities?.[0]?.id
+                   || user.id;
+  const discordName = user.user_metadata?.full_name
+                   || user.user_metadata?.name
+                   || 'Unbekannt';
+  const discordAvatar = user.user_metadata?.avatar_url || '';
+
+  // Leaderschaft-Vollzugriff per User-ID
+  if (LEADERSCHAFT_IDS.includes(discordId)) {
+    loginAsDiscordMember({
+      name: discordName,
+      agentId: discordId,
+      dept: 'Leaderschaft',
+      rankN: 30,
+      div: 'Leaderschaft',
+      avatar: discordAvatar,
+      discordId,
+    });
+    return;
+  }
+
+  // Normales Mitglied → in Supabase-Tabelle nachschlagen
+  const sb = await getSB();
+  const { data, error } = await sb
+    .from('fib_members')
+    .select('*')
+    .eq('discord_id', discordId)
+    .single();
+
+  if (error || !data) {
+    toast('⛔ Kein FIB-Zugang. Wende dich an die Leaderschaft.', 'red');
+    await sb.auth.signOut();
+    return;
+  }
+
+  loginAsDiscordMember({
+    name: data.name || discordName,
+    agentId: discordId,
+    dept: data.dept || 'Mitglied',
+    rankN: data.rank_n || 18,
+    div: data.div || '—',
+    avatar: discordAvatar,
+    discordId,
+  });
+}
+
+function loginAsDiscordMember(m) {
+  currentMember = m;
+  dept = m.dept;
+  closeLogin();
+  openPortalAsMember(m);
+  toast('Willkommen, ' + m.name + '! ✅', 'green');
+  logAdd('Discord-Login: ' + m.name + ' (' + m.discordId + ') · ' + m.dept);
+}
+
+// ── Discord Logout ──
+async function discordLogout() {
+  const sb = await getSB();
+  await sb.auth.signOut();
+  doLogout();
+}
 // TOAST
 function toast(msg,type='green'){
   const icons={green:'✅',red:'❌',amber:'⚠️',blue:'ℹ️'};
@@ -1647,9 +1686,10 @@ function deleteLog(id){
 // ═══════════════ LOGIN ════════════════
 function openLoginModal(pre){
   if(pre)selD(pre);
+  loginTab('discord');
   document.getElementById('login-mb').classList.add('on');
-  document.getElementById('pw').value='';
-  document.getElementById('login-err').textContent='';
+  if(document.getElementById('login-err'))document.getElementById('login-err').textContent='';
+  if(document.getElementById('li-err'))document.getElementById('li-err').textContent='';
 }
 function closeLogin(){document.getElementById('login-mb').classList.remove('on')}
 function selD(d){
@@ -1668,6 +1708,7 @@ function doLogin(){
 }
 function doLogout(){
   dept=null;selDept=null;currentMember=null;
+  getSB().then(sb=>{if(sb)sb.auth.signOut();}).catch(()=>{});
   document.querySelectorAll('.dg-item').forEach(el=>el.classList.remove('on'));
   const pill=document.getElementById('login-pill');
   pill.innerHTML='<span class="lp-dot">🔐</span> Einloggen';pill.className='login-pill';
@@ -2167,14 +2208,16 @@ function acCreate(){
   const agentId=document.getElementById('ac-id')?.value.trim();
   const pw=document.getElementById('ac-pw')?.value.trim();
   if(!name||!agentId||!pw){toast('Name, ID und Passwort sind Pflicht!','red');return;}
-  const dept2=document.getElementById('ac-dept')?.value||'Abteilungsarma';
+  const dept2=document.getElementById('ac-dept')?.value||'Mitglied';
   const rankN=parseInt(document.getElementById('ac-rank')?.value)||18;
   const div=document.getElementById('ac-div')?.value.trim()||dept2;
-  if(createMemberAccount(name,agentId,pw,dept2,rankN,div)){
-    logAdd(`Account erstellt: ${name} (ID: ${agentId}) · ${dept2}`);
-    ['ac-name','ac-id','ac-pw','ac-rank','ac-div'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
-    acRender();
-  }
+  createMemberAccount(name,agentId,pw,dept2,rankN,div).then(ok=>{
+    if(ok){
+      logAdd('Account erstellt: '+name+' (ID: '+agentId+') · '+dept2);
+      ['ac-name','ac-id','ac-pw','ac-rank','ac-div'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+      acRender();
+    }
+  });
 }
 function acRender(){
   const ms=getMembers();
@@ -2201,8 +2244,10 @@ function acDelete(id){
 function acResetPw(id){
   const npw=prompt('Neues Passwort für Agent '+id+':');
   if(!npw)return;
-  const ms=getMembers();const m=ms.find(x=>x.agentId===id);
-  if(m){m.pw=npw;sv('members',ms);toast('Passwort geändert!','green');logAdd(`Passwort geändert: ${m.name} (${id})`)}
+  hashPw(npw).then(h=>{
+    const ms=getMembers();const m=ms.find(x=>x.agentId===id);
+    if(m){m.pwHash=h;delete m.pw;sv('members',ms);toast('Passwort geändert!','green');logAdd('Passwort geändert: '+m.name+' ('+id+')');}
+  });
 }
 
 // ═══ MEMBER HOME ═══
