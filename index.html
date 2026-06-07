@@ -115,9 +115,9 @@ nav::before{
   background:rgba(180,140,40,.15);border:1px solid var(--gold);
   display:flex;align-items:center;justify-content:center;font-size:13px;
 }
-.login-pill.out{border-color:rgba(26,158,92,.4);color:var(--green2);background:rgba(26,158,92,.07)}
-.login-pill.out:hover{background:rgba(26,158,92,.12);border-color:var(--green2)}
-.login-pill.out .lp-dot{background:rgba(26,158,92,.2);border-color:var(--green2)}
+.login-pill.out{border-color:var(--gold);color:var(--gold3);background:rgba(180,140,40,.08)}
+.login-pill.out:hover{background:rgba(180,140,40,.14)}
+.login-pill.out .lp-dot{background:rgba(180,140,40,.2);border-color:var(--gold2)}
 
 /* ── BODY ── */
 .body{flex:1;display:flex;overflow:hidden}
@@ -150,7 +150,7 @@ nav::before{
 }
 
 /* ── PAGE ── */
-.page-wrap{flex:1;overflow-y:auto;padding:28px 32px;display:flex;flex-direction:column;gap:22px}
+.page-wrap{flex:1;overflow-y:auto;padding:28px 32px 60px;display:flex;flex-direction:column;gap:22px}
 
 /* ── VIEWS ── */
 .vw{display:none;flex-direction:column;gap:22px}
@@ -474,12 +474,90 @@ nav::before{
     <div class="nl" id="nl-portal" style="display:none;color:var(--gold3)" onclick="goPortal()">⚡ Portal</div>
   </div>
 
+  <div class="nav-links">
+    <div class="nl on" onclick="goTo('home')">Start</div>
+    <div class="nl" onclick="goTo('mitarbeiter')">Mitarbeiter</div>
+    <div class="nl" onclick="goTo('abteilungen')">Abteilungen</div>
+    <div class="nl" onclick="goTo('rangliste')">Rangliste</div>
+    <div class="nl" id="nl-portal" style="display:none;color:var(--gold3)" onclick="goPortal()">⚡ Portal</div>
+  </div>
+
   <div class="nav-right">
-    <div class="nav-clock" id="nav-clock">--:--:--</div>
     <div class="nav-badge" id="nav-badge"></div>
     <button class="login-pill" id="login-pill" onclick="openLoginModal()"><span class="lp-dot">🔐</span> Einloggen</button>
   </div>
 </nav>
+
+<!-- BOTTOM BAR: Uhr + Einstellungen -->
+<div id="bottom-bar" style="
+  position:fixed;bottom:0;left:0;right:0;height:38px;z-index:90;
+  background:rgba(7,8,10,.96);border-top:1px solid var(--line2);
+  display:flex;align-items:center;padding:0 20px;gap:14px;
+  font-family:var(--fm);font-size:12px;
+">
+  <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+    <!-- Uhr -->
+    <div style="display:flex;align-items:center;gap:7px;color:var(--t3)">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span id="bottom-clock">--:--:--</span>
+    </div>
+    <div style="width:1px;height:18px;background:var(--line2)"></div>
+    <!-- Einstellungen -->
+    <div style="position:relative">
+      <button onclick="toggleSettings()" style="
+        display:flex;align-items:center;gap:6px;
+        background:transparent;border:1px solid var(--line2);
+        color:var(--t2);padding:5px 12px;border-radius:6px;
+        cursor:pointer;font-family:var(--fm);font-size:11px;
+        transition:all .15s;letter-spacing:.04em;
+      " onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold3)'"
+         onmouseout="this.style.borderColor='var(--line2)';this.style.color='var(--t2)'">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        Einstellungen
+      </button>
+      <!-- Settings Dropdown -->
+      <div id="settings-panel" style="
+        display:none;position:absolute;bottom:46px;right:0;
+        width:280px;background:var(--surface);border:1px solid var(--line2);
+        border-radius:12px;box-shadow:0 -8px 32px rgba(0,0,0,.5);
+        overflow:hidden;
+      ">
+        <div style="padding:14px 16px;border-bottom:1px solid var(--line2);font-size:12px;font-weight:600;color:var(--t1);letter-spacing:.04em">EINSTELLUNGEN</div>
+        <!-- Profil wenn eingeloggt -->
+        <div id="settings-profile" style="display:none;padding:14px 16px;border-bottom:1px solid var(--line2)">
+          <div style="font-size:10px;color:var(--t3);letter-spacing:.1em;margin-bottom:10px">DEIN PROFIL</div>
+          <div id="settings-profile-body"></div>
+        </div>
+        <!-- Passwort ändern -->
+        <div id="settings-pw-section" style="display:none;padding:12px 16px;border-bottom:1px solid var(--line2)">
+          <div style="font-size:10px;color:var(--t3);letter-spacing:.1em;margin-bottom:8px">PASSWORT ÄNDERN</div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <input class="fi" type="password" id="settings-old-pw" placeholder="Altes Passwort" style="font-size:12px;padding:7px 10px">
+            <input class="fi" type="password" id="settings-new-pw" placeholder="Neues Passwort" style="font-size:12px;padding:7px 10px">
+            <button class="btn btn-gold btn-sm" onclick="changeOwnPassword()" style="width:100%;justify-content:center">Passwort ändern</button>
+          </div>
+        </div>
+        <!-- Allgemeine Einstellungen -->
+        <div style="padding:12px 16px;display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:10px;color:var(--t3);letter-spacing:.1em;margin-bottom:2px">DARSTELLUNG</div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:13px;color:var(--t2)">Kompakt-Modus</span>
+            <div onclick="toggleCompact(this)" id="compact-toggle" style="
+              width:36px;height:20px;border-radius:10px;background:var(--line2);
+              cursor:pointer;position:relative;transition:.2s;flex-shrink:0;
+            "><div style="position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--t3);transition:.2s"></div></div>
+          </div>
+        </div>
+        <!-- Logout wenn eingeloggt -->
+        <div id="settings-logout-btn" style="display:none;padding:0 16px 12px">
+          <button class="btn btn-red" onclick="doLogout();toggleSettings()" style="width:100%;justify-content:center;font-size:13px">Ausloggen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ═══ BODY ═══ -->
 <div class="body">
@@ -1191,8 +1269,97 @@ async function createMemberAccount(name,agentId,pw,dept2,rankN,div){
   toast('Account für '+name+' erstellt!','green');return true;
 }
 
-// CLOCK
-setInterval(()=>{const el=document.getElementById('nav-clock');if(el)el.textContent=new Date().toLocaleTimeString('de-DE')},1000);
+// CLOCK — jetzt unten rechts
+setInterval(()=>{
+  const el=document.getElementById('bottom-clock');
+  if(el)el.textContent=new Date().toLocaleTimeString('de-DE');
+  // nav-clock falls noch vorhanden
+  const nc=document.getElementById('nav-clock');
+  if(nc)nc.textContent=new Date().toLocaleTimeString('de-DE');
+},1000);
+
+// ═══ SETTINGS ═══
+function toggleSettings(){
+  const p=document.getElementById('settings-panel');
+  if(!p)return;
+  const open=p.style.display==='none'||!p.style.display;
+  p.style.display=open?'':'none';
+  if(open)updateSettingsPanel();
+}
+document.addEventListener('click',e=>{
+  const panel=document.getElementById('settings-panel');
+  if(!panel)return;
+  if(!e.target.closest('#settings-panel')&&!e.target.closest('button[onclick="toggleSettings()"]')){
+    panel.style.display='none';
+  }
+});
+function updateSettingsPanel(){
+  const profileEl=document.getElementById('settings-profile');
+  const pwEl=document.getElementById('settings-pw-section');
+  const logoutEl=document.getElementById('settings-logout-btn');
+  const body=document.getElementById('settings-profile-body');
+  if(!currentMember&&!dept){
+    if(profileEl)profileEl.style.display='none';
+    if(pwEl)pwEl.style.display='none';
+    if(logoutEl)logoutEl.style.display='none';
+    return;
+  }
+  if(logoutEl)logoutEl.style.display='';
+  const m=currentMember;
+  if(m&&profileEl){
+    profileEl.style.display='';
+    const avatarHtml=m.avatar
+      ?`<img src="${m.avatar}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1.5px solid var(--gold)">`
+      :`<div style="width:40px;height:40px;border-radius:50%;background:rgba(180,140,40,.15);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--gold3)">${(m.name||'?')[0].toUpperCase()}</div>`;
+    body.innerHTML=`
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+        ${avatarHtml}
+        <div>
+          <div style="font-size:14px;font-weight:600;color:var(--t1)">${m.name}</div>
+          <div style="font-size:11px;color:var(--t3);font-family:var(--fm)">ID ${m.agentId} · ${m.dept}</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <div style="background:var(--card);border:1px solid var(--line2);border-radius:7px;padding:8px;text-align:center">
+          <div style="font-size:16px;font-weight:700;color:var(--gold3)">${m.rankN||'—'}</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">RANG</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--line2);border-radius:7px;padding:8px;text-align:center">
+          <div style="font-size:16px;font-weight:700;color:var(--cyan2)">${ld('activity_logs').filter(l=>l.agent===m.name).length}</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">LOGS</div>
+        </div>
+      </div>`;
+  }
+  // Passwort-Änderung nur für non-Discord-Member
+  if(pwEl)pwEl.style.display=(m&&!m.discordId)?'':'none';
+}
+
+async function changeOwnPassword(){
+  if(!currentMember||currentMember.discordId){toast('Nicht verfügbar für Discord-Login.','amber');return;}
+  const oldPw=document.getElementById('settings-old-pw')?.value;
+  const newPw=document.getElementById('settings-new-pw')?.value;
+  if(!oldPw||!newPw){toast('Bitte beide Felder ausfüllen.','red');return;}
+  const check=await findMember(currentMember.agentId,oldPw);
+  if(!check){toast('Altes Passwort falsch!','red');return;}
+  const h=await hashPw(newPw);
+  const ms=getMembers();
+  const m=ms.find(x=>x.agentId===currentMember.agentId);
+  if(m){m.pwHash=h;delete m.pw;sv('members',ms);}
+  document.getElementById('settings-old-pw').value='';
+  document.getElementById('settings-new-pw').value='';
+  toast('Passwort erfolgreich geändert!','green');
+  logAdd('Passwort geändert: '+currentMember.name);
+}
+
+let compactMode=false;
+function toggleCompact(btn){
+  compactMode=!compactMode;
+  btn.style.background=compactMode?'var(--gold)':'var(--line2)';
+  btn.querySelector('div').style.left=compactMode?'19px':'3px';
+  btn.querySelector('div').style.background=compactMode?'#07080a':'var(--t3)';
+  document.documentElement.style.fontSize=compactMode?'13px':'15px';
+  toast(compactMode?'Kompakt-Modus aktiviert':'Kompakt-Modus deaktiviert','blue');
+}
 
 // LOGIN TAB
 function loginTab(tab){
@@ -1239,6 +1406,7 @@ function openPortalAsMember(m){
   pill.innerHTML=pillAvatar+' '+m.name+' <span style="font-size:11px;opacity:.6;margin-left:4px">Ausloggen</span>';
   pill.className='login-pill out';pill.onclick=doLogout;
   showPortalLink(true);
+  updateSettingsPanel();
   buildMemberSidebar(m);
   document.querySelectorAll('.vw').forEach(v=>v.classList.remove('on'));
   document.getElementById('vw-portal').classList.add('on');
@@ -1460,15 +1628,30 @@ function abtPills(txt){
 }
 function cbIcon(v){return v?`<span style="color:var(--green);font-size:13px">✓</span>`:`<span style="color:var(--line2)">·</span>`}
 function renderM(){
-  // Kombiniere statische AGENTS + HR-eingetragene Personen
   const hrPersons=ld('hr_persons').map(p=>({
     id:p.agentId||'—', name:p.name||'—',
     rankN:parseInt(p.rankN)||18, dn:p.dn||'—',
     div:p.div||p.dept||'—', strike:parseInt(p.strike)||0,
     invite:p.date||p.created||'—', abt:p.abt||'',
-    ga:0,ev8:0,ak8:0,t8t:0,vhf:0,jur:0,uc:0,ftk:0,
+    _fromHR:true,
   }));
   const combined=[...AGENTS,...hrPersons];
+
+  // Ausbildungs-Status aus TD-Logs pro Agent
+  const tdLogs=ld('td_ausb');
+  const ausbByAgent={};
+  tdLogs.forEach(e=>{
+    if(!ausbByAgent[e.agent])ausbByAgent[e.agent]={};
+    ausbByAgent[e.agent][e.ausb]=(e.result==='BESTANDEN');
+  });
+  // Ausbildungs-Kürzel → Checkbox-Spalten-Mapping
+  const AUSB_MAP={
+    ga:'Grundausbildung', ev8:'Erste Hilfe Kurs',
+    ak8:'AUB Streifen Schulung', t8t:'Tactical Shooting Training',
+    vhf:'Leitstellen Prüfung', jur:'Jura Prüfung',
+    uc:'Flugausbildung / Overwatch', ftk:'TOW Ausbildung (Abschlepper)',
+  };
+
   const q=(document.getElementById('m-q')||{value:''}).value.toLowerCase();
   const d=(document.getElementById('m-div')||{value:''}).value;
   const r=parseInt((document.getElementById('m-rank')||{value:'0'}).value)||0;
@@ -1480,12 +1663,15 @@ function renderM(){
   });
   const cnt=document.getElementById('m-cnt');if(cnt)cnt.textContent=f.length+' Agenten';
   const tb=document.getElementById('m-body');if(!tb)return;
-  if(!f.length){tb.innerHTML=`<tr><td colspan="16" style="padding:24px;text-align:center;color:var(--t3)">Keine Agenten vorhanden. Personen im HR-Portal eintragen.</td></tr>`;return;}
+  if(!f.length){tb.innerHTML=`<tr><td colspan="16" style="padding:24px;text-align:center;color:var(--t3)">Keine Agenten vorhanden.</td></tr>`;return;}
   tb.innerHTML=f.map(a=>{
     const rc=RC[a.rankN]||'r18';
     const rl2=RL[a.rankN]||`Rang ${a.rankN}`;
     const dv=DC[a.div]||'bg-gray';
     const sc=a.strike===0?'color:var(--green)':a.strike===1?'color:var(--amber2)':'color:var(--red)';
+    // Checkboxen: aus statischen Daten ODER aus TD-Logs
+    const agentAusb=ausbByAgent[a.name]||{};
+    const cbVal=(key)=>a._fromHR?!!agentAusb[AUSB_MAP[key]]:!!(a[key]);
     return`<tr>
       <td style="font-family:var(--fm);font-size:11px;color:var(--t3)">${a.id}</td>
       <td class="b">${a.name}</td>
@@ -1495,10 +1681,14 @@ function renderM(){
       <td style="${sc};font-family:var(--fm);font-size:12px;font-weight:700">${a.strike}/3</td>
       <td style="font-family:var(--fm);font-size:11px;color:var(--t3)">${a.invite}</td>
       <td>${abtPills(a.abt)}</td>
-      <td style="text-align:center">${cbIcon(a.ga)}</td><td style="text-align:center">${cbIcon(a.ev8)}</td>
-      <td style="text-align:center">${cbIcon(a.ak8)}</td><td style="text-align:center">${cbIcon(a.t8t)}</td>
-      <td style="text-align:center">${cbIcon(a.vhf)}</td><td style="text-align:center">${cbIcon(a.jur)}</td>
-      <td style="text-align:center">${cbIcon(a.uc)}</td><td style="text-align:center">${cbIcon(a.ftk)}</td>
+      <td style="text-align:center">${cbIcon(cbVal('ga'))}</td>
+      <td style="text-align:center">${cbIcon(cbVal('ev8'))}</td>
+      <td style="text-align:center">${cbIcon(cbVal('ak8'))}</td>
+      <td style="text-align:center">${cbIcon(cbVal('t8t'))}</td>
+      <td style="text-align:center">${cbIcon(cbVal('vhf'))}</td>
+      <td style="text-align:center">${cbIcon(cbVal('jur'))}</td>
+      <td style="text-align:center">${cbIcon(cbVal('uc'))}</td>
+      <td style="text-align:center">${cbIcon(cbVal('ftk'))}</td>
     </tr>`;
   }).join('');
 }
