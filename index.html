@@ -471,6 +471,7 @@ nav::before{
     <div class="nl" onclick="goTo('abteilungen')">Abteilungen</div>
     <div class="nl" onclick="goTo('ausbildungen')">Ausbildungen</div>
     <div class="nl" onclick="goTo('rangliste')">Rangliste</div>
+    <div class="nl" id="nl-portal" style="display:none;color:var(--gold3)" onclick="goPortal()">⚡ Portal</div>
   </div>
 
   <div class="nav-right">
@@ -1227,11 +1228,17 @@ async function doMemberLogin(){
 function openPortalAsMember(m){
   const cfg=DEPT_CFG[m.dept]||DEPT_CFG.Mitglied;
   const badge=document.getElementById('nav-badge');
-  badge.textContent=m.name;
-  badge.style.cssText='display:inline-flex;color:'+cfg.col+';background:'+cfg.bg+';border:1px solid '+cfg.border+';font-family:var(--fm);font-size:11px;font-weight:600;padding:4px 13px;border-radius:20px;letter-spacing:.05em';
+  // Avatar in Badge wenn Discord-Login
+  const avatarEl=m.avatar
+    ?`<img src="${m.avatar}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;margin-right:2px" onerror="this.remove()">`
+    :'';
+  badge.innerHTML=avatarEl+m.name;
+  badge.style.cssText='display:inline-flex;align-items:center;gap:5px;color:'+cfg.col+';background:'+cfg.bg+';border:1px solid '+cfg.border+';font-family:var(--fm);font-size:11px;font-weight:600;padding:4px 13px;border-radius:20px;letter-spacing:.05em';
   const pill=document.getElementById('login-pill');
-  pill.innerHTML='<span class="lp-dot">👤</span> '+m.name+' <span style="font-size:11px;opacity:.6;margin-left:4px">Ausloggen</span>';
+  const pillAvatar=m.avatar?`<img src="${m.avatar}" style="width:20px;height:20px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'">`:'<span class="lp-dot">👤</span>';
+  pill.innerHTML=pillAvatar+' '+m.name+' <span style="font-size:11px;opacity:.6;margin-left:4px">Ausloggen</span>';
   pill.className='login-pill out';pill.onclick=doLogout;
+  showPortalLink(true);
   buildMemberSidebar(m);
   document.querySelectorAll('.vw').forEach(v=>v.classList.remove('on'));
   document.getElementById('vw-portal').classList.add('on');
@@ -1379,6 +1386,21 @@ async function discordLogout() {
   await sb.auth.signOut();
   doLogout();
 }
+
+function goPortal(){
+  if(!dept&&!currentMember){openLoginModal();return;}
+  document.querySelectorAll('.page-wrap > .vw').forEach(v=>v.classList.remove('on'));
+  document.getElementById('vw-portal')?.classList.add('on');
+  document.getElementById('sidebar').classList.add('show');
+  document.querySelectorAll('.nl').forEach(n=>n.classList.remove('on'));
+  document.getElementById('nl-portal')?.classList.add('on');
+  const d=currentMember?currentMember.dept:dept;
+  const first={TD:'pv-td-ausb',HR:'pv-hr-list',FIBCO:'pv-fb-akten',Leaderschaft:'pv-td-ausb',Mitglied:'pv-member-home'}[d]||'pv-member-home';
+  switchP(first);
+}
+function showPortalLink(show){
+  const el=document.getElementById('nl-portal');if(el)el.style.display=show?'':'none';
+}
 // TOAST
 function toast(msg,type='green'){
   const icons={green:'✅',red:'❌',amber:'⚠️',blue:'ℹ️'};
@@ -1394,20 +1416,30 @@ function toast(msg,type='green'){
 
 // ═══ NAV ═══
 function goTo(page){
-  document.querySelectorAll('.vw').forEach(v=>v.classList.remove('on'));
-  document.querySelectorAll('.nl').forEach(n=>n.classList.remove('on'));
-  const pg=document.getElementById('vw-'+page);
-  if(pg)pg.classList.add('on');
-  const nls=document.querySelectorAll('.nl');
-  const map={home:0,mitarbeiter:1,abteilungen:2,ausbildungen:3,rangliste:4};
-  if(map[page]!==undefined&&nls[map[page]])nls[map[page]].classList.add('on');
-  // sidebar only for portal
-  document.getElementById('sidebar').classList.toggle('show',page==='portal');
-  if(page==='mitarbeiter')renderM();
-  if(page==='abteilungen')renderAbt();
-  if(page==='ausbildungen')renderAusbStat();
-  if(page==='rangliste')renderLB();
-  if(page==='home'){updateHeroStats();renderPubAnn()}
+  // Öffentliche Seiten — Portal-View bleibt erhalten wenn eingeloggt
+  const publicPages=['home','mitarbeiter','abteilungen','ausbildungen','rangliste'];
+  if(publicPages.includes(page)){
+    document.querySelectorAll('.page-wrap > .vw').forEach(v=>v.classList.remove('on'));
+    document.getElementById('vw-'+page)?.classList.add('on');
+    // Nav active state
+    document.querySelectorAll('.nl').forEach(n=>n.classList.remove('on'));
+    const map={home:0,mitarbeiter:1,abteilungen:2,ausbildungen:3,rangliste:4};
+    const nls=document.querySelectorAll('.nl');
+    if(map[page]!==undefined&&nls[map[page]])nls[map[page]].classList.add('on');
+    // Sidebar ausblenden bei öffentlichen Seiten
+    document.getElementById('sidebar').classList.remove('show');
+    if(page==='mitarbeiter')renderM();
+    if(page==='abteilungen')renderAbt();
+    if(page==='ausbildungen')renderAusbStat();
+    if(page==='rangliste')renderLB();
+    if(page==='home'){updateHeroStats();renderPubAnn();}
+    return;
+  }
+  // Portal-Seite
+  if(!dept&&!currentMember){openLoginModal();return;}
+  document.querySelectorAll('.page-wrap > .vw').forEach(v=>v.classList.remove('on'));
+  document.getElementById('vw-portal')?.classList.add('on');
+  document.getElementById('sidebar').classList.add('show');
 }
 
 // ═══ HERO STATS ═══
@@ -1428,17 +1460,27 @@ function abtPills(txt){
 }
 function cbIcon(v){return v?`<span style="color:var(--green);font-size:13px">✓</span>`:`<span style="color:var(--line2)">·</span>`}
 function renderM(){
+  // Kombiniere statische AGENTS + HR-eingetragene Personen
+  const hrPersons=ld('hr_persons').map(p=>({
+    id:p.agentId||'—', name:p.name||'—',
+    rankN:parseInt(p.rankN)||18, dn:p.dn||'—',
+    div:p.div||p.dept||'—', strike:parseInt(p.strike)||0,
+    invite:p.date||p.created||'—', abt:p.abt||'',
+    ga:0,ev8:0,ak8:0,t8t:0,vhf:0,jur:0,uc:0,ftk:0,
+  }));
+  const combined=[...AGENTS,...hrPersons];
   const q=(document.getElementById('m-q')||{value:''}).value.toLowerCase();
   const d=(document.getElementById('m-div')||{value:''}).value;
   const r=parseInt((document.getElementById('m-rank')||{value:'0'}).value)||0;
-  const f=AGENTS.filter(a=>{
+  const f=combined.filter(a=>{
     if(q&&!a.name.toLowerCase().includes(q)&&!String(a.id).includes(q))return false;
     if(d&&a.div!==d)return false;
     if(r&&a.rankN<r)return false;
     return true;
   });
-  const el=document.getElementById('m-cnt');if(el)el.textContent=f.length+' Agenten';
+  const cnt=document.getElementById('m-cnt');if(cnt)cnt.textContent=f.length+' Agenten';
   const tb=document.getElementById('m-body');if(!tb)return;
+  if(!f.length){tb.innerHTML=`<tr><td colspan="16" style="padding:24px;text-align:center;color:var(--t3)">Keine Agenten vorhanden. Personen im HR-Portal eintragen.</td></tr>`;return;}
   tb.innerHTML=f.map(a=>{
     const rc=RC[a.rankN]||'r18';
     const rl2=RL[a.rankN]||`Rang ${a.rankN}`;
@@ -1715,6 +1757,7 @@ function doLogout(){
   pill.onclick=openLoginModal;
   document.getElementById('nav-badge').style.display='none';
   document.getElementById('sidebar').classList.remove('show');
+  showPortalLink(false);
   goTo('home');
   toast('Ausgeloggt.','amber');
 }
@@ -1776,16 +1819,19 @@ function switchP(id){
   document.querySelectorAll('.si-item').forEach(s=>s.classList.remove('on'));
   const el=document.getElementById(id);if(el)el.classList.add('on');
   const nav=document.querySelector(`.si-item[data-p="${id}"]`);if(nav)nav.classList.add('on');
-  if(id==='pv-member-home')renderMemberHome();
-  if(id==='pv-member-logs')renderMemberLogs();
-  if(id==='pv-accounts')acRender();
-  refreshAll();
-}
-function refreshAll(){
-  tdStats();tdRender();tdAgRender();
-  hrStats();hrRender();strikeRender();
-  fbStats();fbRender();fbArchRender();
-  dpRender();annRenderAdmin();logRender();
+  // Nur den aktiven Tab rendern — nicht alles auf einmal
+  if(id==='pv-td-ausb'){tdStats();tdRender();}
+  else if(id==='pv-td-agenten')tdAgRender();
+  else if(id==='pv-hr-list'){hrStats();hrRender();}
+  else if(id==='pv-hr-strikes')strikeRender();
+  else if(id==='pv-fb-akten'){fbStats();fbRender();}
+  else if(id==='pv-fb-archiv')fbArchRender();
+  else if(id==='pv-dienst')dpRender();
+  else if(id==='pv-ankuend')annRenderAdmin();
+  else if(id==='pv-log')logRender();
+  else if(id==='pv-member-home')renderMemberHome();
+  else if(id==='pv-member-logs')renderMemberLogs();
+  else if(id==='pv-accounts')acRender();
 }
 
 // ═══ LOG ═══
@@ -2259,26 +2305,31 @@ function renderMemberHome(){
   if(el)el.innerHTML=`
     <div class="stat" style="border-top:2px solid var(--gold2)"><div class="stat-n" style="color:var(--gold3)">${m.rankN||'—'}</div><div class="stat-l">RANG-NUMMER</div></div>
     <div class="stat" style="border-top:2px solid var(--cyan2)"><div class="stat-n" style="color:var(--cyan2)">${myLogs.length}</div><div class="stat-l">MEINE LOGS</div></div>
-    <div class="stat" style="border-top:2px solid var(--green2)"><div class="stat-n" style="color:var(--green2)">${m.dept||'—'}</div><div class="stat-l">ABTEILUNG</div></div>`;
+    <div class="stat" style="border-top:2px solid var(--green2)"><div class="stat-n" style="color:var(--green2);font-size:18px;padding-top:4px">${m.dept||'—'}</div><div class="stat-l">ABTEILUNG</div></div>`;
   const pb=document.getElementById('member-profile-body');
+  // Avatar: Discord-Bild wenn vorhanden, sonst Initialen
+  const avatarHtml=m.avatar
+    ?`<img src="${m.avatar}" style="width:72px;height:72px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;flex-shrink:0" onerror="this.style.display='none'">`
+    :`<div style="width:72px;height:72px;border-radius:50%;background:var(--card2);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:var(--gold3);flex-shrink:0">${(m.name||'?')[0].toUpperCase()}</div>`;
   if(pb)pb.innerHTML=`
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div style="display:flex;gap:18px;align-items:flex-start;margin-bottom:20px">
+      ${avatarHtml}
       <div>
-        <div style="font-size:24px;font-weight:700;color:var(--t1);margin-bottom:4px">${m.name}</div>
-        <div style="font-size:12px;color:var(--t3);font-family:var(--fm);margin-bottom:16px">AGENT · ID ${m.agentId}</div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <div style="display:flex;gap:12px"><span style="font-size:12px;color:var(--t3);width:100px">Abteilung</span><span style="font-size:13px;color:var(--t1)">${m.dept||'—'}</span></div>
-          <div style="display:flex;gap:12px"><span style="font-size:12px;color:var(--t3);width:100px">Division</span><span style="font-size:13px;color:var(--t1)">${m.div||'—'}</span></div>
-          <div style="display:flex;gap:12px"><span style="font-size:12px;color:var(--t3);width:100px">Rang</span><span style="font-size:13px;color:var(--t1)">${RL[m.rankN]||('Rang '+m.rankN)||'—'}</span></div>
-          <div style="display:flex;gap:12px"><span style="font-size:12px;color:var(--t3);width:100px">Account seit</span><span style="font-size:13px;color:var(--t1)">${m.created||'—'}</span></div>
+        <div style="font-size:22px;font-weight:700;color:var(--t1);margin-bottom:3px">${m.name}</div>
+        <div style="font-size:12px;color:var(--t3);font-family:var(--fm);margin-bottom:10px">AGENT · ID ${m.agentId}</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:12px"><span style="font-size:12px;color:var(--t3);width:100px;font-family:var(--fm)">Abteilung</span><span style="font-size:13px;color:var(--t1)">${m.dept||'—'}</span></div>
+          <div style="display:flex;gap:12px"><span style="font-size:12px;color:var(--t3);width:100px;font-family:var(--fm)">Division</span><span style="font-size:13px;color:var(--t1)">${m.div||'—'}</span></div>
+          <div style="display:flex;gap:12px"><span style="font-size:12px;color:var(--t3);width:100px;font-family:var(--fm)">Rang</span><span style="font-size:13px;color:var(--t1)">${RL[m.rankN]||('Rang '+m.rankN)||'—'}</span></div>
+          ${m.discordId?`<div style="display:flex;gap:12px"><span style="font-size:12px;color:var(--t3);width:100px;font-family:var(--fm)">Discord ID</span><span style="font-size:12px;color:var(--t2);font-family:var(--fm)">${m.discordId}</span></div>`:''}
+          <div style="display:flex;gap:12px"><span style="font-size:12px;color:var(--t3);width:100px;font-family:var(--fm)">Seit</span><span style="font-size:13px;color:var(--t1)">${m.created||'—'}</span></div>
         </div>
       </div>
-      <div>
-        <div style="font-size:12px;color:var(--t3);font-family:var(--fm);letter-spacing:.1em;margin-bottom:10px">LETZTE LOGS</div>
-        ${myLogs.slice(0,5).map(l=>{const cfg=LOG_TYPES[l.type]||{icon:'📋',label:l.type};return`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line2)"><span>${cfg.icon}</span><span style="font-size:13px;color:var(--t2);flex:1">${cfg.label}</span><span style="font-size:10px;color:var(--t3);font-family:var(--fm)">${l.ts}</span></div>`}).join('')}
-        ${!myLogs.length?'<div style="color:var(--t3);font-size:13px">Noch keine Logs.</div>':''}
-      </div>
-    </div>`;
+    </div>
+    <hr style="border:none;border-top:1px solid var(--line2);margin-bottom:14px">
+    <div style="font-size:12px;color:var(--t3);font-family:var(--fm);letter-spacing:.1em;margin-bottom:10px">LETZTE LOGS</div>
+    ${myLogs.slice(0,5).map(l=>{const cfg=LOG_TYPES[l.type]||{icon:'📋',label:l.type};return`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line2)"><span>${cfg.icon}</span><span style="font-size:13px;color:var(--t2);flex:1">${cfg.label}</span><span style="font-size:10px;color:var(--t3);font-family:var(--fm)">${l.ts}</span></div>`}).join('')}
+    ${!myLogs.length?'<div style="color:var(--t3);font-size:13px">Noch keine Logs erstellt.</div>':''}`;
 }
 
 // ═══ MEMBER LOG FORM (mit eigenem Namen vorausgefüllt) ═══
