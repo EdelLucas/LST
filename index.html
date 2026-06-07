@@ -1,137 +1,2202 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LSPD - Secure Login</title>
-    <style>
-        /* Grunddesign & Hintergrund */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #0b0e14; /* Sehr dunkles Blau/Schwarz */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #ffffff;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIB — Federal Investigation Bureau</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* Premium dark — near black with warm undertone */
+  --bg:#07080a;
+  --surface:#0d0f12;
+  --card:#121519;
+  --card2:#181c22;
+  --line:#1e2329;
+  --line2:#2d3440;
+  --line3:#3d4857;
 
-        /* Das Login-Fenster */
-        .login-card {
-            background-color: #161b22; /* Etwas helleres Dunkelgrau */
-            width: 400px;
-            padding: 40px;
-            border-radius: 15px;
-            border: 1px solid #30363d;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            text-align: center;
-        }
+  /* Text — warm whites */
+  --t1:#edf0f4;
+  --t2:#8a95a8;
+  --t3:#4a5568;
 
-        /* Titel-Stil (LSPD Penal Code Look) */
-        .login-card h1 {
-            font-size: 24px;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
+  /* Gold accent — the FIB signature */
+  --gold:#b8922a;
+  --gold2:#d4a843;
+  --gold3:#f0c878;
 
-        .login-card h1 span {
-            color: #ff4d8d; /* Das typische LSPD Pink */
-        }
+  /* Semantic */
+  --blue:#2d6be4;
+  --blue2:#5b8ef0;
+  --green:#1a9e5c;
+  --green2:#22c97a;
+  --red:#c23b3b;
+  --red2:#e05555;
+  --amber:#b07a10;
+  --amber2:#d99f20;
+  --purple:#6b4ac4;
+  --purple2:#8b6bd4;
+  --cyan:#1098a8;
+  --cyan2:#18bcd0;
 
-        /* Eingabefelder */
-        .input-group {
-            text-align: left;
-            margin-bottom: 20px;
-        }
+  --fn:'Outfit',sans-serif;
+  --fm:'IBM Plex Mono',monospace;
+}
 
-        .input-group label {
-            display: block;
-            font-size: 12px;
-            color: #8b949e;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--t1);font-family:var(--fn);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:4px}
+::-webkit-scrollbar-track{background:transparent}
 
-        .input-group input {
-            width: 100%;
-            padding: 12px;
-            background-color: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            color: white;
-            font-size: 16px;
-            box-sizing: border-box;
-            outline: none;
-            transition: border-color 0.3s;
-        }
+/* ── LAYOUT ── */
+.shell{display:flex;flex-direction:column;height:100vh}
 
-        .input-group input:focus {
-            border-color: #ff4d8d; /* Pinker Rahmen bei Klick */
-        }
+/* ── NAV — premium topbar with gold accent ── */
+nav{
+  height:60px;flex-shrink:0;
+  background:rgba(7,8,10,.96);
+  border-bottom:1px solid var(--line2);
+  display:flex;align-items:center;
+  padding:0 32px;gap:0;
+  position:relative;z-index:100;
+}
+/* golden left border accent */
+nav::before{
+  content:'';position:absolute;left:0;top:8px;bottom:8px;
+  width:2px;background:linear-gradient(180deg,transparent,var(--gold2),transparent);
+  border-radius:2px;
+}
+.nav-brand{display:flex;align-items:center;gap:14px;cursor:pointer;margin-right:36px}
+.nav-logo{
+  width:38px;height:38px;border-radius:8px;flex-shrink:0;
+  background:var(--card2);
+  border:1px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fm);font-weight:500;font-size:13px;color:var(--gold3);
+  letter-spacing:.05em;
+}
+.nav-brand-text{line-height:1.25}
+.nav-brand-text strong{font-size:16px;font-weight:700;letter-spacing:.04em;display:block;color:var(--t1)}
+.nav-brand-text span{font-size:9px;color:var(--t3);letter-spacing:.18em;font-family:var(--fm);text-transform:uppercase}
 
-        /* Buttons */
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            transition: opacity 0.3s;
-        }
+.nav-links{display:flex;gap:1px}
+.nl{
+  padding:8px 18px;border-radius:6px;cursor:pointer;
+  font-size:14px;font-weight:400;color:var(--t2);
+  transition:all .15s;white-space:nowrap;letter-spacing:.01em;
+}
+.nl:hover{color:var(--t1);background:var(--card)}
+.nl.on{color:var(--t1);font-weight:500;background:var(--card);border-bottom:2px solid var(--gold2);border-radius:6px 6px 0 0;padding-bottom:6px}
 
-        .btn-login {
-            background-color: #ff4d8d;
-            color: white;
-        }
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.nav-clock{
+  font-family:var(--fm);font-size:12px;color:var(--t3);
+  background:var(--card);border:1px solid var(--line2);
+  padding:6px 13px;border-radius:7px;letter-spacing:.06em;
+}
+.nav-badge{
+  font-family:var(--fm);font-size:11px;font-weight:500;
+  padding:4px 13px;border-radius:4px;letter-spacing:.06em;display:none;
+}
 
-        .btn-cancel {
-            background-color: #238636; /* Oder ein Blau-Ton: #1f6feb */
-            color: white;
-        }
+/* LOGIN PILL — slim, credential-style */
+.login-pill{
+  display:flex;align-items:center;gap:10px;
+  background:var(--card);border:1px solid var(--line2);
+  color:var(--t1);padding:7px 16px 7px 10px;border-radius:7px;
+  font-family:var(--fn);font-size:14px;font-weight:500;
+  cursor:pointer;transition:all .2s;letter-spacing:.02em;
+}
+.login-pill:hover{border-color:var(--gold);color:var(--gold3);background:rgba(180,140,40,.06)}
+.lp-dot{
+  width:26px;height:26px;border-radius:5px;flex-shrink:0;
+  background:rgba(180,140,40,.15);border:1px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;font-size:13px;
+}
+.login-pill.out{border-color:rgba(26,158,92,.4);color:var(--green2);background:rgba(26,158,92,.07)}
+.login-pill.out:hover{background:rgba(26,158,92,.12);border-color:var(--green2)}
+.login-pill.out .lp-dot{background:rgba(26,158,92,.2);border-color:var(--green2)}
 
-        .btn:hover {
-            opacity: 0.8;
-        }
+/* ── BODY ── */
+.body{flex:1;display:flex;overflow:hidden}
 
-        /* Kleiner Footer */
-        .version {
-            font-size: 10px;
-            color: #484f58;
-            margin-top: 20px;
-        }
-    </style>
+/* ── SIDEBAR ── */
+.sidebar{
+  width:226px;flex-shrink:0;
+  background:var(--surface);
+  border-right:1px solid var(--line2);
+  padding:18px 10px;
+  display:none;flex-direction:column;gap:2px;
+  overflow-y:auto;
+}
+.sidebar.show{display:flex}
+.sg{
+  margin-top:16px;margin-bottom:5px;padding:0 12px;
+  font-size:10px;letter-spacing:.16em;color:var(--t3);
+  font-family:var(--fm);text-transform:uppercase;
+}
+.si-item{
+  display:flex;align-items:center;gap:11px;
+  padding:9px 14px;border-radius:7px;cursor:pointer;
+  font-size:14px;font-weight:400;color:var(--t2);
+  transition:all .14s;letter-spacing:.01em;
+}
+.si-item:hover{background:var(--card);color:var(--t1)}
+.si-item.on{
+  background:rgba(180,140,40,.1);color:var(--gold3);font-weight:500;
+  border-left:2px solid var(--gold2);padding-left:12px;
+}
+
+/* ── PAGE ── */
+.page-wrap{flex:1;overflow-y:auto;padding:28px 32px;display:flex;flex-direction:column;gap:22px}
+
+/* ── VIEWS ── */
+.vw{display:none;flex-direction:column;gap:22px}
+.vw.on{display:flex;animation:vwIn .22s cubic-bezier(.4,0,.2,1)}
+@keyframes vwIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HERO ── */
+.hero{
+  border-radius:16px;overflow:hidden;position:relative;
+  background:var(--surface);
+  border:1px solid var(--line2);
+  padding:64px 60px;min-height:340px;display:flex;align-items:center;
+}
+/* Top gold line */
+.hero::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.hero-glow{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 2% 60%,rgba(180,140,40,.1) 0%,transparent 50%),
+    radial-gradient(ellipse at 90% 10%,rgba(45,107,228,.08) 0%,transparent 45%);
+}
+.hero-lines{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse at 35% 50%,black 10%,transparent 70%);
+  -webkit-mask-image:radial-gradient(ellipse at 35% 50%,black 10%,transparent 70%);
+}
+.hero-inner{position:relative;z-index:1;max-width:580px}
+.hero-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(180,140,40,.08);border:1px solid rgba(180,140,40,.25);
+  color:var(--gold3);font-size:11px;font-family:var(--fm);
+  letter-spacing:.14em;padding:6px 16px;border-radius:4px;margin-bottom:24px;
+  text-transform:uppercase;
+}
+.hero-dot{width:5px;height:5px;border-radius:50%;background:var(--green2);animation:blink 2.5s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-h1{
+  font-size:52px;font-weight:700;line-height:.95;
+  letter-spacing:-.02em;color:var(--t1);margin-bottom:10px;
+}
+.hero-h1 em{
+  font-style:normal;color:var(--gold2);
+}
+.hero-p{font-size:15px;color:var(--t2);margin-bottom:32px;line-height:1.7;font-weight:400;max-width:460px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.hb{
+  padding:11px 26px;border-radius:7px;cursor:pointer;border:none;
+  font-family:var(--fn);font-size:14px;font-weight:600;transition:all .2s;letter-spacing:.02em;
+}
+.hb-p{background:var(--gold);color:#07080a}
+.hb-p:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(180,140,40,.3)}
+.hb-g{background:transparent;color:var(--t2);border:1px solid var(--line2)}
+.hb-g:hover{background:var(--card);color:var(--t1);border-color:var(--line3)}
+.hero-aside{
+  position:absolute;right:60px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:12px;z-index:1;
+}
+.ha-card{
+  background:var(--card);border:1px solid var(--line2);border-radius:10px;
+  padding:16px 22px;text-align:center;min-width:118px;
+}
+.ha-n{font-size:30px;font-weight:700;line-height:1;letter-spacing:-.03em}
+.ha-l{font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.12em;margin-top:4px;text-transform:uppercase}
+
+/* ── INFO CARDS ── */
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.ic{
+  background:var(--card);border:1px solid var(--line2);border-radius:12px;
+  padding:24px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;
+}
+.ic::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;opacity:.7}
+.ic:hover{border-color:var(--line3);transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,.35)}
+.ic.c-blue::after{background:linear-gradient(90deg,var(--blue),transparent)}
+.ic.c-cyan::after{background:linear-gradient(90deg,var(--cyan),transparent)}
+.ic.c-gold::after{background:linear-gradient(90deg,var(--gold),transparent)}
+.ic.c-green::after{background:linear-gradient(90deg,var(--green),transparent)}
+.ic.c-purple::after{background:linear-gradient(90deg,var(--purple),transparent)}
+.ic.c-amber::after{background:linear-gradient(90deg,var(--amber),transparent)}
+.ic-ico{font-size:26px;margin-bottom:14px;display:block}
+.ic-t{font-size:15px;font-weight:600;margin-bottom:7px;letter-spacing:.01em}
+.ic-d{font-size:13px;color:var(--t2);line-height:1.65;font-weight:400}
+.ic-lock{display:flex;align-items:center;gap:6px;margin-top:14px;font-size:11px;color:var(--t3);font-family:var(--fm);letter-spacing:.04em}
+
+/* ── SECTION ── */
+.sc{background:var(--card);border:1px solid var(--line2);border-radius:12px;overflow:hidden}
+.sc-h{
+  padding:15px 20px;border-bottom:1px solid var(--line2);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sc-t{font-size:14px;font-weight:600;letter-spacing:.02em;color:var(--t1)}
+.sc-b{padding:20px}
+
+/* ── TABLE ── */
+.tbl{width:100%;border-collapse:collapse}
+.tbl thead th{
+  font-size:10px;font-family:var(--fm);letter-spacing:.12em;color:var(--t3);
+  padding:11px 14px;border-bottom:1px solid var(--line2);text-align:left;
+  background:var(--surface);white-space:nowrap;text-transform:uppercase;
+}
+.tbl tbody tr{border-bottom:1px solid rgba(30,35,41,.8);transition:background .12s}
+.tbl tbody tr:hover{background:var(--card2)}
+.tbl td{padding:11px 14px;font-size:13px;font-family:var(--fm);color:var(--t2);vertical-align:middle}
+.tbl td.b{color:var(--t1);font-weight:500;font-family:var(--fn);font-size:14px}
+
+/* ── STATS ROW ── */
+.stats{display:flex;gap:12px}
+.stat{
+  flex:1;background:var(--card);border:1px solid var(--line2);
+  border-radius:12px;padding:18px 22px;transition:border .15s;
+}
+.stat:hover{border-color:var(--line3)}
+.stat-n{font-size:32px;font-weight:700;line-height:1;letter-spacing:-.03em}
+.stat-l{font-size:11px;color:var(--t3);font-family:var(--fm);margin-top:6px;letter-spacing:.1em;text-transform:uppercase}
+
+/* ── BADGE ── */
+.badge{
+  display:inline-flex;align-items:center;
+  padding:3px 9px;border-radius:4px;
+  font-size:11px;font-weight:500;font-family:var(--fm);letter-spacing:.03em;border:1px solid;
+}
+.bg-green{background:rgba(26,158,92,.09);color:var(--green2);border-color:rgba(26,158,92,.25)}
+.bg-red{background:rgba(194,59,59,.09);color:var(--red2);border-color:rgba(194,59,59,.25)}
+.bg-amber{background:rgba(176,122,16,.1);color:var(--amber2);border-color:rgba(176,122,16,.28)}
+.bg-blue{background:rgba(45,107,228,.1);color:var(--blue2);border-color:rgba(45,107,228,.25)}
+.bg-purple{background:rgba(107,74,196,.1);color:var(--purple2);border-color:rgba(107,74,196,.25)}
+.bg-cyan{background:rgba(16,152,168,.09);color:var(--cyan2);border-color:rgba(16,152,168,.25)}
+.bg-gold{background:rgba(180,140,40,.1);color:var(--gold3);border-color:rgba(180,140,40,.28)}
+.bg-gray{background:rgba(74,85,104,.1);color:var(--t2);border-color:rgba(74,85,104,.22)}
+
+/* Rank badges */
+.r30{background:rgba(107,74,196,.1);color:#c4b5fd;border:1px solid rgba(107,74,196,.25);border-radius:4px}
+.r28{background:rgba(45,107,228,.1);color:var(--blue2);border:1px solid rgba(45,107,228,.25);border-radius:4px}
+.r27{background:rgba(194,59,59,.09);color:#fca5a5;border:1px solid rgba(194,59,59,.22);border-radius:4px}
+.r26{background:rgba(26,158,92,.09);color:#86efac;border:1px solid rgba(26,158,92,.22);border-radius:4px}
+.r25{background:rgba(16,152,168,.09);color:var(--cyan2);border:1px solid rgba(16,152,168,.22);border-radius:4px}
+.r24{background:rgba(176,122,16,.1);color:var(--amber2);border:1px solid rgba(176,122,16,.25);border-radius:4px}
+.r23{background:rgba(16,152,168,.07);color:#a5f3fc;border:1px solid rgba(16,152,168,.16);border-radius:4px}
+.r22{background:rgba(132,204,22,.07);color:#bef264;border:1px solid rgba(132,204,22,.16);border-radius:4px}
+.r21{background:rgba(113,113,122,.08);color:#d4d4d8;border:1px solid rgba(113,113,122,.18);border-radius:4px}
+.r20{background:rgba(180,140,40,.09);color:var(--gold3);border:1px solid rgba(180,140,40,.22);border-radius:4px}
+.r18{background:rgba(74,85,104,.08);color:#a1a1aa;border:1px solid rgba(74,85,104,.18);border-radius:4px}
+
+/* Div badges */
+.dv-l{background:rgba(180,140,40,.1);color:var(--gold3);border-color:rgba(180,140,40,.28)}
+.dv-c{background:rgba(194,59,59,.09);color:#fca5a5;border-color:rgba(194,59,59,.22)}
+.dv-hcl{background:rgba(26,158,92,.09);color:#86efac;border-color:rgba(26,158,92,.22)}
+.dv-hc{background:rgba(16,152,168,.09);color:var(--cyan2);border-color:rgba(16,152,168,.22)}
+.dv-dl{background:rgba(107,74,196,.1);color:var(--purple2);border-color:rgba(107,74,196,.25)}
+.dv-ab{background:rgba(176,122,16,.1);color:var(--amber2);border-color:rgba(176,122,16,.25)}
+
+/* ── FORM ── */
+.fg{display:grid;gap:14px}
+.fg2{grid-template-columns:1fr 1fr}
+.fg3{grid-template-columns:1fr 1fr 1fr}
+.ff{display:flex;flex-direction:column;gap:6px}
+.fl{font-size:12px;color:var(--t2);font-weight:500;letter-spacing:.04em;text-transform:uppercase;font-family:var(--fm)}
+.fi,.fs,.fta{
+  background:var(--surface);border:1px solid var(--line2);
+  color:var(--t1);padding:10px 14px;border-radius:7px;
+  font-size:14px;font-family:var(--fn);transition:all .15s;width:100%;
+}
+.fi:focus,.fs:focus,.fta:focus{
+  outline:none;border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(180,140,40,.1);
+}
+.fi::placeholder,.fta::placeholder{color:var(--t3)}
+.fta{resize:vertical;min-height:90px;line-height:1.6}
+.fs option{background:var(--card);color:var(--t1)}
+
+/* ── BUTTONS ── */
+.btn{
+  padding:10px 20px;border-radius:7px;cursor:pointer;
+  font-family:var(--fn);font-size:14px;font-weight:500;
+  border:none;transition:all .18s;
+  display:inline-flex;align-items:center;gap:7px;letter-spacing:.02em;
+}
+.btn-sm{padding:6px 13px;font-size:12px;border-radius:6px}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-blue:hover{background:#2060d4;transform:translateY(-1px)}
+.btn-green{background:rgba(26,158,92,.12);color:var(--green2);border:1px solid rgba(26,158,92,.28)}
+.btn-green:hover{background:rgba(26,158,92,.2)}
+.btn-cyan{background:rgba(16,152,168,.1);color:var(--cyan2);border:1px solid rgba(16,152,168,.28)}
+.btn-cyan:hover{background:rgba(16,152,168,.18)}
+.btn-amber{background:rgba(176,122,16,.1);color:var(--amber2);border:1px solid rgba(176,122,16,.28)}
+.btn-amber:hover{background:rgba(176,122,16,.18)}
+.btn-purple{background:rgba(107,74,196,.1);color:var(--purple2);border:1px solid rgba(107,74,196,.28)}
+.btn-purple:hover{background:rgba(107,74,196,.18)}
+.btn-gold{background:rgba(180,140,40,.15);color:var(--gold3);border:1px solid rgba(180,140,40,.35)}
+.btn-gold:hover{background:rgba(180,140,40,.25)}
+.btn-red{background:rgba(194,59,59,.09);color:var(--red2);border:1px solid rgba(194,59,59,.25)}
+.btn-red:hover{background:rgba(194,59,59,.16)}
+.btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--line2)}
+.btn-ghost:hover{background:var(--card2);color:var(--t1);border-color:var(--line3)}
+
+/* ── PERSON CARD ── */
+.pc{
+  background:var(--surface);border:1px solid var(--line2);border-radius:10px;
+  padding:16px 18px;display:flex;gap:14px;align-items:flex-start;transition:all .16s;
+}
+.pc:hover{border-color:var(--line3);background:var(--card)}
+.pc-av{
+  width:44px;height:44px;border-radius:10px;flex-shrink:0;
+  background:var(--card2);border:1px solid var(--line2);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.pc-inf{flex:1;min-width:0}
+.pc-name{font-size:14px;font-weight:600;margin-bottom:2px;letter-spacing:.01em}
+.pc-rank{font-size:11px;color:var(--t3);font-family:var(--fm);margin-bottom:8px;letter-spacing:.04em}
+.pc-tags{display:flex;gap:5px;flex-wrap:wrap}
+.pc-act{display:flex;gap:6px;flex-shrink:0}
+
+/* ── FALLAKTE CARD ── */
+.fc{
+  background:var(--surface);border:1px solid var(--line2);border-radius:10px;
+  padding:18px;cursor:pointer;transition:all .2s;
+}
+.fc:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.fc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.fc-id{font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.06em;margin-bottom:4px}
+.fc-title{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.fc-desc{font-size:12px;color:var(--t2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fc-meta{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap;align-items:center}
+
+/* ── NOTIFICATION CARD ── */
+.notif-card{background:var(--surface);border:1px solid var(--line2);border-radius:10px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start}
+.notif-type{width:36px;height:36px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px}
+.notif-inner{flex:1}
+.notif-title{font-size:15px;font-weight:600;margin-bottom:4px}
+.notif-body{font-size:13px;color:var(--t2);line-height:1.6}
+.notif-meta{font-size:11px;color:var(--t3);font-family:var(--fm);margin-top:6px;letter-spacing:.04em}
+
+/* ── LEADERBOARD ── */
+.lb-row{display:flex;align-items:center;gap:14px;padding:13px 18px;border-bottom:1px solid var(--line2);transition:background .12s}
+.lb-row:hover{background:var(--card2)}
+.lb-pos{font-family:var(--fm);font-size:13px;font-weight:500;width:28px;text-align:center;flex-shrink:0}
+.lb-pos.gold{color:var(--gold3)}
+.lb-pos.silver{color:#8a95a8}
+.lb-pos.bronze{color:#9a6b30}
+.lb-av{width:36px;height:36px;border-radius:9px;flex-shrink:0;background:var(--card2);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:16px}
+.lb-info{flex:1}
+.lb-name{font-size:14px;font-weight:500}
+.lb-rank{font-size:11px;color:var(--t3);font-family:var(--fm);letter-spacing:.04em}
+.lb-score{font-family:var(--fm);font-size:14px;font-weight:500;color:var(--gold3)}
+
+/* ── DIENSTPLAN ── */
+.dp-row{display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid var(--line2)}
+.dp-time{font-family:var(--fm);font-size:11px;color:var(--t3);width:90px;flex-shrink:0;letter-spacing:.04em}
+.dp-name{font-size:14px;font-weight:500;flex:1}
+.dp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* ── SEARCH BAR ── */
+.search-bar{background:var(--surface);border:1px solid var(--line2);color:var(--t1);padding:9px 14px;border-radius:7px;font-size:14px;font-family:var(--fn);transition:all .15s}
+.search-bar:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(180,140,40,.1)}
+.search-bar::placeholder{color:var(--t3)}
+
+/* ── MODAL ── */
+.mb{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(10px)}
+.mb.on{display:flex;animation:mbIn .18s ease}
+@keyframes mbIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--surface);border:1px solid var(--line2);border-radius:14px;padding:32px;max-width:94vw;box-shadow:0 40px 80px rgba(0,0,0,.7);max-height:88vh;overflow-y:auto;animation:modalSlide .22s cubic-bezier(.34,1.3,.64,1)}
+.modal::before{content:'';display:block;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:-32px -32px 28px;border-radius:14px 14px 0 0}
+@keyframes modalSlide{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-t{font-size:20px;font-weight:700;letter-spacing:.02em;margin-bottom:20px}
+.modal-act{display:flex;gap:9px;justify-content:flex-end;margin-top:20px;border-top:1px solid var(--line2);padding-top:16px}
+
+/* login modal */
+.lm{width:460px}
+.dept-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.dg-item{padding:16px 12px;border-radius:9px;cursor:pointer;border:1px solid var(--line2);background:var(--card);text-align:center;transition:all .18s;position:relative;overflow:hidden}
+.dg-item::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;opacity:0;transition:.2s}
+.dg-item:hover{border-color:var(--line3);background:var(--card2)}
+.dg-item:hover::after,.dg-item.on::after{opacity:1}
+.dg-item.on{border-color:var(--line3)}
+.dg-ico{font-size:22px;margin-bottom:8px}
+.dg-name{font-size:14px;font-weight:700;letter-spacing:.04em;margin-bottom:3px}
+.dg-desc{font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.1em;text-transform:uppercase}
+.dg-td::after{background:var(--cyan2)}.dg-td.on{background:rgba(16,152,168,.07);border-color:rgba(16,152,168,.4)!important}.dg-td .dg-name{color:var(--cyan2)}
+.dg-hr::after{background:var(--amber2)}.dg-hr.on{background:rgba(176,122,16,.07);border-color:rgba(176,122,16,.4)!important}.dg-hr .dg-name{color:var(--amber2)}
+.dg-fb::after{background:var(--purple2)}.dg-fb.on{background:rgba(107,74,196,.07);border-color:rgba(107,74,196,.4)!important}.dg-fb .dg-name{color:var(--purple2)}
+.dg-lk::after{background:var(--gold2)}.dg-lk.on{background:rgba(180,140,40,.08);border-color:rgba(180,140,40,.45)!important}.dg-lk .dg-name{color:var(--gold3)}
+.le{font-size:12px;color:var(--red2);font-family:var(--fm);margin-top:8px;text-align:center;min-height:18px}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;right:28px;z-index:500;background:var(--card);border:1px solid var(--line3);padding:13px 20px;border-radius:9px;font-size:14px;font-weight:500;box-shadow:0 16px 48px rgba(0,0,0,.6);transform:translateY(100px);opacity:0;transition:all .3s cubic-bezier(.34,1.4,.64,1);display:flex;align-items:center;gap:10px;pointer-events:none}
+.toast.on{transform:translateY(0);opacity:1}
+
+/* Agent overview box */
+.ag-box{background:var(--surface);border:1px solid var(--line2);border-radius:10px;padding:16px;margin-bottom:10px}
+.ag-box-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+
+.div-label{font-size:11px;font-weight:500;letter-spacing:.12em;color:var(--t3);text-transform:uppercase;margin:16px 0 8px;font-family:var(--fm)}
+</style>
 </head>
 <body>
+<div class="shell">
 
-    <div class="login-card">
-        <h1>LSPD <span>Secure Login</span></h1>
-        
-        <form>
-            <div class="input-group">
-                <label>Benutzername / Dienstnummer</label>
-                <input type="text" placeholder="Officer ID eingeben..." required>
-            </div>
+<!-- ═══ NAV ═══ -->
+<nav>
+  <div class="nav-brand" onclick="goTo('home')">
+    <div class="nav-logo">FIB</div>
+    <div class="nav-brand-text">
+      <strong>FIB</strong>
+      <span>FEDERAL INVESTIGATION BUREAU</span>
+    </div>
+  </div>
 
-            <div class="input-group">
-                <label>Passwort</label>
-                <input type="password" placeholder="••••••••" required>
-            </div>
+  <div class="nav-links">
+    <div class="nl on" onclick="goTo('home')">Start</div>
+    <div class="nl" onclick="goTo('mitarbeiter')">Mitarbeiter</div>
+    <div class="nl" onclick="goTo('abteilungen')">Abteilungen</div>
+    <div class="nl" onclick="goTo('ausbildungen')">Ausbildungen</div>
+    <div class="nl" onclick="goTo('rangliste')">Rangliste</div>
+  </div>
 
-            <button type="submit" class="btn btn-login">Login</button>
-            <button type="button" class="btn btn-cancel">Abbrechen</button>
-        </form>
+  <div class="nav-right">
+    <div class="nav-clock" id="nav-clock">--:--:--</div>
+    <div class="nav-badge" id="nav-badge"></div>
+    <button class="login-pill" id="login-pill" onclick="openLoginModal()"><span class="lp-dot">🔐</span> Einloggen</button>
+  </div>
+</nav>
 
-        <div class="version">V.2.0 PINK - SYSTEM ACCESS ONLY</div>
+<!-- ═══ BODY ═══ -->
+<div class="body">
+
+  <!-- SIDEBAR (portal only) -->
+  <div class="sidebar" id="sidebar"></div>
+
+  <!-- PAGE WRAP -->
+  <div class="page-wrap" id="page-wrap">
+
+    <!-- ══════ VIEW: HOME ══════ -->
+    <div class="vw on" id="vw-home">
+      <div class="hero">
+        <div class="hero-glow"></div>
+        <div class="hero-lines"></div>
+        <div class="hero-inner">
+          <div class="hero-pill"><div class="hero-dot"></div>SYSTEM AKTIV · FIB PORTAL</div>
+          <h1 class="hero-h1">Federal<br><em>Investigation</em><br>Bureau</h1>
+          <p class="hero-p">Das offizielle Verwaltungsportal des FIB. Mitarbeiter, Ausbildungen, Fallakten und mehr — alles an einem Ort.</p>
+          <div class="hero-btns">
+            <button class="hb hb-p" onclick="openLoginModal()">🔐 Portal öffnen</button>
+            <button class="hb hb-g" onclick="goTo('mitarbeiter')">👥 Mitarbeiter</button>
+          </div>
+        </div>
+        <div class="hero-aside">
+          <div class="ha-card"><div class="ha-n" style="color:var(--gold3)" id="hs-agents">—</div><div class="ha-l">AGENTEN</div></div>
+          <div class="ha-card"><div class="ha-n" style="color:var(--cyan2)">7</div><div class="ha-l">ABTEILUNGEN</div></div>
+          <div class="ha-card"><div class="ha-n" style="color:var(--gold2)" id="hs-hr">—</div><div class="ha-l">HR EINTRÄGE</div></div>
+        </div>
+      </div>
+
+      <!-- PUBLIC ANNOUNCEMENTS -->
+      <div class="sc">
+        <div class="sc-h"><span class="sc-t">📢 Aktuelle Ankündigungen</span></div>
+        <div style="padding:16px;display:flex;flex-direction:column;gap:10px" id="pub-announcements">
+          <div style="padding:24px;text-align:center;color:var(--t3);font-size:13px">Keine aktuellen Ankündigungen.</div>
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <div class="ic c-blue" onclick="openLoginModal('TD')">
+          <span class="ic-ico">🎓</span>
+          <div class="ic-t">Training Division</div>
+          <div class="ic-d">Ausbildungen eintragen, verwalten und Agenten-Übersichten einsehen.</div>
+          <div class="ic-lock">🔒 TD-Zugang erforderlich</div>
+        </div>
+        <div class="ic c-amber" onclick="openLoginModal('HR')">
+          <span class="ic-ico">👥</span>
+          <div class="ic-t">Human Resources</div>
+          <div class="ic-d">Personen hinzufügen, bearbeiten, Strikes vergeben und verwalten.</div>
+          <div class="ic-lock">🔒 HR-Zugang erforderlich</div>
+        </div>
+        <div class="ic c-purple" onclick="openLoginModal('FIBCO')">
+          <span class="ic-ico">🗂</span>
+          <div class="ic-t">FIBCO</div>
+          <div class="ic-d">Fallakten erstellen, speichern, archivieren und Dienstplan verwalten.</div>
+          <div class="ic-lock">🔒 FIBCO-Zugang erforderlich</div>
+        </div>
+        <div class="ic c-gold" onclick="openLoginModal('Leaderschaft')">
+          <span class="ic-ico">⭐</span>
+          <div class="ic-t">Leaderschaft</div>
+          <div class="ic-d">Vollzugriff auf alle Systeme — TD, HR, FIBCO und Ankündigungen.</div>
+          <div class="ic-lock">🔒 Führungsebene</div>
+        </div>
+        <div class="ic c-cyan" onclick="goTo('mitarbeiter')" style="cursor:pointer">
+          <span class="ic-ico">📋</span>
+          <div class="ic-t">Mitarbeiterliste</div>
+          <div class="ic-d">Öffentliche Übersicht aller Agenten mit Rang und Abteilungen.</div>
+          <div style="margin-top:14px;font-size:11px;color:var(--cyan2);font-family:var(--fm)">→ Öffentlich zugänglich</div>
+        </div>
+        <div class="ic c-green" onclick="goTo('rangliste')" style="cursor:pointer">
+          <span class="ic-ico">🏆</span>
+          <div class="ic-t">Rangliste</div>
+          <div class="ic-d">Top-Agenten nach Rang sortiert. Leistungsübersicht des FIB.</div>
+          <div style="margin-top:14px;font-size:11px;color:var(--green);font-family:var(--fm)">→ Öffentlich zugänglich</div>
+        </div>
+      </div>
     </div>
 
+
+    <!-- ══════ VIEW: MITARBEITER ══════ -->
+    <div class="vw" id="vw-mitarbeiter">
+      <div class="sc">
+        <div class="sc-b" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <input class="search-bar" style="width:210px" id="m-q" placeholder="Name / ID suchen ..." oninput="renderM()">
+          <select class="search-bar fs" id="m-div" style="width:170px" onchange="renderM()">
+            <option value="">Alle Divisionen</option>
+            <option>Leaderschaft</option><option>Curator of Dmsns</option>
+            <option>High Command Lead</option><option>High Command</option>
+            <option>Division Lead</option><option>Abteilungsarma</option>
+          </select>
+          <select class="search-bar fs" id="m-rank" style="width:130px" onchange="renderM()">
+            <option value="0">Alle Ränge</option>
+            <option value="28">Rang 28+</option><option value="25">Rang 25+</option>
+            <option value="23">Rang 23+</option><option value="22">Rang 22+</option>
+          </select>
+          <span style="font-size:12px;color:var(--t3);font-family:var(--fm);margin-left:auto" id="m-cnt">—</span>
+        </div>
+      </div>
+      <div class="sc"><div style="overflow-x:auto">
+        <table class="tbl" style="min-width:960px">
+          <thead><tr>
+            <th>ID</th><th>NAME</th><th>RANG</th><th>DN</th><th>DIVISION</th>
+            <th>STRIKE</th><th>INVITE</th><th>ABTEILUNGEN</th>
+            <th>GA</th><th>EV8</th><th>AK8</th><th>T8T</th><th>VHF</th><th>JUR</th><th>UC</th><th>FTK</th>
+          </tr></thead>
+          <tbody id="m-body"></tbody>
+        </table>
+      </div></div>
+    </div>
+
+    <!-- ══════ VIEW: ABTEILUNGEN ══════ -->
+    <div class="vw" id="vw-abteilungen">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px" id="abt-grid"></div>
+    </div>
+
+    <!-- ══════ VIEW: AUSBILDUNGEN ══════ -->
+    <div class="vw" id="vw-ausbildungen">
+      <div class="sc">
+        <div class="sc-h"><span class="sc-t">Ausbildungsstatistiken</span></div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>AUSBILDUNG</th><th style="text-align:center">BESTANDEN</th><th style="text-align:center">OFFEN</th><th style="text-align:center">QUOTE</th></tr></thead>
+            <tbody id="ausb-stat"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ VIEW: RANGLISTE + LOGS ══════ -->
+    <div class="vw" id="vw-rangliste">
+      <div style="display:grid;grid-template-columns:320px 1fr;gap:18px;align-items:start">
+
+        <!-- LEFT: Rangliste -->
+        <div class="sc">
+          <div class="sc-h"><span class="sc-t">🏆 Rangliste</span><span style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.1em">NACH RANG</span></div>
+          <div id="lb-list"></div>
+        </div>
+
+        <!-- RIGHT: Aktivitäts-Log -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="sc">
+            <div class="sc-h">
+              <span class="sc-t">📋 Aktivitäts-Log</span>
+              <select class="search-bar" id="log-type" style="font-size:12px;padding:5px 10px;width:180px" onchange="switchLogForm()">
+                <option value="">— Log-Art wählen —</option>
+                <option value="inhaft">Inhaftierung</option>
+                <option value="event">Event-Log</option>
+                <option value="ammu">Ammu-/Shop-Rob</option>
+                <option value="geisel">Geiselnahme</option>
+                <option value="fahndung">Fahndungsbild</option>
+              </select>
+            </div>
+            <div class="sc-b" id="log-form-wrap">
+              <div style="text-align:center;color:var(--t3);font-size:13px;padding:16px 0">Log-Art auswählen um das Formular anzuzeigen.</div>
+            </div>
+          </div>
+          <div class="sc">
+            <div class="sc-h">
+              <span class="sc-t">📁 Gespeicherte Logs</span>
+              <div style="display:flex;gap:8px">
+                <input class="search-bar" style="width:150px;font-size:12px;padding:5px 10px" id="log-search" placeholder="Suchen ..." oninput="renderLogs()">
+                <select class="search-bar" style="font-size:12px;padding:5px 10px;width:150px" id="log-filter" onchange="renderLogs()">
+                  <option value="">Alle Arten</option>
+                  <option value="inhaft">Inhaftierung</option>
+                  <option value="event">Event-Log</option>
+                  <option value="ammu">Ammu-/Shop-Rob</option>
+                  <option value="geisel">Geiselnahme</option>
+                  <option value="fahndung">Fahndungsbild</option>
+                </select>
+              </div>
+            </div>
+            <div id="log-entries"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ VIEW: PORTAL ══════ -->
+    <div class="vw" id="vw-portal" style="flex-direction:row;gap:0;margin:-28px;padding:0">
+      <div style="flex:1;overflow-y:auto;padding:28px;display:flex;flex-direction:column;gap:16px" id="portal-pane">
+
+        <!-- TD: Ausbildungen -->
+        <div class="vw" id="pv-td-ausb">
+          <div class="stats" id="td-stats"></div>
+          <div class="sc">
+            <div class="sc-h"><span class="sc-t">Ausbildung eintragen</span></div>
+            <div class="sc-b">
+              <div class="fg fg3" style="margin-bottom:14px">
+                <div class="ff"><div class="fl">Agent (Name / ID) *</div><input class="fi" id="td-agent" placeholder="Name oder Agenten-ID ..."></div>
+                <div class="ff"><div class="fl">Ausbildung *</div>
+                  <select class="fs" id="td-ausb">
+                    <option value="">— Ausbildung wählen —</option>
+                    <option>Grundausbildung</option><option>Erste Hilfe Kurs</option><option>Officer Prüfung</option>
+                    <option>Ortskunde Plus</option><option>Fahrtauglichkeitsprüfung</option><option>Fahrsicherheit</option>
+                    <option>Tactical Shooting Training</option><option>Senior Officer Prüfung</option>
+                    <option>AUB Streifen Schulung</option><option>Leitstellen Prüfung</option>
+                    <option>Jura Prüfung</option><option>Verhandlungs-/ Einsatzleitung Prüfung</option>
+                    <option>Flugausbildung / Overwatch</option><option>TOW Ausbildung (Abschlepper)</option>
+                  </select>
+                </div>
+                <div class="ff"><div class="fl">Ausbilder</div><input class="fi" id="td-trainer" placeholder="Name des Ausbilders ..."></div>
+              </div>
+              <div class="fg fg3" style="margin-bottom:14px">
+                <div class="ff"><div class="fl">Datum</div><input class="fi" type="date" id="td-datum"></div>
+                <div class="ff"><div class="fl">Ergebnis</div>
+                  <select class="fs" id="td-result"><option>BESTANDEN</option><option>NICHT BESTANDEN</option><option>AUSSTEHEND</option></select>
+                </div>
+                <div class="ff"><div class="fl">Notizen</div><input class="fi" id="td-note" placeholder="Optionale Anmerkungen ..."></div>
+              </div>
+              <button class="btn btn-cyan" onclick="tdSave()">+ Ausbildung eintragen</button>
+            </div>
+          </div>
+          <div class="sc">
+            <div class="sc-h">
+              <span class="sc-t">Eingetragene Ausbildungen</span>
+              <input class="search-bar" style="width:200px" id="td-search" placeholder="Suchen ..." oninput="tdRender()">
+            </div>
+            <div style="overflow-x:auto">
+              <table class="tbl"><thead><tr><th>AGENT</th><th>AUSBILDUNG</th><th>AUSBILDER</th><th>DATUM</th><th>ERGEBNIS</th><th>NOTIZEN</th><th></th></tr></thead>
+              <tbody id="td-body"></tbody></table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TD: Agenten -->
+        <div class="vw" id="pv-td-agenten">
+          <div class="sc">
+            <div class="sc-h"><span class="sc-t">Agenten Ausbildungsübersicht</span></div>
+            <div class="sc-b"><input class="search-bar" style="width:240px" id="td-agq" placeholder="Agent suchen ..." oninput="tdAgRender()"></div>
+            <div style="padding:0 20px 20px" id="td-ag-list"></div>
+          </div>
+        </div>
+
+        <!-- HR: Personen -->
+        <div class="vw" id="pv-hr-list">
+          <div class="stats" id="hr-stats"></div>
+          <div class="sc">
+            <div class="sc-h">
+              <span class="sc-t">Alle Mitarbeiter</span>
+              <div style="display:flex;gap:8px">
+                <input class="search-bar" style="width:180px" id="hr-q" placeholder="Suchen ..." oninput="hrRender()">
+                <select class="search-bar fs" id="hr-div-f" style="width:160px" onchange="hrRender()">
+                  <option value="">Alle Divisionen</option>
+                  <option>Leaderschaft</option><option>Curator of Dmsns</option>
+                  <option>High Command Lead</option><option>High Command</option>
+                  <option>Division Lead</option><option>Abteilungsarma</option>
+                </select>
+              </div>
+            </div>
+            <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px" id="hr-grid"></div>
+          </div>
+        </div>
+
+        <!-- HR: Hinzufügen -->
+        <div class="vw" id="pv-hr-add">
+          <div class="sc">
+            <div class="sc-h"><span class="sc-t">Person hinzufügen</span></div>
+            <div class="sc-b">
+              <div class="fg fg2" style="margin-bottom:14px">
+                <div class="ff"><div class="fl">Name *</div><input class="fi" id="hr-name" placeholder="Vor- und Nachname"></div>
+                <div class="ff"><div class="fl">Agenten-ID *</div><input class="fi" id="hr-id" placeholder="z.B. 123456"></div>
+              </div>
+              <div class="fg fg3" style="margin-bottom:14px">
+                <div class="ff"><div class="fl">Rang *</div>
+                  <select class="fs" id="hr-rank">
+                    <option value="">— Rang wählen —</option>
+                    <option>30. Director of FIB</option><option>29. Deputy Director of FIB</option>
+                    <option>28. Assistant Director of FIB</option><option>27. Divisional Director</option>
+                    <option>26. Inspector of the FIB</option><option>25. Supervisory Head Agent</option>
+                    <option>24. Supervisory Agent</option><option>23. Special Agent in Charge</option>
+                    <option>22. Division Chief</option><option>21. Deputy Division Chief</option>
+                    <option>20. Senior Special Agent</option><option>19. Tactical Operator</option>
+                    <option>18. Department Specialist</option><option>17. Special Agent</option>
+                    <option>16. Agent</option><option>15. Junior Agent</option>
+                  </select>
+                </div>
+                <div class="ff"><div class="fl">Division</div>
+                  <select class="fs" id="hr-div">
+                    <option value="">— Division —</option>
+                    <option>Leaderschaft</option><option>Curator of Dmsns</option>
+                    <option>High Command Lead</option><option>High Command</option>
+                    <option>Division Lead</option><option>Abteilungsarma</option>
+                  </select>
+                </div>
+                <div class="ff"><div class="fl">DN Nummer</div><input class="fi" id="hr-dn" placeholder="z.B. 42"></div>
+              </div>
+              <div class="fg fg3" style="margin-bottom:14px">
+                <div class="ff"><div class="fl">Telefon</div><input class="fi" id="hr-phone" placeholder="18-XX-XXX"></div>
+                <div class="ff"><div class="fl">Abteilungen</div><input class="fi" id="hr-abt" placeholder="FIBCO, CID, HR ..."></div>
+                <div class="ff"><div class="fl">Strike</div>
+                  <select class="fs" id="hr-strike"><option>0</option><option>1</option><option>2</option><option>3</option></select>
+                </div>
+              </div>
+              <div class="fg fg2" style="margin-bottom:16px">
+                <div class="ff"><div class="fl">Einstellungsdatum</div><input class="fi" type="date" id="hr-date"></div>
+                <div class="ff"><div class="fl">Notizen</div><input class="fi" id="hr-note" placeholder="Optionale Anmerkungen"></div>
+              </div>
+              <div style="display:flex;gap:10px">
+                <button class="btn btn-amber" onclick="hrAdd()">+ Person hinzufügen</button>
+                <button class="btn btn-ghost" onclick="hrClear()">Leeren</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- HR: Strikes -->
+        <div class="vw" id="pv-hr-strikes">
+          <div class="sc">
+            <div class="sc-h"><span class="sc-t">⚠️ Strike vergeben</span></div>
+            <div class="sc-b">
+              <div class="fg fg3" style="margin-bottom:14px">
+                <div class="ff"><div class="fl">Agent (Name / ID)</div><input class="fi" id="str-agent" placeholder="Name oder ID des Agenten"></div>
+                <div class="ff"><div class="fl">Aktion</div>
+                  <select class="fs" id="str-action">
+                    <option value="add">Strike hinzufügen (+1)</option>
+                    <option value="remove">Strike entfernen (-1)</option>
+                    <option value="reset">Alle Strikes zurücksetzen</option>
+                  </select>
+                </div>
+                <div class="ff"><div class="fl">Grund</div><input class="fi" id="str-reason" placeholder="Begründung ..."></div>
+              </div>
+              <button class="btn btn-red" onclick="strikeSave()">⚠️ Aktion ausführen</button>
+            </div>
+          </div>
+          <div class="sc">
+            <div class="sc-h"><span class="sc-t">Strike-Historie</span></div>
+            <div id="strike-list"></div>
+          </div>
+        </div>
+
+        <!-- FIBCO: Akten -->
+        <div class="vw" id="pv-fb-akten">
+          <div class="stats" id="fb-stats"></div>
+          <div class="sc">
+            <div class="sc-h">
+              <span class="sc-t">Aktive Fallakten</span>
+              <div style="display:flex;gap:8px">
+                <input class="search-bar" style="width:180px" id="fb-q" placeholder="Suchen ..." oninput="fbRender()">
+                <select class="search-bar fs" id="fb-prio-f" style="width:140px" onchange="fbRender()">
+                  <option value="">Alle Prioritäten</option><option>KRITISCH</option><option>HOCH</option><option>MITTEL</option><option>NIEDRIG</option>
+                </select>
+              </div>
+            </div>
+            <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="fb-grid"></div>
+          </div>
+        </div>
+
+        <!-- FIBCO: Erstellen -->
+        <div class="vw" id="pv-fb-create">
+          <div class="sc">
+            <div class="sc-h"><span class="sc-t">Neue Fallakte erstellen</span></div>
+            <div class="sc-b">
+              <div class="fg fg2" style="margin-bottom:14px">
+                <div class="ff"><div class="fl">Fallbezeichnung *</div><input class="fi" id="fb-title" placeholder="z.B. Operation Stille Nacht"></div>
+                <div class="ff"><div class="fl">Priorität</div>
+                  <select class="fs" id="fb-prio"><option>KRITISCH</option><option>HOCH</option><option selected>MITTEL</option><option>NIEDRIG</option></select>
+                </div>
+              </div>
+              <div class="fg fg3" style="margin-bottom:14px">
+                <div class="ff"><div class="fl">Falltyp</div>
+                  <select class="fs" id="fb-type"><option>Observation</option><option>Ermittlung</option><option>Verhör</option><option>Korruption</option><option>Terrorismus</option><option>Org. Kriminalität</option><option>Intern</option><option>Sonstiges</option></select>
+                </div>
+                <div class="ff"><div class="fl">Zuständige Einheit</div><input class="fi" id="fb-unit" placeholder="z.B. CIRG, CID"></div>
+                <div class="ff"><div class="fl">Fallführer</div><input class="fi" id="fb-lead" placeholder="Name"></div>
+              </div>
+              <div class="ff" style="margin-bottom:14px"><div class="fl">Beschreibung *</div><textarea class="fta" id="fb-desc" placeholder="Hintergrund, bekannte Fakten, Verlauf ..."></textarea></div>
+              <div class="ff" style="margin-bottom:14px"><div class="fl">Verdächtige / Zielpersonen</div><textarea class="fta" id="fb-suspects" placeholder="Namen, IDs, Beschreibungen ..."></textarea></div>
+              <div class="fg fg2" style="margin-bottom:16px">
+                <div class="ff"><div class="fl">Klassifizierung</div>
+                  <select class="fs" id="fb-class"><option>VS-VERTRAULICH</option><option>GEHEIM</option><option>STRENG GEHEIM</option><option>INTERN</option></select>
+                </div>
+                <div class="ff"><div class="fl">Status</div>
+                  <select class="fs" id="fb-status"><option>AKTIV</option><option>IN BEARBEITUNG</option><option>AUSSTEHEND</option></select>
+                </div>
+              </div>
+              <div class="ff" style="margin-bottom:16px"><div class="fl">Anmerkungen / Beweismittel</div><textarea class="fta" id="fb-notes" placeholder="Zeugenaussagen, Beweismittel ..."></textarea></div>
+              <div style="display:flex;gap:10px">
+                <button class="btn btn-purple" onclick="fbCreate()">🗂 Akte speichern</button>
+                <button class="btn btn-ghost" onclick="fbClear()">Leeren</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FIBCO: Archiv -->
+        <div class="vw" id="pv-fb-archiv">
+          <div class="sc">
+            <div class="sc-h"><span class="sc-t">📦 Archivierte Akten</span></div>
+            <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="fb-archiv-grid"></div>
+          </div>
+        </div>
+
+        <!-- FIBCO: Dienstplan -->
+        <div class="vw" id="pv-dienst">
+          <div class="sc">
+            <div class="sc-h"><span class="sc-t">📅 Dienstplan — Eintrag</span></div>
+            <div class="sc-b">
+              <div class="fg fg3" style="margin-bottom:14px">
+                <div class="ff"><div class="fl">Agent Name</div><input class="fi" id="dp-name" placeholder="Name des Agenten"></div>
+                <div class="ff"><div class="fl">Datum</div><input class="fi" type="date" id="dp-date"></div>
+                <div class="ff"><div class="fl">Uhrzeit (von)</div><input class="fi" type="time" id="dp-start"></div>
+              </div>
+              <div class="fg fg3" style="margin-bottom:14px">
+                <div class="ff"><div class="fl">Uhrzeit (bis)</div><input class="fi" type="time" id="dp-end"></div>
+                <div class="ff"><div class="fl">Einheit / Abteilung</div><input class="fi" id="dp-unit" placeholder="z.B. CIRG, Streife"></div>
+                <div class="ff"><div class="fl">Notiz</div><input class="fi" id="dp-note" placeholder="Optional ..."></div>
+              </div>
+              <button class="btn btn-blue" onclick="dpSave()">+ Diensteintrag hinzufügen</button>
+            </div>
+          </div>
+          <div class="sc">
+            <div class="sc-h"><span class="sc-t">Aktuelle Dienste</span></div>
+            <div id="dp-list"></div>
+          </div>
+        </div>
+
+        <!-- LEITUNG: Ankündigungen -->
+        <div class="vw" id="pv-ankuend">
+          <div class="sc">
+            <div class="sc-h"><span class="sc-t">📢 Ankündigung veröffentlichen</span></div>
+            <div class="sc-b">
+              <div class="fg fg2" style="margin-bottom:14px">
+                <div class="ff"><div class="fl">Titel *</div><input class="fi" id="ann-title" placeholder="Betreff der Ankündigung ..."></div>
+                <div class="ff"><div class="fl">Typ</div>
+                  <select class="fs" id="ann-type">
+                    <option value="info">ℹ️ Information</option>
+                    <option value="warn">⚠️ Warnung</option>
+                    <option value="alert">🚨 Dringend</option>
+                    <option value="good">✅ Positiv</option>
+                  </select>
+                </div>
+              </div>
+              <div class="ff" style="margin-bottom:14px"><div class="fl">Inhalt *</div><textarea class="fta" id="ann-body" placeholder="Inhalt der Ankündigung ..."></textarea></div>
+              <div style="display:flex;gap:10px">
+                <button class="btn btn-gold" onclick="annSave()">📢 Veröffentlichen</button>
+                <button class="btn btn-red" onclick="annClear()">Alle löschen</button>
+              </div>
+            </div>
+          </div>
+          <div class="sc">
+            <div class="sc-h"><span class="sc-t">Aktive Ankündigungen</span></div>
+            <div style="padding:16px;display:flex;flex-direction:column;gap:10px" id="ann-list-admin"></div>
+          </div>
+        </div>
+
+        <!-- LOG -->
+        <div class="vw" id="pv-log">
+          <div class="sc">
+            <div class="sc-h">
+              <span class="sc-t">Aktivitätsprotokoll</span>
+              <button class="btn btn-sm btn-red" onclick="if(confirm('Protokoll leeren?')){sv('log',[]);logRender();toast('Protokoll geleert','amber')}">Leeren</button>
+            </div>
+            <div id="log-body"></div>
+          </div>
+        </div>
+
+        <!-- MEMBER HOME -->
+        <div class="vw" id="pv-member-home">
+          <div class="stats" id="member-stats"></div>
+          <div class="sc">
+            <div class="sc-h"><span class="sc-t">🏠 Mein Profil</span></div>
+            <div class="sc-b" id="member-profile-body">
+              <div style="text-align:center;color:var(--t3)">Nicht eingeloggt.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MEMBER LOGS (eigene Logs) -->
+        <div class="vw" id="pv-member-logs">
+          <div class="sc">
+            <div class="sc-h">
+              <span class="sc-t">📋 Meine Aktivitäts-Logs</span>
+              <select class="search-bar" id="ml-type" style="font-size:12px;padding:5px 10px;width:180px" onchange="memberLogForm()">
+                <option value="">— Log-Art wählen —</option>
+                <option value="inhaft">Inhaftierung</option>
+                <option value="event">Event-Log</option>
+                <option value="ammu">Ammu-/Shop-Rob</option>
+                <option value="geisel">Geiselnahme</option>
+                <option value="fahndung">Fahndungsbild</option>
+              </select>
+            </div>
+            <div class="sc-b" id="ml-form-wrap">
+              <div style="text-align:center;color:var(--t3);font-size:13px;padding:16px 0">Log-Art auswählen.</div>
+            </div>
+          </div>
+          <div class="sc">
+            <div class="sc-h"><span class="sc-t">Meine Log-Einträge</span></div>
+            <div id="ml-entries"></div>
+          </div>
+        </div>
+
+        <!-- ACCOUNTS VERWALTUNG (Leaderschaft only) -->
+        <div class="vw" id="pv-accounts">
+          <div class="sc">
+            <div class="sc-h"><span class="sc-t">👤 Account erstellen</span></div>
+            <div class="sc-b">
+              <div class="fg fg3" style="margin-bottom:12px">
+                <div class="ff"><div class="fl">Name *</div><input class="fi" id="ac-name" placeholder="Vor- und Nachname"></div>
+                <div class="ff"><div class="fl">Agenten-ID *</div><input class="fi" id="ac-id" placeholder="z.B. 123456"></div>
+                <div class="ff"><div class="fl">Passwort *</div><input class="fi" id="ac-pw" placeholder="Sicheres Passwort"></div>
+              </div>
+              <div class="fg fg3" style="margin-bottom:14px">
+                <div class="ff"><div class="fl">Abteilung</div>
+                  <select class="fs" id="ac-dept">
+                    <option value="Abteilungsarma">Abteilungsarma</option>
+                    <option value="Division Lead">Division Lead</option>
+                    <option value="High Command">High Command</option>
+                    <option value="High Command Lead">High Command Lead</option>
+                    <option value="Curator of Dmsns">Curator of Dmsns</option>
+                    <option value="Leaderschaft">Leaderschaft</option>
+                    <option value="TD">TD</option>
+                    <option value="HR">HR</option>
+                    <option value="FIBCO">FIBCO</option>
+                  </select>
+                </div>
+                <div class="ff"><div class="fl">Rang-Nr.</div><input class="fi" id="ac-rank" placeholder="z.B. 23" type="number" min="1" max="30"></div>
+                <div class="ff"><div class="fl">Division</div><input class="fi" id="ac-div" placeholder="z.B. High Command"></div>
+              </div>
+              <button class="btn btn-gold" onclick="acCreate()">+ Account erstellen</button>
+            </div>
+          </div>
+          <div class="sc">
+            <div class="sc-h"><span class="sc-t">Alle Mitglieder-Accounts</span><span style="font-size:11px;color:var(--t3);font-family:var(--fm)" id="ac-count">0 Accounts</span></div>
+            <div style="overflow-x:auto">
+              <table class="tbl" id="ac-table">
+                <thead><tr><th>NAME</th><th>AGENTEN-ID</th><th>ABTEILUNG</th><th>RANG</th><th>ERSTELLT</th><th>AKTION</th></tr></thead>
+                <tbody id="ac-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+</div><!-- /shell -->
+
+<!-- ═ LOGIN MODAL ═ -->
+<div class="mb" id="login-mb">
+  <div class="modal lm" style="width:480px">
+    <div class="modal-t">🔐 FIB — Einloggen</div>
+
+    <!-- TABS -->
+    <div style="display:flex;gap:2px;background:var(--card);border-radius:8px;padding:3px;margin-bottom:18px">
+      <div id="tab-personal" onclick="switchLoginTab('personal')"
+        style="flex:1;text-align:center;padding:8px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;background:var(--card2);color:var(--t1);transition:.15s">
+        👤 Persönlicher Login
+      </div>
+      <div id="tab-dept" onclick="switchLoginTab('dept')"
+        style="flex:1;text-align:center;padding:8px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;color:var(--t2);transition:.15s">
+        🏛 Abteilungs-Login
+      </div>
+    </div>
+
+    <!-- PERSONAL LOGIN -->
+    <div id="panel-personal">
+      <div style="font-size:12px;color:var(--t3);font-family:var(--fm);letter-spacing:.08em;margin-bottom:12px">AGENTEN-ID UND PASSWORT</div>
+      <div class="fg" style="gap:10px;margin-bottom:4px">
+        <div class="ff"><div class="fl">Agenten-ID</div><input class="fi" id="m-agentid" placeholder="z.B. 123456" onkeydown="if(event.key==='Enter')doMemberLogin()"></div>
+        <div class="ff"><div class="fl">Passwort</div><input class="fi" type="password" id="m-pw" placeholder="Dein persönliches Passwort" onkeydown="if(event.key==='Enter')doMemberLogin()"></div>
+      </div>
+      <div style="font-size:11px;color:var(--t3);margin-top:8px">Noch kein Account? Wende dich an die <span style="color:var(--gold3)">Leaderschaft</span>.</div>
+      <div class="le" id="m-login-err"></div>
+      <div class="modal-act">
+        <button class="btn btn-ghost" onclick="closeLogin()">Abbrechen</button>
+        <button class="btn btn-gold" onclick="doMemberLogin()">Einloggen</button>
+      </div>
+    </div>
+
+    <!-- DEPT LOGIN -->
+    <div id="panel-dept" style="display:none">
+      <div style="font-size:12px;color:var(--t3);font-family:var(--fm);letter-spacing:.08em;margin-bottom:10px">ABTEILUNG WÄHLEN</div>
+      <div class="dept-grid" style="margin-bottom:14px">
+        <div class="dg-item dg-td" data-d="TD" onclick="selD('TD')"><div class="dg-ico">🎓</div><div class="dg-name">TD</div><div class="dg-desc">TRAINING DIVISION</div></div>
+        <div class="dg-item dg-hr" data-d="HR" onclick="selD('HR')"><div class="dg-ico">👥</div><div class="dg-name">HR</div><div class="dg-desc">HUMAN RESOURCES</div></div>
+        <div class="dg-item dg-fb" data-d="FIBCO" onclick="selD('FIBCO')"><div class="dg-ico">🗂</div><div class="dg-name">FIBCO</div><div class="dg-desc">COMMAND OFFICE</div></div>
+        <div class="dg-item dg-lk" data-d="Leaderschaft" onclick="selD('Leaderschaft')"><div class="dg-ico">⭐</div><div class="dg-name">LEUDERSCHAFT</div><div class="dg-desc">VOLLZUGRIFF</div></div>
+      </div>
+      <div class="ff" style="margin-bottom:6px">
+        <div class="fl">Abteilungs-Passwort</div>
+        <input class="fi" type="password" id="pw" placeholder="Abteilungs-Passwort ..." onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div style="font-size:11px;color:var(--t3);font-family:var(--fm);line-height:2;margin-top:6px">
+        TD: <span style="color:var(--cyan2)">td2026</span> &nbsp;·&nbsp;
+        HR: <span style="color:var(--amber2)">hr2026</span> &nbsp;·&nbsp;
+        FIBCO: <span style="color:var(--purple2)">fibco2026</span> &nbsp;·&nbsp;
+        Leaderschaft: <span style="color:var(--gold2)">leitung2026</span>
+      </div>
+      <div class="le" id="login-err"></div>
+      <div class="modal-act">
+        <button class="btn btn-ghost" onclick="closeLogin()">Abbrechen</button>
+        <button class="btn btn-blue" onclick="doLogin()">Einloggen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═ EDIT MODAL ═ -->
+<div class="mb" id="edit-mb">
+  <div class="modal" id="edit-box" style="width:520px">
+    <div class="modal-t" id="edit-title"></div>
+    <div id="edit-body"></div>
+    <div class="modal-act" id="edit-acts"></div>
+  </div>
+</div>
+
+<!-- ═ TOAST ═ -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+const PW = {TD:'td2026',HR:'hr2026',FIBCO:'fibco2026',Leaderschaft:'leitung2026'};
+const AUSB_LIST=['Grundausbildung','Erste Hilfe Kurs','Officer Prüfung','Ortskunde Plus','Fahrtauglichkeitsprüfung','Fahrsicherheit','Tactical Shooting Training','Senior Officer Prüfung','AUB Streifen Schulung','Leitstellen Prüfung','Jura Prüfung','Verhandlungs-/ Einsatzleitung Prüfung','Flugausbildung / Overwatch','TOW Ausbildung (Abschlepper)'];
+const RL={30:'30. Director of FIB',29:'29. Deputy Director of FIB',28:'28. Assistant Director of FIB',27:'27. Divisional Director',26:'26. Inspector of the FIB',25:'25. Supervisory Head Agent',24:'24. Supervisory Agent',23:'23. Special Agent in Charge',22:'22. Division Chief',21:'21. Deputy Division Chief',20:'20. Senior Special Agent',19:'19. Tactical Operator',18:'18. Department Specialist'};
+const RC={30:'r30',29:'r30',28:'r28',27:'r27',26:'r26',25:'r25',24:'r24',23:'r23',22:'r22',21:'r21',20:'r20',19:'r20',18:'r18'};
+const DC={'Leaderschaft':'dv-l','Curator of Dmsns':'dv-c','High Command Lead':'dv-hcl','High Command':'dv-hc','Division Lead':'dv-dl','Abteilungsarma':'dv-ab'};
+const AC={FIBCO:'#818cf8',CID:'#f87171',CIRG:'#4ade80',HR:'#fb923c',PR:'#f472b6',TD:'#38bdf8',LAW:'#bef264',IA:'#fbbf24'};
+const AGENTS=[];
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let dept=null, selDept=null, currentMember=null;
+function ld(k,d=[]){try{return JSON.parse(localStorage.getItem('fib_'+k))||d}catch{return d}}
+function sv(k,v){localStorage.setItem('fib_'+k,JSON.stringify(v))}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5).toUpperCase()}
+function now(){return new Date().toLocaleDateString('de-DE')+' '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}
+
+// ═══ MEMBER LOGIN HELPERS ═══
+const DEPT_CFG={
+  TD:{col:'var(--cyan2)',bg:'rgba(6,182,212,.1)',border:'rgba(6,182,212,.35)'},
+  HR:{col:'var(--amber2)',bg:'rgba(245,158,11,.1)',border:'rgba(245,158,11,.35)'},
+  FIBCO:{col:'var(--purple2)',bg:'rgba(139,92,246,.1)',border:'rgba(139,92,246,.35)'},
+  Leaderschaft:{col:'var(--gold2)',bg:'rgba(202,138,4,.12)',border:'rgba(202,138,4,.4)'},
+  Mitglied:{col:'var(--gold3)',bg:'rgba(180,140,40,.1)',border:'rgba(180,140,40,.35)'},
+};
+// Abteilungs-Passwörter (unveränderlich)
+// Mitglieder-Logins werden in localStorage gespeichert: [{name, agentId, pw, dept, rankN, div}]
+function getMembers(){return ld('members',[]);}
+function saveMember(m){const ms=getMembers();const idx=ms.findIndex(x=>x.agentId===m.agentId);if(idx>=0)ms[idx]=m;else ms.push(m);sv('members',ms);}
+function findMember(agentId,pw){return getMembers().find(m=>m.agentId===agentId&&m.pw===pw)||null;}
+function createMemberAccount(name,agentId,pw,dept2,rankN,div){
+  if(getMembers().find(m=>m.agentId===agentId)){toast('Agent-ID bereits vergeben!','red');return false;}
+  saveMember({name,agentId,pw,dept:dept2,rankN:rankN||18,div:div||'Abteilungsarma',created:now()});
+  toast(`Account für ${name} erstellt!`,'green');
+  return true;
+}
+
+// CLOCK
+setInterval(()=>{const el=document.getElementById('nav-clock');if(el)el.textContent=new Date().toLocaleTimeString('de-DE')},1000);
+
+// LOGIN TAB SWITCH
+function switchLoginTab(tab){
+  const isP=tab==='personal';
+  document.getElementById('panel-personal').style.display=isP?'':'none';
+  document.getElementById('panel-dept').style.display=isP?'none':'';
+  const tp=document.getElementById('tab-personal');
+  const td=document.getElementById('tab-dept');
+  tp.style.cssText=`flex:1;text-align:center;padding:8px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:${isP?'600':'500'};background:${isP?'var(--card2)':'transparent'};color:${isP?'var(--t1)':'var(--t2)'};transition:.15s`;
+  td.style.cssText=`flex:1;text-align:center;padding:8px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:${isP?'500':'600'};background:${isP?'transparent':'var(--card2)'};color:${isP?'var(--t2)':'var(--t1)'};transition:.15s`;
+}
+
+// MEMBER LOGIN
+function doMemberLogin(){
+  const agentId=document.getElementById('m-agentid')?.value.trim();
+  const pw=document.getElementById('m-pw')?.value;
+  const err=document.getElementById('m-login-err');
+  if(!agentId||!pw){if(err)err.textContent='⚠ Bitte alle Felder ausfüllen.';return;}
+  const m=findMember(agentId,pw);
+  if(!m){if(err)err.textContent='⚠ Agenten-ID oder Passwort falsch.';return;}
+  currentMember=m;dept=m.dept||'Mitglied';
+  closeLogin();
+  openPortalAsMember(m);
+  toast(`Willkommen, ${m.name}!`,'green');
+  logAdd(`Mitglied-Login: ${m.name} (ID: ${m.agentId})`);
+}
+
+function openPortalAsMember(m){
+  const cfg=DEPT_CFG[m.dept]||{col:'var(--gold3)',bg:'rgba(180,140,40,.1)',border:'rgba(180,140,40,.35)'};
+  const badge=document.getElementById('nav-badge');
+  badge.textContent=m.name;
+  badge.style.cssText=`display:inline-flex;color:${cfg.col};background:${cfg.bg};border:1px solid ${cfg.border};font-family:var(--fm);font-size:11px;font-weight:600;padding:4px 13px;border-radius:20px;letter-spacing:.05em`;
+  const pill=document.getElementById('login-pill');
+  pill.innerHTML=`<span class="lp-dot">👤</span> ${m.name} <span style="font-size:11px;opacity:.6;margin-left:4px">Ausloggen</span>`;
+  pill.className='login-pill out';pill.onclick=doLogout;
+  buildMemberSidebar(m);
+  document.querySelectorAll('.vw').forEach(v=>v.classList.remove('on'));
+  document.getElementById('vw-portal').classList.add('on');
+  document.getElementById('sidebar').classList.add('show');
+  switchP('pv-member-home');
+}
+
+function buildMemberSidebar(m){
+  const sb=document.getElementById('sidebar');
+  const isL=m.dept==='Leaderschaft';
+  let h=`<div class="sg">MEIN BEREICH</div>`;
+  h+=si('pv-member-home','🏠','Übersicht');
+  h+=si('pv-member-logs','📋','Meine Logs');
+  if(isL||m.dept==='TD'){h+=`<div class="sg" style="color:var(--cyan2)">TRAINING DIVISION</div>`;h+=si('pv-td-ausb','🎓','Ausbildungen');h+=si('pv-td-agenten','👤','Agenten');}
+  if(isL||m.dept==='HR'){h+=`<div class="sg" style="color:var(--amber2)">HUMAN RESOURCES</div>`;h+=si('pv-hr-list','👥','Mitarbeiter');h+=si('pv-hr-add','➕','Hinzufügen');h+=si('pv-hr-strikes','⚠️','Strikes');}
+  if(isL||m.dept==='FIBCO'){h+=`<div class="sg" style="color:var(--purple2)">FIBCO</div>`;h+=si('pv-fb-akten','🗂','Fallakten');h+=si('pv-fb-create','➕','Akte erstellen');h+=si('pv-fb-archiv','📦','Archiv');h+=si('pv-dienst','📅','Dienstplan');}
+  if(isL){h+=`<div class="sg" style="color:var(--gold2)">LEUDERSCHAFT</div>`;h+=si('pv-ankuend','📢','Ankündigungen');h+=si('pv-accounts','👤','Accounts');}
+  h+=`<div class="sg">SYSTEM</div>`;h+=si('pv-log','📝','Protokoll');
+  sb.innerHTML=h;
+}
+
+// TOAST
+function toast(msg,type='green'){
+  const icons={green:'✅',red:'❌',amber:'⚠️',blue:'ℹ️'};
+  const el=document.getElementById('toast');
+  el.textContent='';
+  const s=document.createElement('span');s.textContent=icons[type]||'';
+  const m=document.createElement('span');m.textContent=' '+msg;
+  el.appendChild(s);el.appendChild(m);
+  el.classList.add('on');
+  clearTimeout(el._t);
+  el._t=setTimeout(()=>el.classList.remove('on'),2800);
+}
+
+// ═══ NAV ═══
+function goTo(page){
+  document.querySelectorAll('.vw').forEach(v=>v.classList.remove('on'));
+  document.querySelectorAll('.nl').forEach(n=>n.classList.remove('on'));
+  const pg=document.getElementById('vw-'+page);
+  if(pg)pg.classList.add('on');
+  const nls=document.querySelectorAll('.nl');
+  const map={home:0,mitarbeiter:1,abteilungen:2,ausbildungen:3,rangliste:4};
+  if(map[page]!==undefined&&nls[map[page]])nls[map[page]].classList.add('on');
+  // sidebar only for portal
+  document.getElementById('sidebar').classList.toggle('show',page==='portal');
+  if(page==='mitarbeiter')renderM();
+  if(page==='abteilungen')renderAbt();
+  if(page==='ausbildungen')renderAusbStat();
+  if(page==='rangliste')renderLB();
+  if(page==='home'){updateHeroStats();renderPubAnn()}
+}
+
+// ═══ HERO STATS ═══
+function updateHeroStats(){
+  document.getElementById('hs-agents').textContent=AGENTS.length;
+  document.getElementById('hs-hr').textContent=ld('hr_persons').length;
+}
+
+// ═══════════════ MITARBEITER ════════════════
+function abtPills(txt){
+  if(!txt)return'';
+  return txt.split(',').map(p=>{
+    p=p.trim();
+    const k=Object.keys(AC).find(k=>p.toUpperCase().includes(k));
+    const c=k?AC[k]:'#666';
+    return`<span style="display:inline-block;padding:2px 7px;border-radius:5px;font-size:9px;font-weight:700;font-family:var(--fm);background:${c}18;color:${c};border:1px solid ${c}30;margin:1px">${p}</span>`;
+  }).join('');
+}
+function cbIcon(v){return v?`<span style="color:var(--green);font-size:13px">✓</span>`:`<span style="color:var(--line2)">·</span>`}
+function renderM(){
+  const q=(document.getElementById('m-q')||{value:''}).value.toLowerCase();
+  const d=(document.getElementById('m-div')||{value:''}).value;
+  const r=parseInt((document.getElementById('m-rank')||{value:'0'}).value)||0;
+  const f=AGENTS.filter(a=>{
+    if(q&&!a.name.toLowerCase().includes(q)&&!String(a.id).includes(q))return false;
+    if(d&&a.div!==d)return false;
+    if(r&&a.rankN<r)return false;
+    return true;
+  });
+  const el=document.getElementById('m-cnt');if(el)el.textContent=f.length+' Agenten';
+  const tb=document.getElementById('m-body');if(!tb)return;
+  tb.innerHTML=f.map(a=>{
+    const rc=RC[a.rankN]||'r18';
+    const rl2=RL[a.rankN]||`Rang ${a.rankN}`;
+    const dv=DC[a.div]||'bg-gray';
+    const sc=a.strike===0?'color:var(--green)':a.strike===1?'color:var(--amber2)':'color:var(--red)';
+    return`<tr>
+      <td style="font-family:var(--fm);font-size:11px;color:var(--t3)">${a.id}</td>
+      <td class="b">${a.name}</td>
+      <td><span class="badge ${rc}" style="font-size:9px;white-space:nowrap">${rl2}</span></td>
+      <td style="font-family:var(--fm);color:var(--t3)">${a.dn}</td>
+      <td><span class="badge ${dv}" style="font-size:9px">${a.div}</span></td>
+      <td style="${sc};font-family:var(--fm);font-size:12px;font-weight:700">${a.strike}/3</td>
+      <td style="font-family:var(--fm);font-size:11px;color:var(--t3)">${a.invite}</td>
+      <td>${abtPills(a.abt)}</td>
+      <td style="text-align:center">${cbIcon(a.ga)}</td><td style="text-align:center">${cbIcon(a.ev8)}</td>
+      <td style="text-align:center">${cbIcon(a.ak8)}</td><td style="text-align:center">${cbIcon(a.t8t)}</td>
+      <td style="text-align:center">${cbIcon(a.vhf)}</td><td style="text-align:center">${cbIcon(a.jur)}</td>
+      <td style="text-align:center">${cbIcon(a.uc)}</td><td style="text-align:center">${cbIcon(a.ftk)}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══════════════ ABTEILUNGEN ════════════════
+const ABT_DEFS=[
+  {k:'FIBCO',name:'FIBCO',desc:'Federal Intelligence Bureau Command Office',col:'#818cf8'},
+  {k:'CID',name:'Criminal Investigative Division',desc:'Ermittlungen schwerer Straftaten',col:'#f87171'},
+  {k:'CIRG',name:'Critical Incident Response Group',desc:'Krisenreaktion und Sondereinsätze',col:'#4ade80'},
+  {k:'HR',name:'Human Resources',desc:'Personalverwaltung und Rekrutierung',col:'#fb923c'},
+  {k:'TD',name:'Training Division',desc:'Ausbildung und Weiterentwicklung',col:'#38bdf8'},
+  {k:'PR',name:'Public Relations',desc:'Öffentlichkeitsarbeit',col:'#f472b6'},
+  {k:'IA',name:'Internal Affairs',desc:'Interne Angelegenheiten',col:'#fbbf24'},
+];
+function renderAbt(){
+  const el=document.getElementById('abt-grid');if(!el)return;
+  el.innerHTML=ABT_DEFS.map(a=>{
+    const m=AGENTS.filter(ag=>ag.abt.toUpperCase().includes(a.k));
+    return`<div class="sc" style="border-top:2px solid ${a.col}20;border-left:none;border-right:none;border-bottom:none;border:1px solid var(--line);border-top:2px solid ${a.col}">
+      <div class="sc-h">
+        <span class="sc-t">${a.name}</span>
+        <span style="font-size:24px;font-weight:800;color:${a.col}">${m.length}</span>
+      </div>
+      <div class="sc-b">
+        <div style="font-size:13px;color:var(--t2);margin-bottom:14px;line-height:1.5">${a.desc}</div>
+        ${m.slice(0,5).map(ag=>`<div style="padding:6px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;font-size:12px">
+          <span style="font-weight:600">${ag.name}</span>
+          <span style="color:var(--t3);font-family:var(--fm);font-size:11px">${ag.rankN}</span>
+        </div>`).join('')}
+        ${m.length>5?`<div style="font-size:11px;color:var(--t3);text-align:center;margin-top:8px">+${m.length-5} weitere</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════ AUSBILDUNGEN STATS ════════════════
+function renderAusbStat(){
+  const el=document.getElementById('ausb-stat');if(!el)return;
+  el.innerHTML=AUSB_LIST.map((n,i)=>{
+    const best=AGENTS.filter(a=>a.ausb[i]).length;
+    const pct=Math.round(best/AGENTS.length*100);
+    const col=pct>=90?'var(--green)':pct>=60?'var(--amber2)':'var(--red)';
+    return`<tr><td class="b">${n}</td>
+      <td style="text-align:center;font-weight:700;color:var(--green);font-family:var(--fm)">${best}</td>
+      <td style="text-align:center;font-weight:700;color:var(--red);font-family:var(--fm)">${AGENTS.length-best}</td>
+      <td style="text-align:center">
+        <div style="display:flex;align-items:center;gap:10px;justify-content:center">
+          <div style="width:90px;height:5px;background:var(--line2);border-radius:3px;overflow:hidden">
+            <div style="width:${pct}%;height:100%;background:${col};border-radius:3px;transition:width 1s"></div>
+          </div>
+          <span style="font-family:var(--fm);font-size:12px;font-weight:700;color:${col};min-width:34px">${pct}%</span>
+        </div>
+      </td></tr>`;
+  }).join('');
+}
+
+// ═══════════════ RANGLISTE ════════════════
+function renderLB(){
+  const el=document.getElementById('lb-list');if(!el)return;
+  const sorted=[...AGENTS].sort((a,b)=>b.rankN-a.rankN);
+  el.innerHTML=sorted.map((a,i)=>{
+    const pos=i+1;
+    const pc=pos===1?'gold':pos===2?'silver':pos===3?'bronze':'';
+    const medal=pos===1?'🥇':pos===2?'🥈':pos===3?'🥉':'';
+    const rnk=RL[a.rankN]||`Rang ${a.rankN}`;
+    const logCount=ld('activity_logs').filter(l=>l.agent===a.name).length;
+    return`<div class="lb-row" style="cursor:pointer" onclick="filterLogsByAgent('${a.name}')">
+      <div class="lb-pos ${pc}">${medal||pos}</div>
+      <div class="lb-av">${pos<=3?['👑','⭐','🔥'][pos-1]:'👤'}</div>
+      <div class="lb-info">
+        <div class="lb-name">${a.name}</div>
+        <div class="lb-rank">${rnk} · DN ${a.dn}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="lb-score">Rg. ${a.rankN}</div>
+        <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">${logCount} Logs</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterLogsByAgent(name){
+  const el=document.getElementById('log-search');
+  if(el){el.value=name;renderLogs();}
+}
+
+// ═══════════════ LOG SYSTEM ════════════════
+const LOG_TYPES={
+  inhaft:{label:'Inhaftierung',icon:'🔒',color:'var(--red2)',fields:[
+    {id:'art',label:'Art der Inhaftierung',placeholder:'Wantedjagd / Live Straftat'},
+    {id:'proof',label:'Proof',placeholder:'Link zu Bild oder Clip'},
+  ]},
+  event:{label:'Event-Log',icon:'📅',color:'var(--cyan2)',fields:[
+    {id:'art',label:'Art des Events',placeholder:'z.B. Banküberfall, Drogenrazzia ...'},
+    {id:'uhrzeit',label:'Uhrzeit',placeholder:'z.B. 21:30'},
+    {id:'proof',label:'Proof',placeholder:'Link zu Bild oder Clip'},
+  ]},
+  ammu:{label:'Ammu-/Shop-Rob',icon:'💰',color:'var(--amber2)',fields:[
+    {id:'gang',label:'Gang / Familie',placeholder:'Name der Gang'},
+    {id:'summe',label:'ggf. bezahlte Summe',placeholder:'z.B. $50.000'},
+    {id:'ort',label:'Ort',placeholder:'z.B. Ammu-Nation Downtown'},
+    {id:'proof',label:'Proof',placeholder:'Link zu Bild oder Clip'},
+  ]},
+  geisel:{label:'Geiselnahme',icon:'⚠️',color:'var(--red2)',fields:[
+    {id:'gang',label:'Gang / Familie',placeholder:'Name der Gang'},
+    {id:'anzahl',label:'Anzahl der Geiseln',placeholder:'z.B. 3'},
+    {id:'ort',label:'Ort',placeholder:'z.B. Fleeca Bank'},
+    {id:'summe',label:'ggf. bezahlte Summe',placeholder:'z.B. $100.000'},
+    {id:'proof',label:'Proof',placeholder:'Link zu Bild oder Clip'},
+  ]},
+  fahndung:{label:'Fahndungsbild',icon:'📸',color:'var(--purple2)',fields:[
+    {id:'name',label:'Name des TV',placeholder:'Tatverdächtiger Name'},
+    {id:'proof',label:'Proofs',placeholder:'Links zu Bildern / Clips'},
+  ]},
+};
+
+function switchLogForm(){
+  const type=document.getElementById('log-type').value;
+  const wrap=document.getElementById('log-form-wrap');
+  if(!type){wrap.innerHTML=`<div style="text-align:center;color:var(--t3);font-size:13px;padding:16px 0">Log-Art auswählen um das Formular anzuzeigen.</div>`;return;}
+  const cfg=LOG_TYPES[type];
+  wrap.innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--line2)">
+        <span style="font-size:18px">${cfg.icon}</span>
+        <span style="font-size:14px;font-weight:600;color:${cfg.color}">${cfg.label}</span>
+      </div>
+      <div class="fg fg2">
+        <div class="ff"><div class="fl">Agent / Bearbeiter</div><input class="fi" id="lf-agent" placeholder="Dein Name ..."></div>
+        <div class="ff"><div class="fl">Datum & Uhrzeit</div><input class="fi" id="lf-ts" type="datetime-local" value="${new Date().toISOString().slice(0,16)}"></div>
+      </div>
+      ${cfg.fields.map(f=>`
+        <div class="ff">
+          <div class="fl">${f.label}</div>
+          <input class="fi" id="lf-${f.id}" placeholder="${f.placeholder}">
+        </div>`).join('')}
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="btn btn-gold" onclick="saveLog('${type}')">💾 Log speichern</button>
+        <button class="btn btn-ghost" onclick="copyLogTemplate('${type}')">📋 Als Text kopieren</button>
+      </div>
+    </div>`;
+}
+
+function saveLog(type){
+  const cfg=LOG_TYPES[type];
+  const agent=document.getElementById('lf-agent')?.value.trim();
+  if(!agent){toast('Bitte Agenten-Name eingeben!','red');return;}
+  const entry={id:uid(),type,agent,ts:now(),created:document.getElementById('lf-ts')?.value||now()};
+  cfg.fields.forEach(f=>{entry[f.id]=document.getElementById('lf-'+f.id)?.value.trim()||''});
+  const logs=ld('activity_logs');logs.unshift(entry);sv('activity_logs',logs);
+  logAdd(`Log: ${cfg.label} — ${agent}`);
+  toast(`${cfg.icon} Log gespeichert!`,'green');
+  switchLogForm();
+  renderLogs();renderLB();
+}
+
+function copyLogTemplate(type){
+  const cfg=LOG_TYPES[type];
+  const agent=document.getElementById('lf-agent')?.value.trim()||'—';
+  const ts=document.getElementById('lf-ts')?.value||now();
+  let text=`${cfg.icon} ${cfg.label}\n`;
+  text+=`━━━━━━━━━━━━━━━━━━━━\n`;
+  text+=`Bearbeiter: ${agent}\n`;
+  text+=`Zeitpunkt: ${ts}\n\n`;
+  cfg.fields.forEach(f=>{
+    const val=document.getElementById('lf-'+f.id)?.value.trim()||'—';
+    text+=`${f.label}: ${val}\n`;
+  });
+  navigator.clipboard.writeText(text).then(()=>toast('In Zwischenablage kopiert!','green')).catch(()=>toast('Kopieren fehlgeschlagen.','red'));
+}
+
+function renderLogs(){
+  const el=document.getElementById('log-entries');if(!el)return;
+  const q=(document.getElementById('log-search')||{value:''}).value.toLowerCase();
+  const ft=(document.getElementById('log-filter')||{value:''}).value;
+  const logs=ld('activity_logs').filter(l=>{
+    if(ft&&l.type!==ft)return false;
+    const str=JSON.stringify(l).toLowerCase();
+    if(q&&!str.includes(q))return false;
+    return true;
+  });
+  if(!logs.length){
+    el.innerHTML=`<div style="padding:28px;text-align:center;color:var(--t3);font-size:13px">Noch keine Logs vorhanden.</div>`;return;
+  }
+  const typeColors={inhaft:'var(--red2)',event:'var(--cyan2)',ammu:'var(--amber2)',geisel:'var(--red2)',fahndung:'var(--purple2)'};
+  el.innerHTML=logs.map(l=>{
+    const cfg=LOG_TYPES[l.type]||{label:l.type,icon:'📋',fields:[]};
+    const col=typeColors[l.type]||'var(--t2)';
+    const details=cfg.fields.filter(f=>l[f.id]).map(f=>`
+      <div style="display:flex;gap:8px;margin-top:5px">
+        <span style="font-size:11px;color:var(--t3);font-family:var(--fm);min-width:130px">${f.label}:</span>
+        <span style="font-size:12px;color:var(--t2)">${l[f.id]||'—'}</span>
+      </div>`).join('');
+    return`<div style="padding:14px 18px;border-bottom:1px solid var(--line2)">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:15px">${cfg.icon}</span>
+          <span style="font-size:13px;font-weight:600;color:${col}">${cfg.label}</span>
+          <span class="badge bg-gray" style="font-size:10px">${l.agent}</span>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="font-size:10px;color:var(--t3);font-family:var(--fm)">${l.ts}</span>
+          <button class="btn btn-sm btn-ghost" onclick="copyLogEntry('${l.id}')" style="padding:3px 8px;font-size:11px">📋</button>
+          <button class="btn btn-sm btn-red" onclick="deleteLog('${l.id}')" style="padding:3px 8px;font-size:11px">✕</button>
+        </div>
+      </div>
+      ${details}
+    </div>`;
+  }).join('');
+}
+
+function copyLogEntry(id){
+  const logs=ld('activity_logs');
+  const l=logs.find(x=>x.id===id);if(!l)return;
+  const cfg=LOG_TYPES[l.type]||{label:l.type,icon:'📋',fields:[]};
+  let text=`${cfg.icon} ${cfg.label}\n━━━━━━━━━━━━━━━━━━━━\nBearbeiter: ${l.agent}\nZeitpunkt: ${l.ts}\n\n`;
+  cfg.fields.forEach(f=>{text+=`${f.label}: ${l[f.id]||'—'}\n`;});
+  navigator.clipboard.writeText(text).then(()=>toast('Kopiert!','green')).catch(()=>toast('Kopieren fehlgeschlagen.','red'));
+}
+
+function deleteLog(id){
+  if(!confirm('Log wirklich löschen?'))return;
+  sv('activity_logs',ld('activity_logs').filter(x=>x.id!==id));
+  renderLogs();renderLB();toast('Log gelöscht.','amber');
+}
+
+// ═══════════════ LOGIN ════════════════
+function openLoginModal(pre){
+  if(pre)selD(pre);
+  document.getElementById('login-mb').classList.add('on');
+  document.getElementById('pw').value='';
+  document.getElementById('login-err').textContent='';
+}
+function closeLogin(){document.getElementById('login-mb').classList.remove('on')}
+function selD(d){
+  selDept=d;
+  document.querySelectorAll('.dg-item').forEach(el=>el.classList.toggle('on',el.dataset.d===d));
+  document.getElementById('login-err').textContent='';
+}
+function doLogin(){
+  if(!selDept){document.getElementById('login-err').textContent='⚠ Bitte eine Abteilung wählen.';return}
+  if(document.getElementById('pw').value!==PW[selDept]){document.getElementById('login-err').textContent='⚠ Falsches Passwort.';return}
+  dept=selDept;
+  closeLogin();
+  openPortal();
+  toast(`Eingeloggt als ${dept}`,'green');
+  logAdd(`Login: ${dept}`);
+}
+function doLogout(){
+  dept=null;selDept=null;currentMember=null;
+  document.querySelectorAll('.dg-item').forEach(el=>el.classList.remove('on'));
+  const pill=document.getElementById('login-pill');
+  pill.innerHTML='<span class="lp-dot">🔐</span> Einloggen';pill.className='login-pill';
+  pill.onclick=openLoginModal;
+  document.getElementById('nav-badge').style.display='none';
+  document.getElementById('sidebar').classList.remove('show');
+  goTo('home');
+  toast('Ausgeloggt.','amber');
+}
+
+// ═══════════════ PORTAL ════════════════
+function openPortal(){
+  const cfg=DEPT_CFG[dept]||DEPT_CFG.TD;
+  const badge=document.getElementById('nav-badge');
+  badge.textContent=dept;
+  badge.style.cssText=`display:inline-flex;color:${cfg.col};background:${cfg.bg};border:1px solid ${cfg.border};font-family:var(--fm);font-size:11px;font-weight:700;padding:4px 13px;border-radius:20px;letter-spacing:.05em`;
+  const pill=document.getElementById('login-pill');
+  pill.innerHTML=`<span class="lp-dot">👤</span> ${dept} &nbsp;<span style="font-size:11px;opacity:.6">Ausloggen</span>`;
+  pill.className='login-pill out';
+  pill.onclick=doLogout;
+  buildSidebar();
+  document.querySelectorAll('.vw').forEach(v=>v.classList.remove('on'));
+  document.getElementById('vw-portal').classList.add('on');
+  document.getElementById('sidebar').classList.add('show');
+  const first={TD:'pv-td-ausb',HR:'pv-hr-list',FIBCO:'pv-fb-akten',Leaderschaft:'pv-td-ausb'}[dept]||'pv-td-ausb';
+  switchP(first);
+}
+
+function buildSidebar(){
+  const sb=document.getElementById('sidebar');
+  const isL=dept==='Leaderschaft';
+  let h='';
+  if(dept==='TD'||isL){
+    h+=`<div class="sg" style="color:var(--cyan2)">TRAINING DIVISION</div>`;
+    h+=si('pv-td-ausb','🎓','Ausbildungen');
+    h+=si('pv-td-agenten','👤','Agenten');
+  }
+  if(dept==='HR'||isL){
+    h+=`<div class="sg" style="color:var(--amber2)">HUMAN RESOURCES</div>`;
+    h+=si('pv-hr-list','👥','Mitarbeiter');
+    h+=si('pv-hr-add','➕','Hinzufügen');
+    h+=si('pv-hr-strikes','⚠️','Strikes');
+  }
+  if(dept==='FIBCO'||isL){
+    h+=`<div class="sg" style="color:var(--purple2)">FIBCO</div>`;
+    h+=si('pv-fb-akten','🗂','Fallakten');
+    h+=si('pv-fb-create','➕','Akte erstellen');
+    h+=si('pv-fb-archiv','📦','Archiv');
+    h+=si('pv-dienst','📅','Dienstplan');
+  }
+  if(isL){
+    h+=`<div class="sg" style="color:var(--gold2)">LEADERSCHAFT</div>`;
+    h+=si('pv-ankuend','📢','Ankündigungen');
+    h+=si('pv-accounts','👤','Accounts verwalten');
+  }
+  h+=`<div class="sg">SYSTEM</div>`;
+  h+=si('pv-log','📝','Protokoll');
+  sb.innerHTML=h;
+}
+function si(id,icon,label){
+  return`<div class="si-item" data-p="${id}" onclick="switchP('${id}')">${icon} ${label}</div>`;
+}
+function switchP(id){
+  document.querySelectorAll('#portal-pane .vw').forEach(v=>v.classList.remove('on'));
+  document.querySelectorAll('.si-item').forEach(s=>s.classList.remove('on'));
+  const el=document.getElementById(id);if(el)el.classList.add('on');
+  const nav=document.querySelector(`.si-item[data-p="${id}"]`);if(nav)nav.classList.add('on');
+  if(id==='pv-member-home')renderMemberHome();
+  if(id==='pv-member-logs')renderMemberLogs();
+  if(id==='pv-accounts')acRender();
+  refreshAll();
+}
+function refreshAll(){
+  tdStats();tdRender();tdAgRender();
+  hrStats();hrRender();strikeRender();
+  fbStats();fbRender();fbArchRender();
+  dpRender();annRenderAdmin();logRender();
+}
+
+// ═══ LOG ═══
+function logAdd(msg){
+  const l=ld('log');l.unshift({msg,d:dept||'—',ts:now()});sv('log',l.slice(0,150));
+}
+function logRender(){
+  const el=document.getElementById('log-body');if(!el)return;
+  const l=ld('log');
+  if(!l.length){el.innerHTML=`<div style="padding:24px;text-align:center;color:var(--t3)">Keine Einträge.</div>`;return}
+  el.innerHTML=`<table class="tbl"><thead><tr><th>EINTRAG</th><th>ABTEILUNG</th><th>ZEIT</th></tr></thead><tbody>
+    ${l.map(e=>`<tr><td class="b">${e.msg}</td><td><span class="badge bg-gray">${e.d}</span></td><td style="color:var(--t3);font-family:var(--fm);font-size:11px">${e.ts}</td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+// ═══ TD ═══
+function tdStats(){
+  const d=ld('td_ausb');const el=document.getElementById('td-stats');if(!el)return;
+  const b=d.filter(x=>x.result==='BESTANDEN').length;
+  const ag=[...new Set(d.map(x=>x.agent))].length;
+  el.innerHTML=`
+    <div class="stat" style="border-top:2px solid var(--cyan2)"><div class="stat-n" style="color:var(--cyan2)">${d.length}</div><div class="stat-l">EINTRÄGE</div></div>
+    <div class="stat" style="border-top:2px solid var(--green)"><div class="stat-n" style="color:var(--green)">${b}</div><div class="stat-l">BESTANDEN</div></div>
+    <div class="stat" style="border-top:2px solid var(--red)"><div class="stat-n" style="color:var(--red)">${d.length-b}</div><div class="stat-l">NICHT BESTANDEN</div></div>
+    <div class="stat" style="border-top:2px solid var(--amber2)"><div class="stat-n" style="color:var(--amber2)">${ag}</div><div class="stat-l">AGENTEN</div></div>`;
+}
+function tdSave(){
+  const agent=document.getElementById('td-agent')?.value.trim();
+  const ausb=document.getElementById('td-ausb')?.value;
+  if(!agent||!ausb){toast('Agent und Ausbildung sind Pflichtfelder!','red');return}
+  const e={id:uid(),agent,ausb,
+    trainer:document.getElementById('td-trainer')?.value.trim()||'',
+    datum:document.getElementById('td-datum')?.value||'',
+    result:document.getElementById('td-result')?.value||'BESTANDEN',
+    note:document.getElementById('td-note')?.value.trim()||'',
+    ts:now()};
+  const d=ld('td_ausb');d.push(e);sv('td_ausb',d);
+  logAdd(`TD: ${agent} — ${ausb} — ${e.result}`);
+  document.getElementById('td-agent').value='';
+  document.getElementById('td-ausb').value='';
+  document.getElementById('td-note').value='';
+  toast('Ausbildung eingetragen!','green');
+  tdStats();tdRender();tdAgRender();
+}
+function tdRender(){
+  const d=ld('td_ausb');
+  const q=(document.getElementById('td-search')||{value:''}).value.toLowerCase();
+  const f=d.filter(x=>!q||x.agent.toLowerCase().includes(q)||x.ausb.toLowerCase().includes(q));
+  const tb=document.getElementById('td-body');if(!tb)return;
+  if(!f.length){tb.innerHTML=`<tr><td colspan="7" style="padding:24px;text-align:center;color:var(--t3)">Keine Einträge vorhanden.</td></tr>`;return}
+  const rc={BESTANDEN:'bg-green','NICHT BESTANDEN':'bg-red',AUSSTEHEND:'bg-amber'};
+  tb.innerHTML=f.slice().reverse().map(x=>`<tr>
+    <td class="b">${x.agent}</td><td>${x.ausb}</td><td>${x.trainer||'—'}</td><td>${x.datum||'—'}</td>
+    <td><span class="badge ${rc[x.result]||'bg-gray'}">${x.result}</span></td>
+    <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--t2)">${x.note||'—'}</td>
+    <td><button class="btn btn-sm btn-red" onclick="tdDel('${x.id}')">✕</button></td>
+  </tr>`).join('');
+}
+function tdDel(id){
+  sv('td_ausb',ld('td_ausb').filter(x=>x.id!==id));
+  toast('Gelöscht.','amber');tdStats();tdRender();tdAgRender();
+}
+function tdAgRender(){
+  const d=ld('td_ausb');
+  const q=(document.getElementById('td-agq')||{value:''}).value.toLowerCase();
+  const agents=[...new Set(d.map(x=>x.agent))].filter(a=>!q||a.toLowerCase().includes(a));
+  const el=document.getElementById('td-ag-list');if(!el)return;
+  if(!agents.length){el.innerHTML=`<div style="padding:24px;text-align:center;color:var(--t3)">Noch keine Ausbildungen eingetragen.</div>`;return}
+  el.innerHTML=agents.map(ag=>{
+    const entries=d.filter(x=>x.agent===ag);
+    const best=entries.filter(x=>x.result==='BESTANDEN').length;
+    return`<div class="ag-box">
+      <div class="ag-box-head">
+        <span style="font-size:14px;font-weight:700">${ag}</span>
+        <div style="display:flex;gap:6px">
+          <span class="badge bg-green">${best} Bestanden</span>
+          <span class="badge bg-red">${entries.length-best} Offen</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        ${entries.map(e=>`<span class="badge ${e.result==='BESTANDEN'?'bg-green':e.result==='NICHT BESTANDEN'?'bg-red':'bg-amber'}">${e.ausb}</span>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══ HR ═══
+function hrStats(){
+  const d=ld('hr_persons');const el=document.getElementById('hr-stats');if(!el)return;
+  el.innerHTML=`
+    <div class="stat" style="border-top:2px solid var(--amber2)"><div class="stat-n" style="color:var(--amber2)">${d.length}</div><div class="stat-l">PERSONEN</div></div>
+    <div class="stat" style="border-top:2px solid var(--red)"><div class="stat-n" style="color:var(--red)">${d.filter(x=>parseInt(x.strike)>0).length}</div><div class="stat-l">MIT STRIKES</div></div>
+    <div class="stat" style="border-top:2px solid var(--cyan2)"><div class="stat-n" style="color:var(--cyan2)">${[...new Set(d.map(x=>x.div).filter(Boolean))].length}</div><div class="stat-l">DIVISIONEN</div></div>
+    <div class="stat" style="border-top:2px solid var(--green)"><div class="stat-n" style="color:var(--green)">${d.filter(x=>!parseInt(x.strike)).length}</div><div class="stat-l">KEIN STRIKE</div></div>`;
+}
+function hrRender(){
+  const d=ld('hr_persons');
+  const q=(document.getElementById('hr-q')||{value:''}).value.toLowerCase();
+  const div=(document.getElementById('hr-div-f')||{value:''}).value;
+  const f=d.filter(p=>{
+    if(q&&!p.name?.toLowerCase().includes(q)&&!String(p.agentId||'').includes(q))return false;
+    if(div&&p.div!==div)return false;
+    return true;
+  });
+  const el=document.getElementById('hr-grid');if(!el)return;
+  if(!f.length){el.innerHTML=`<div style="grid-column:1/-1;padding:28px;text-align:center;color:var(--t3)">Keine Personen gefunden.</div>`;return}
+  const sc=s=>parseInt(s)===0?'bg-green':parseInt(s)===1?'bg-amber':'bg-red';
+  el.innerHTML=f.map(p=>`
+    <div class="pc">
+      <div class="pc-av">👤</div>
+      <div class="pc-inf">
+        <div class="pc-name">${p.name} <span style="font-size:11px;color:var(--t3);font-family:var(--fm)">#${p.agentId||'—'}</span></div>
+        <div class="pc-rank">${p.rank||'—'} · DN ${p.dn||'—'}</div>
+        <div class="pc-tags">
+          <span class="badge bg-blue" style="font-size:9px">${p.div||'—'}</span>
+          <span class="badge ${sc(p.strike)}" style="font-size:9px">${p.strike||0}/3 Strikes</span>
+          ${p.abt?p.abt.split(',').map(a=>`<span class="badge bg-gray" style="font-size:9px">${a.trim()}</span>`).join(''):''}
+        </div>
+        ${p.note?`<div style="font-size:12px;color:var(--t3);margin-top:6px">${p.note}</div>`:''}
+      </div>
+      <div class="pc-act">
+        <button class="btn btn-sm btn-ghost" onclick="hrEdit('${p.id}')">✏</button>
+        <button class="btn btn-sm btn-red" onclick="hrDel('${p.id}')">✕</button>
+      </div>
+    </div>`).join('');
+}
+function hrAdd(){
+  const name=document.getElementById('hr-name')?.value.trim();
+  const rank=document.getElementById('hr-rank')?.value;
+  if(!name||!rank){toast('Name und Rang sind Pflichtfelder!','red');return}
+  const p={id:uid(),name,agentId:document.getElementById('hr-id')?.value.trim(),rank,
+    div:document.getElementById('hr-div')?.value,dn:document.getElementById('hr-dn')?.value.trim(),
+    phone:document.getElementById('hr-phone')?.value.trim(),abt:document.getElementById('hr-abt')?.value.trim(),
+    strike:document.getElementById('hr-strike')?.value||'0',date:document.getElementById('hr-date')?.value,
+    note:document.getElementById('hr-note')?.value.trim(),ts:now()};
+  const d=ld('hr_persons');d.push(p);sv('hr_persons',d);
+  logAdd(`HR Neu: ${name} (${p.agentId||'—'}) · ${rank}`);
+  hrClear();toast('Person hinzugefügt!','green');
+  hrStats();hrRender();switchP('pv-hr-list');
+}
+function hrClear(){
+  ['hr-name','hr-id','hr-dn','hr-phone','hr-abt','hr-note'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  ['hr-rank','hr-div','hr-strike'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+}
+function hrDel(id){
+  if(!confirm('Person wirklich löschen?'))return;
+  const d=ld('hr_persons');const p=d.find(x=>x.id===id);
+  sv('hr_persons',d.filter(x=>x.id!==id));
+  if(p)logAdd(`HR Gelöscht: ${p.name}`);
+  toast('Person gelöscht.','amber');hrStats();hrRender();
+}
+function hrEdit(id){
+  const d=ld('hr_persons');const p=d.find(x=>x.id===id);if(!p)return;
+  document.getElementById('edit-title').textContent='Person bearbeiten';
+  document.getElementById('edit-body').innerHTML=`
+    <div class="fg fg2" style="gap:12px">
+      <div class="ff"><div class="fl">Name</div><input class="fi" id="e-name" value="${p.name||''}"></div>
+      <div class="ff"><div class="fl">Agenten-ID</div><input class="fi" id="e-aid" value="${p.agentId||''}"></div>
+      <div class="ff"><div class="fl">Rang</div><input class="fi" id="e-rank" value="${p.rank||''}"></div>
+      <div class="ff"><div class="fl">Division</div><input class="fi" id="e-div" value="${p.div||''}"></div>
+      <div class="ff"><div class="fl">DN</div><input class="fi" id="e-dn" value="${p.dn||''}"></div>
+      <div class="ff"><div class="fl">Strike</div><select class="fs" id="e-strike">${[0,1,2,3].map(n=>`<option ${p.strike==n?'selected':''}>${n}</option>`).join('')}</select></div>
+      <div class="ff" style="grid-column:1/-1"><div class="fl">Abteilungen</div><input class="fi" id="e-abt" value="${p.abt||''}"></div>
+      <div class="ff" style="grid-column:1/-1"><div class="fl">Notizen</div><textarea class="fta" id="e-note">${p.note||''}</textarea></div>
+    </div>`;
+  document.getElementById('edit-acts').innerHTML=`
+    <button class="btn btn-ghost" onclick="closeEdit()">Abbrechen</button>
+    <button class="btn btn-amber" onclick="hrSave('${id}')">Speichern</button>`;
+  document.getElementById('edit-mb').classList.add('on');
+}
+function hrSave(id){
+  const d=ld('hr_persons');const p=d.find(x=>x.id===id);if(!p)return;
+  p.name=document.getElementById('e-name').value.trim();
+  p.agentId=document.getElementById('e-aid').value.trim();
+  p.rank=document.getElementById('e-rank').value.trim();
+  p.div=document.getElementById('e-div').value.trim();
+  p.dn=document.getElementById('e-dn').value.trim();
+  p.strike=document.getElementById('e-strike').value;
+  p.abt=document.getElementById('e-abt').value.trim();
+  p.note=document.getElementById('e-note').value.trim();
+  sv('hr_persons',d);logAdd(`HR Bearbeitet: ${p.name}`);
+  closeEdit();toast('Gespeichert!','green');hrRender();
+}
+
+// ═══ STRIKES ═══
+function strikeSave(){
+  const agent=document.getElementById('str-agent')?.value.trim();
+  const action=document.getElementById('str-action')?.value;
+  const reason=document.getElementById('str-reason')?.value.trim();
+  if(!agent){toast('Agentname erforderlich!','red');return}
+  const d=ld('hr_persons');
+  const p=d.find(x=>x.name?.toLowerCase()===agent.toLowerCase()||String(x.agentId||'')===agent);
+  let msg='';
+  if(p){
+    if(action==='add'){p.strike=Math.min(3,parseInt(p.strike||0)+1);msg=`Strike +1 → ${p.strike}/3`}
+    else if(action==='remove'){p.strike=Math.max(0,parseInt(p.strike||0)-1);msg=`Strike -1 → ${p.strike}/3`}
+    else{p.strike=0;msg='Alle Strikes zurückgesetzt'}
+    sv('hr_persons',d);
+  }else{msg=`Agent "${agent}" nicht in HR-Datenbank`}
+  const sh=ld('strike_history');
+  sh.unshift({agent,action,reason,result:msg,ts:now(),dept});
+  sv('strike_history',sh);
+  logAdd(`Strike: ${agent} — ${msg}${reason?' ('+reason+')':''}`);
+  document.getElementById('str-agent').value='';
+  document.getElementById('str-reason').value='';
+  toast(msg,'amber');hrRender();strikeRender();
+}
+function strikeRender(){
+  const el=document.getElementById('strike-list');if(!el)return;
+  const d=ld('strike_history');
+  if(!d.length){el.innerHTML=`<div style="padding:24px;text-align:center;color:var(--t3)">Keine Strike-Aktionen.</div>`;return}
+  el.innerHTML=`<table class="tbl"><thead><tr><th>AGENT</th><th>AKTION</th><th>ERGEBNIS</th><th>GRUND</th><th>ZEIT</th></tr></thead><tbody>
+    ${d.map(x=>`<tr><td class="b">${x.agent}</td><td><span class="badge bg-red">${x.action}</span></td><td style="color:var(--amber2);font-family:var(--fm)">${x.result}</td><td style="color:var(--t2)">${x.reason||'—'}</td><td style="color:var(--t3);font-family:var(--fm);font-size:11px">${x.ts}</td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+// ═══ FIBCO ═══
+function fbStats(){
+  const d=ld('fb_akten');const el=document.getElementById('fb-stats');if(!el)return;
+  el.innerHTML=`
+    <div class="stat" style="border-top:2px solid var(--purple2)"><div class="stat-n" style="color:var(--purple2)">${d.length}</div><div class="stat-l">AKTEN</div></div>
+    <div class="stat" style="border-top:2px solid var(--red)"><div class="stat-n" style="color:var(--red)">${d.filter(x=>x.prio==='KRITISCH').length}</div><div class="stat-l">KRITISCH</div></div>
+    <div class="stat" style="border-top:2px solid var(--green)"><div class="stat-n" style="color:var(--green)">${d.filter(x=>x.status==='AKTIV'||x.status==='IN BEARBEITUNG').length}</div><div class="stat-l">AKTIV</div></div>
+    <div class="stat" style="border-top:2px solid var(--t3)"><div class="stat-n" style="color:var(--t2)">${ld('fb_archiv').length}</div><div class="stat-l">ARCHIVIERT</div></div>`;
+}
+function fbRender(){
+  const d=ld('fb_akten');
+  const q=(document.getElementById('fb-q')||{value:''}).value.toLowerCase();
+  const prio=(document.getElementById('fb-prio-f')||{value:''}).value;
+  const f=d.filter(x=>{
+    if(q&&!x.title?.toLowerCase().includes(q)&&!x.id?.toLowerCase().includes(q))return false;
+    if(prio&&x.prio!==prio)return false;
+    return true;
+  });
+  const el=document.getElementById('fb-grid');if(!el)return;
+  if(!f.length){el.innerHTML=`<div style="grid-column:1/-1;padding:28px;text-align:center;color:var(--t3)">Keine Fallakten vorhanden.</div>`;return}
+  const pc={KRITISCH:'bg-red',HOCH:'bg-amber',MITTEL:'bg-blue',NIEDRIG:'bg-gray'};
+  const sc={AKTIV:'bg-red','IN BEARBEITUNG':'bg-amber',AUSSTEHEND:'bg-gray',ABGESCHLOSSEN:'bg-green'};
+  el.innerHTML=f.slice().reverse().map(x=>`
+    <div class="fc" onclick="fbDetail('${x.id}')">
+      <div class="fc-top">
+        <div><div class="fc-id">AKTE #${x.id}</div><div class="fc-title">${x.title}</div></div>
+        <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end">
+          <span class="badge ${pc[x.prio]||'bg-gray'}">${x.prio}</span>
+          <span class="badge ${sc[x.status]||'bg-gray'}">${x.status}</span>
+        </div>
+      </div>
+      <div class="fc-desc">${x.desc||'—'}</div>
+      <div class="fc-meta">
+        <span class="badge bg-purple" style="font-size:9px">${x.type||'—'}</span>
+        <span class="badge bg-gray" style="font-size:9px">${x.classification||'—'}</span>
+        <span style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-left:auto">${x.ts}</span>
+      </div>
+    </div>`).join('');
+}
+function fbCreate(){
+  const title=document.getElementById('fb-title')?.value.trim();
+  const desc=document.getElementById('fb-desc')?.value.trim();
+  if(!title||!desc){toast('Bezeichnung und Beschreibung sind Pflichtfelder!','red');return}
+  const a={id:'FA-'+uid(),title,desc,
+    prio:document.getElementById('fb-prio')?.value,type:document.getElementById('fb-type')?.value,
+    unit:document.getElementById('fb-unit')?.value.trim(),lead:document.getElementById('fb-lead')?.value.trim(),
+    suspects:document.getElementById('fb-suspects')?.value.trim(),
+    classification:document.getElementById('fb-class')?.value,status:document.getElementById('fb-status')?.value,
+    notes:document.getElementById('fb-notes')?.value.trim(),ts:now()};
+  const d=ld('fb_akten');d.push(a);sv('fb_akten',d);
+  logAdd(`FIBCO Neue Akte: ${title} (${a.id}) · ${a.prio}`);
+  fbClear();toast('Fallakte gespeichert!','green');fbStats();fbRender();switchP('pv-fb-akten');
+}
+function fbClear(){['fb-title','fb-unit','fb-lead','fb-desc','fb-suspects','fb-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''})}
+function fbDetail(id){
+  const all=[...ld('fb_akten'),...ld('fb_archiv')];
+  const x=all.find(a=>a.id===id);if(!x)return;
+  const pc={KRITISCH:'bg-red',HOCH:'bg-amber',MITTEL:'bg-blue',NIEDRIG:'bg-gray'};
+  const sc={AKTIV:'bg-red','IN BEARBEITUNG':'bg-amber',AUSSTEHEND:'bg-gray',ABGESCHLOSSEN:'bg-green'};
+  document.getElementById('edit-title').innerHTML=`📁 ${x.id}`;
+  document.getElementById('edit-body').innerHTML=`
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+      <span class="badge ${pc[x.prio]||''}">${x.prio}</span>
+      <span class="badge ${sc[x.status]||''}">${x.status}</span>
+      <span class="badge bg-purple">${x.type||'—'}</span>
+      <span class="badge bg-gray">${x.classification||'—'}</span>
+    </div>
+    <div style="font-size:22px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px">${x.title}</div>
+    <div style="font-size:11px;color:var(--t3);font-family:var(--fm);margin-bottom:16px">Erstellt: ${x.ts}</div>
+    ${x.unit||x.lead?`<div style="display:flex;gap:20px;padding:12px 14px;background:var(--card);border-radius:10px;border:1px solid var(--line);margin-bottom:14px">
+      ${x.unit?`<div><div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:2px">EINHEIT</div><div style="font-size:13px;font-weight:600">${x.unit}</div></div>`:''}
+      ${x.lead?`<div><div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:2px">FALLFÜHRER</div><div style="font-size:13px;font-weight:600">${x.lead}</div></div>`:''}
+    </div>`:''}
+    <div style="font-size:11px;font-weight:600;color:var(--t3);margin-bottom:5px">BESCHREIBUNG</div>
+    <div style="font-size:13px;color:var(--t2);margin-bottom:14px;line-height:1.7;white-space:pre-wrap">${x.desc}</div>
+    ${x.suspects?`<div style="font-size:11px;font-weight:600;color:var(--t3);margin-bottom:5px">VERDÄCHTIGE</div><div style="font-size:13px;color:var(--t2);margin-bottom:14px;white-space:pre-wrap">${x.suspects}</div>`:''}
+    ${x.notes?`<div style="font-size:11px;font-weight:600;color:var(--t3);margin-bottom:5px">ANMERKUNGEN</div><div style="font-size:13px;color:var(--t2);white-space:pre-wrap">${x.notes}</div>`:''}`;
+  const isArch=ld('fb_archiv').some(a=>a.id===id);
+  document.getElementById('edit-acts').innerHTML=`
+    ${!isArch?`<button class="btn btn-ghost" onclick="fbArchive('${id}')">📦 Archivieren</button>`:''}
+    <button class="btn btn-red" onclick="fbDel('${id}')">✕ Löschen</button>
+    <button class="btn btn-purple" onclick="closeEdit()">Schließen</button>`;
+  document.getElementById('edit-mb').classList.add('on');
+}
+function fbArchive(id){
+  let d=ld('fb_akten');const x=d.find(a=>a.id===id);if(!x)return;
+  d=d.filter(a=>a.id!==id);sv('fb_akten',d);
+  const arch=ld('fb_archiv');x.archivedAt=now();arch.push(x);sv('fb_archiv',arch);
+  logAdd(`FIBCO Archiviert: ${x.title}`);closeEdit();toast('Archiviert.','amber');
+  fbStats();fbRender();fbArchRender();
+}
+function fbDel(id){
+  if(!confirm('Akte wirklich löschen?'))return;
+  sv('fb_akten',ld('fb_akten').filter(a=>a.id!==id));
+  sv('fb_archiv',ld('fb_archiv').filter(a=>a.id!==id));
+  logAdd(`FIBCO Gelöscht: ${id}`);closeEdit();toast('Gelöscht.','amber');
+  fbStats();fbRender();fbArchRender();
+}
+function fbArchRender(){
+  const d=ld('fb_archiv');const el=document.getElementById('fb-archiv-grid');if(!el)return;
+  if(!d.length){el.innerHTML=`<div style="grid-column:1/-1;padding:28px;text-align:center;color:var(--t3)">Keine archivierten Akten.</div>`;return}
+  const pc={KRITISCH:'bg-red',HOCH:'bg-amber',MITTEL:'bg-blue',NIEDRIG:'bg-gray'};
+  el.innerHTML=d.slice().reverse().map(x=>`
+    <div class="fc" onclick="fbDetail('${x.id}')">
+      <div class="fc-top"><div><div class="fc-id">AKTE #${x.id} · ARCHIV</div><div class="fc-title">${x.title}</div></div>
+      <span class="badge ${pc[x.prio]||'bg-gray'}">${x.prio}</span></div>
+      <div class="fc-desc">${x.desc||'—'}</div>
+      <div class="fc-meta"><span class="badge bg-gray" style="font-size:9px">Archiviert ${x.archivedAt||'—'}</span></div>
+    </div>`).join('');
+}
+
+// ═══ DIENSTPLAN ═══
+function dpSave(){
+  const name=document.getElementById('dp-name')?.value.trim();
+  const date=document.getElementById('dp-date')?.value;
+  if(!name||!date){toast('Name und Datum sind erforderlich!','red');return}
+  const e={id:uid(),name,date,
+    start:document.getElementById('dp-start')?.value||'',
+    end:document.getElementById('dp-end')?.value||'',
+    unit:document.getElementById('dp-unit')?.value.trim()||'',
+    note:document.getElementById('dp-note')?.value.trim()||'',
+    ts:now()};
+  const d=ld('dienstplan');d.push(e);sv('dienstplan',d);
+  logAdd(`Dienst: ${name} am ${date} ${e.start}-${e.end}`);
+  ['dp-name','dp-start','dp-end','dp-unit','dp-note'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  toast('Diensteintrag gespeichert!','green');dpRender();
+}
+function dpRender(){
+  const el=document.getElementById('dp-list');if(!el)return;
+  const d=ld('dienstplan');
+  if(!d.length){el.innerHTML=`<div style="padding:24px;text-align:center;color:var(--t3)">Keine Einträge.</div>`;return}
+  const sorted=[...d].sort((a,b)=>a.date>b.date?-1:1);
+  el.innerHTML=sorted.map(x=>`
+    <div class="dp-row">
+      <div class="dp-dot" style="background:var(--green)"></div>
+      <div class="dp-time">${x.date}${x.start?' · '+x.start:''}</div>
+      <div class="dp-name">${x.name}</div>
+      <span class="badge bg-gray" style="font-size:10px">${x.unit||'—'}</span>
+      ${x.end?`<span style="font-size:11px;color:var(--t3);font-family:var(--fm)">bis ${x.end}</span>`:''}
+      ${x.note?`<span style="font-size:11px;color:var(--t2)">${x.note}</span>`:''}
+      <button class="btn btn-sm btn-red" onclick="dpDel('${x.id}')">✕</button>
+    </div>`).join('');
+}
+function dpDel(id){sv('dienstplan',ld('dienstplan').filter(x=>x.id!==id));dpRender();toast('Entfernt.','amber')}
+
+// ═══ ANKÜNDIGUNGEN ═══
+function annSave(){
+  const title=document.getElementById('ann-title')?.value.trim();
+  const body=document.getElementById('ann-body')?.value.trim();
+  if(!title||!body){toast('Titel und Inhalt sind Pflichtfelder!','red');return}
+  const type=document.getElementById('ann-type')?.value||'info';
+  const e={id:uid(),title,body,type,ts:now()};
+  const d=ld('announcements');d.unshift(e);sv('announcements',d);
+  document.getElementById('ann-title').value='';
+  document.getElementById('ann-body').value='';
+  toast('Ankündigung veröffentlicht!','green');
+  logAdd(`Ankündigung: ${title}`);
+  annRenderAdmin();renderPubAnn();
+}
+function annClear(){if(confirm('Alle Ankündigungen löschen?')){sv('announcements',[]);annRenderAdmin();renderPubAnn();toast('Geleert.','amber')}}
+function annRenderAdmin(){
+  const el=document.getElementById('ann-list-admin');if(!el)return;
+  const d=ld('announcements');
+  if(!d.length){el.innerHTML=`<div style="padding:24px;text-align:center;color:var(--t3)">Keine Ankündigungen.</div>`;return}
+  const ic={info:'ℹ️',warn:'⚠️',alert:'🚨',good:'✅'};
+  const bg={info:'rgba(59,130,246,.08)',warn:'rgba(245,158,11,.08)',alert:'rgba(239,68,68,.08)',good:'rgba(34,197,94,.08)'};
+  el.innerHTML=d.map(x=>`
+    <div class="notif-card" style="background:${bg[x.type]||bg.info}">
+      <div class="notif-type">${ic[x.type]||'ℹ️'}</div>
+      <div class="notif-inner">
+        <div class="notif-title">${x.title}</div>
+        <div class="notif-body">${x.body}</div>
+        <div class="notif-meta">${x.ts}</div>
+      </div>
+      <button class="btn btn-sm btn-red" onclick="annDel('${x.id}')">✕</button>
+    </div>`).join('');
+}
+function annDel(id){sv('announcements',ld('announcements').filter(x=>x.id!==id));annRenderAdmin();renderPubAnn();toast('Gelöscht.','amber')}
+function renderPubAnn(){
+  const el=document.getElementById('pub-announcements');if(!el)return;
+  const d=ld('announcements');
+  if(!d.length){el.innerHTML=`<div style="padding:24px;text-align:center;color:var(--t3);font-size:13px">Keine aktuellen Ankündigungen.</div>`;return}
+  const ic={info:'ℹ️',warn:'⚠️',alert:'🚨',good:'✅'};
+  const bg={info:'rgba(59,130,246,.06)',warn:'rgba(245,158,11,.06)',alert:'rgba(239,68,68,.06)',good:'rgba(34,197,94,.06)'};
+  el.innerHTML=d.slice(0,3).map(x=>`
+    <div class="notif-card" style="background:${bg[x.type]||bg.info}">
+      <div class="notif-type">${ic[x.type]||'ℹ️'}</div>
+      <div class="notif-inner">
+        <div class="notif-title">${x.title}</div>
+        <div class="notif-body">${x.body}</div>
+        <div class="notif-meta">${x.ts}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ═══ EDIT MODAL CLOSE ═══
+function closeEdit(){document.getElementById('edit-mb').classList.remove('on')}
+document.getElementById('edit-mb').addEventListener('click',e=>{if(e.target===e.currentTarget)closeEdit()});
+document.getElementById('login-mb').addEventListener('click',e=>{if(e.target===e.currentTarget)closeLogin()});
+
+// ═══ ACCOUNT VERWALTUNG (Leaderschaft) ═══
+function acCreate(){
+  const name=document.getElementById('ac-name')?.value.trim();
+  const agentId=document.getElementById('ac-id')?.value.trim();
+  const pw=document.getElementById('ac-pw')?.value.trim();
+  if(!name||!agentId||!pw){toast('Name, ID und Passwort sind Pflicht!','red');return;}
+  const dept2=document.getElementById('ac-dept')?.value||'Abteilungsarma';
+  const rankN=parseInt(document.getElementById('ac-rank')?.value)||18;
+  const div=document.getElementById('ac-div')?.value.trim()||dept2;
+  if(createMemberAccount(name,agentId,pw,dept2,rankN,div)){
+    logAdd(`Account erstellt: ${name} (ID: ${agentId}) · ${dept2}`);
+    ['ac-name','ac-id','ac-pw','ac-rank','ac-div'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+    acRender();
+  }
+}
+function acRender(){
+  const ms=getMembers();
+  const el=document.getElementById('ac-body');if(!el)return;
+  const cnt=document.getElementById('ac-count');if(cnt)cnt.textContent=ms.length+' Accounts';
+  if(!ms.length){el.innerHTML=`<tr><td colspan="6" style="padding:24px;text-align:center;color:var(--t3)">Keine Accounts vorhanden.</td></tr>`;return;}
+  el.innerHTML=ms.map(m=>`<tr>
+    <td class="b">${m.name}</td>
+    <td style="font-family:var(--fm);color:var(--gold3)">${m.agentId}</td>
+    <td><span class="badge bg-gray">${m.dept||'—'}</span></td>
+    <td style="font-family:var(--fm);color:var(--t2)">${m.rankN||'—'}</td>
+    <td style="font-size:11px;color:var(--t3);font-family:var(--fm)">${m.created||'—'}</td>
+    <td>
+      <button class="btn btn-sm btn-amber" onclick="acResetPw('${m.agentId}')" style="margin-right:5px">PW ändern</button>
+      <button class="btn btn-sm btn-red" onclick="acDelete('${m.agentId}')">✕</button>
+    </td>
+  </tr>`).join('');
+}
+function acDelete(id){
+  if(!confirm('Account wirklich löschen?'))return;
+  sv('members',getMembers().filter(m=>m.agentId!==id));
+  toast('Account gelöscht.','amber');acRender();
+}
+function acResetPw(id){
+  const npw=prompt('Neues Passwort für Agent '+id+':');
+  if(!npw)return;
+  const ms=getMembers();const m=ms.find(x=>x.agentId===id);
+  if(m){m.pw=npw;sv('members',ms);toast('Passwort geändert!','green');logAdd(`Passwort geändert: ${m.name} (${id})`)}
+}
+
+// ═══ MEMBER HOME ═══
+function renderMemberHome(){
+  if(!currentMember)return;
+  const m=currentMember;
+  const myLogs=ld('activity_logs').filter(l=>l.agent===m.name||l.agentId===m.agentId);
+  const el=document.getElementById('member-stats');
+  if(el)el.innerHTML=`
+    <div class="stat" style="border-top:2px solid var(--gold2)"><div class="stat-n" style="color:var(--gold3)">${m.rankN||'—'}</div><div class="stat-l">RANG-NUMMER</div></div>
+    <div class="stat" style="border-top:2px solid var(--cyan2)"><div class="stat-n" style="color:var(--cyan2)">${myLogs.length}</div><div class="stat-l">MEINE LOGS</div></div>
+    <div class="stat" style="border-top:2px solid var(--green2)"><div class="stat-n" style="color:var(--green2)">${m.dept||'—'}</div><div class="stat-l">ABTEILUNG</div></div>`;
+  const pb=document.getElementById('member-profile-body');
+  if(pb)pb.innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div style="font-size:24px;font-weight:700;color:var(--t1);margin-bottom:4px">${m.name}</div>
+        <div style="font-size:12px;color:var(--t3);font-family:var(--fm);margin-bottom:16px">AGENT · ID ${m.agentId}</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:12px"><span style="font-size:12px;color:var(--t3);width:100px">Abteilung</span><span style="font-size:13px;color:var(--t1)">${m.dept||'—'}</span></div>
+          <div style="display:flex;gap:12px"><span style="font-size:12px;color:var(--t3);width:100px">Division</span><span style="font-size:13px;color:var(--t1)">${m.div||'—'}</span></div>
+          <div style="display:flex;gap:12px"><span style="font-size:12px;color:var(--t3);width:100px">Rang</span><span style="font-size:13px;color:var(--t1)">${RL[m.rankN]||('Rang '+m.rankN)||'—'}</span></div>
+          <div style="display:flex;gap:12px"><span style="font-size:12px;color:var(--t3);width:100px">Account seit</span><span style="font-size:13px;color:var(--t1)">${m.created||'—'}</span></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--t3);font-family:var(--fm);letter-spacing:.1em;margin-bottom:10px">LETZTE LOGS</div>
+        ${myLogs.slice(0,5).map(l=>{const cfg=LOG_TYPES[l.type]||{icon:'📋',label:l.type};return`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line2)"><span>${cfg.icon}</span><span style="font-size:13px;color:var(--t2);flex:1">${cfg.label}</span><span style="font-size:10px;color:var(--t3);font-family:var(--fm)">${l.ts}</span></div>`}).join('')}
+        ${!myLogs.length?'<div style="color:var(--t3);font-size:13px">Noch keine Logs.</div>':''}
+      </div>
+    </div>`;
+}
+
+// ═══ MEMBER LOG FORM (mit eigenem Namen vorausgefüllt) ═══
+function memberLogForm(){
+  const type=document.getElementById('ml-type')?.value;
+  const wrap=document.getElementById('ml-form-wrap');
+  if(!type||!wrap){return;}
+  if(!type){wrap.innerHTML=`<div style="text-align:center;color:var(--t3);font-size:13px;padding:16px 0">Log-Art auswählen.</div>`;return;}
+  const cfg=LOG_TYPES[type];
+  const agentName=currentMember?.name||'';
+  wrap.innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--line2)">
+        <span style="font-size:18px">${cfg.icon}</span>
+        <span style="font-size:14px;font-weight:600">${cfg.label}</span>
+      </div>
+      <div class="fg fg2">
+        <div class="ff"><div class="fl">Agent</div><input class="fi" id="mlf-agent" value="${agentName}" readonly style="opacity:.6"></div>
+        <div class="ff"><div class="fl">Datum & Uhrzeit</div><input class="fi" type="datetime-local" id="mlf-ts" value="${new Date().toISOString().slice(0,16)}"></div>
+      </div>
+      ${cfg.fields.map(f=>`<div class="ff"><div class="fl">${f.label}</div><input class="fi" id="mlf-${f.id}" placeholder="${f.placeholder}"></div>`).join('')}
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="btn btn-gold" onclick="saveMemberLog('${type}')">💾 Log speichern</button>
+        <button class="btn btn-ghost" onclick="copyMemberLog('${type}')">📋 Kopieren</button>
+      </div>
+    </div>`;
+}
+function saveMemberLog(type){
+  const cfg=LOG_TYPES[type];
+  const agent=currentMember?.name||document.getElementById('mlf-agent')?.value.trim()||'—';
+  const entry={id:uid(),type,agent,ts:now(),created:document.getElementById('mlf-ts')?.value||now()};
+  cfg.fields.forEach(f=>{entry[f.id]=document.getElementById('mlf-'+f.id)?.value.trim()||'';});
+  const logs=ld('activity_logs');logs.unshift(entry);sv('activity_logs',logs);
+  logAdd(`Log: ${cfg.label} — ${agent}`);
+  toast(`${cfg.icon} Log gespeichert!`,'green');
+  memberLogForm();renderMemberLogs();renderLB();renderMemberHome();
+}
+function copyMemberLog(type){
+  const cfg=LOG_TYPES[type];
+  const agent=currentMember?.name||'—';
+  let text=`${cfg.icon} ${cfg.label}\n━━━━━━━━━━━━━━━━━━━━\nBearbeiter: ${agent}\nZeitpunkt: ${document.getElementById('mlf-ts')?.value||now()}\n\n`;
+  cfg.fields.forEach(f=>{text+=`${f.label}: ${document.getElementById('mlf-'+f.id)?.value.trim()||'—'}\n`;});
+  navigator.clipboard.writeText(text).then(()=>toast('Kopiert!','green')).catch(()=>toast('Kopieren fehlgeschlagen.','red'));
+}
+function renderMemberLogs(){
+  const el=document.getElementById('ml-entries');if(!el)return;
+  const myName=currentMember?.name;
+  const logs=ld('activity_logs').filter(l=>!myName||l.agent===myName);
+  if(!logs.length){el.innerHTML=`<div style="padding:24px;text-align:center;color:var(--t3)">Noch keine Logs.</div>`;return;}
+  const typeColors={inhaft:'var(--red2)',event:'var(--cyan2)',ammu:'var(--amber2)',geisel:'var(--red2)',fahndung:'var(--purple2)'};
+  el.innerHTML=logs.map(l=>{
+    const cfg=LOG_TYPES[l.type]||{icon:'📋',label:l.type,fields:[]};
+    const col=typeColors[l.type]||'var(--t2)';
+    const details=cfg.fields.filter(f=>l[f.id]).map(f=>`<div style="display:flex;gap:8px;margin-top:4px"><span style="font-size:11px;color:var(--t3);font-family:var(--fm);min-width:130px">${f.label}:</span><span style="font-size:12px;color:var(--t2)">${l[f.id]}</span></div>`).join('');
+    return`<div style="padding:14px 18px;border-bottom:1px solid var(--line2)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span>${cfg.icon}</span><span style="font-size:13px;font-weight:600;color:${col}">${cfg.label}</span>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="font-size:10px;color:var(--t3);font-family:var(--fm)">${l.ts}</span>
+          <button class="btn btn-sm btn-ghost" onclick="copyLogEntry('${l.id}')" style="padding:3px 8px;font-size:11px">📋</button>
+          <button class="btn btn-sm btn-red" onclick="deleteMemberLog('${l.id}')" style="padding:3px 8px;font-size:11px">✕</button>
+        </div>
+      </div>
+      ${details}
+    </div>`;
+  }).join('');
+}
+function deleteMemberLog(id){
+  if(!confirm('Log löschen?'))return;
+  sv('activity_logs',ld('activity_logs').filter(x=>x.id!==id));
+  renderMemberLogs();renderLB();toast('Gelöscht.','amber');
+}
+goTo('home');
+document.querySelectorAll('input[type=date]').forEach(el=>{if(!el.value)el.value=new Date().toISOString().slice(0,10)});
+renderLogs();
+
+// ═══ KOPIERSCHUTZ ═══
+(function(){
+  // Block right-click
+  document.addEventListener('contextmenu',e=>{e.preventDefault();toast('Rechtsklick ist deaktiviert.','amber')});
+  // Block common copy/save shortcuts
+  document.addEventListener('keydown',e=>{
+    // Ctrl/Cmd + S, U, P, Shift+I, F12
+    if((e.ctrlKey||e.metaKey)&&['s','u','p'].includes(e.key.toLowerCase())){e.preventDefault();toast('Funktion deaktiviert.','amber');return}
+    if((e.ctrlKey||e.metaKey)&&e.shiftKey&&['i','j','c'].includes(e.key.toLowerCase())){e.preventDefault();return}
+    if(e.key==='F12'){e.preventDefault();toast('DevTools deaktiviert.','amber');return}
+    // Block text selection via keyboard shortcuts only (allow normal typing)
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='a'){
+      // Only block on non-input elements
+      if(!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();}
+    }
+  });
+  // Disable text selection on non-input elements via CSS
+  const style=document.createElement('style');
+  style.textContent=`
+    body{-webkit-user-select:none;-moz-user-select:none;user-select:none}
+    input,textarea,select{-webkit-user-select:text;-moz-user-select:text;user-select:text}
+    .sc-t,.lb-name,.lb-rank,.fc-title,.pc-name{pointer-events:none}
+  `;
+  document.head.appendChild(style);
+  // Block drag
+  document.addEventListener('dragstart',e=>e.preventDefault());
+  // Watermark on print
+  window.addEventListener('beforeprint',()=>{
+    const wm=document.createElement('div');
+    wm.id='print-wm';
+    wm.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:72px;font-weight:900;color:rgba(180,140,40,.15);z-index:99999;pointer-events:none;letter-spacing:.1em;font-family:monospace';
+    wm.textContent='FIB INTERN';
+    document.body.appendChild(wm);
+  });
+  window.addEventListener('afterprint',()=>{const wm=document.getElementById('print-wm');if(wm)wm.remove();});
+})();
+</script>
 </body>
 </html>
