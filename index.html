@@ -103,21 +103,32 @@ nav::before{
 
 /* LOGIN PILL — slim, credential-style */
 .login-pill{
-  display:flex;align-items:center;gap:10px;
+  display:flex;align-items:center;gap:9px;
   background:var(--card);border:1px solid var(--line2);
-  color:var(--t1);padding:7px 16px 7px 10px;border-radius:7px;
-  font-family:var(--fn);font-size:14px;font-weight:500;
-  cursor:pointer;transition:all .2s;letter-spacing:.02em;
+  color:var(--t1);padding:6px 14px 6px 8px;border-radius:8px;
+  font-family:var(--fn);font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .2s;letter-spacing:.01em;
 }
 .login-pill:hover{border-color:var(--gold);color:var(--gold3);background:rgba(180,140,40,.06)}
+.login-pill.out{border-color:var(--gold);color:var(--gold3);background:rgba(180,140,40,.08)}
+.login-pill.out:hover{background:rgba(180,140,40,.14)}
+/* dot nur für nicht-eingeloggt Zustand */
 .lp-dot{
-  width:26px;height:26px;border-radius:5px;flex-shrink:0;
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
   background:rgba(180,140,40,.15);border:1px solid var(--gold);
   display:flex;align-items:center;justify-content:center;font-size:13px;
 }
-.login-pill.out{border-color:var(--gold);color:var(--gold3);background:rgba(180,140,40,.08)}
-.login-pill.out:hover{background:rgba(180,140,40,.14)}
-.login-pill.out .lp-dot{background:rgba(180,140,40,.2);border-color:var(--gold2)}
+/* Avatar im eingeloggten Zustand */
+.lp-avatar{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  object-fit:cover;border:1.5px solid var(--gold);
+}
+.lp-avatar-init{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:rgba(180,140,40,.2);border:1.5px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:var(--gold3);
+}
 
 /* ── BODY ── */
 .body{flex:1;display:flex;overflow:hidden}
@@ -466,25 +477,47 @@ nav::before{
   </div>
 
   <div class="nav-links">
-    <div class="nl on" onclick="goTo('home')">Start</div>
-    <div class="nl" onclick="goTo('mitarbeiter')">Mitarbeiter</div>
-    <div class="nl" onclick="goTo('abteilungen')">Abteilungen</div>
-    <div class="nl" onclick="goTo('ausbildungen')">Ausbildungen</div>
-    <div class="nl" onclick="goTo('rangliste')">Rangliste</div>
-    <div class="nl" id="nl-portal" style="display:none;color:var(--gold3)" onclick="goPortal()">⚡ Portal</div>
-  </div>
-
-  <div class="nav-links">
-    <div class="nl on" onclick="goTo('home')">Start</div>
-    <div class="nl" onclick="goTo('mitarbeiter')">Mitarbeiter</div>
-    <div class="nl" onclick="goTo('abteilungen')">Abteilungen</div>
-    <div class="nl" onclick="goTo('rangliste')">Rangliste</div>
+    <div class="nl on" id="nl-home" onclick="goTo('home')">Start</div>
+    <div class="nl" id="nl-mitarbeiter" onclick="goTo('mitarbeiter')">Mitarbeiter</div>
+    <div class="nl" id="nl-abteilungen" onclick="goTo('abteilungen')">Abteilungen</div>
+    <div class="nl" id="nl-rangliste" onclick="goTo('rangliste')">Rangliste</div>
     <div class="nl" id="nl-portal" style="display:none;color:var(--gold3)" onclick="goPortal()">⚡ Portal</div>
   </div>
 
   <div class="nav-right">
-    <div class="nav-badge" id="nav-badge"></div>
-    <button class="login-pill" id="login-pill" onclick="openLoginModal()"><span class="lp-dot">🔐</span> Einloggen</button>
+    <div class="nav-badge" id="nav-badge" style="display:none"></div>
+    <!-- Login Pill + Profil-Dropdown -->
+    <div style="position:relative">
+      <button class="login-pill" id="login-pill" onclick="openLoginModal()">
+        <span class="lp-dot">🔐</span> Einloggen
+      </button>
+      <!-- Profil Dropdown (nur wenn eingeloggt) -->
+      <div id="profile-dropdown" style="
+        display:none;position:absolute;top:calc(100% + 10px);right:0;
+        width:260px;background:var(--surface);border:1px solid var(--line2);
+        border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.5);
+        overflow:hidden;z-index:200;
+      ">
+        <!-- Profil-Header -->
+        <div id="pd-header" style="padding:16px;border-bottom:1px solid var(--line2)"></div>
+        <!-- Stats -->
+        <div id="pd-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2)"></div>
+        <!-- Passwort -->
+        <div id="pd-pw" style="display:none;padding:12px 16px;border-top:1px solid var(--line2)">
+          <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.1em;margin-bottom:8px">PASSWORT ÄNDERN</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <input class="fi" type="password" id="pd-old" placeholder="Altes Passwort" style="font-size:12px;padding:7px 10px">
+            <input class="fi" type="password" id="pd-new" placeholder="Neues Passwort" style="font-size:12px;padding:7px 10px">
+            <button class="btn btn-gold btn-sm" onclick="changeOwnPassword()" style="width:100%;justify-content:center">Ändern</button>
+          </div>
+        </div>
+        <!-- Actions -->
+        <div style="padding:10px 16px;display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" onclick="toggleCompactMode()" style="flex:1;justify-content:center;font-size:12px">⚙ Kompakt</button>
+          <button class="btn btn-red btn-sm" id="pd-logout" style="display:none;flex:1;justify-content:center;font-size:12px" onclick="doLogout();closeProfileDropdown()">Ausloggen</button>
+        </div>
+      </div>
+    </div>
   </div>
 </nav>
 
@@ -1336,8 +1369,8 @@ function updateSettingsPanel(){
 
 async function changeOwnPassword(){
   if(!currentMember||currentMember.discordId){toast('Nicht verfügbar für Discord-Login.','amber');return;}
-  const oldPw=document.getElementById('settings-old-pw')?.value;
-  const newPw=document.getElementById('settings-new-pw')?.value;
+  const oldPw=document.getElementById('pd-old')?.value||document.getElementById('settings-old-pw')?.value;
+  const newPw=document.getElementById('pd-new')?.value||document.getElementById('settings-new-pw')?.value;
   if(!oldPw||!newPw){toast('Bitte beide Felder ausfüllen.','red');return;}
   const check=await findMember(currentMember.agentId,oldPw);
   if(!check){toast('Altes Passwort falsch!','red');return;}
@@ -1345,8 +1378,7 @@ async function changeOwnPassword(){
   const ms=getMembers();
   const m=ms.find(x=>x.agentId===currentMember.agentId);
   if(m){m.pwHash=h;delete m.pw;sv('members',ms);}
-  document.getElementById('settings-old-pw').value='';
-  document.getElementById('settings-new-pw').value='';
+  ['pd-old','pd-new','settings-old-pw','settings-new-pw'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   toast('Passwort erfolgreich geändert!','green');
   logAdd('Passwort geändert: '+currentMember.name);
 }
@@ -1354,12 +1386,11 @@ async function changeOwnPassword(){
 let compactMode=false;
 function toggleCompact(btn){
   compactMode=!compactMode;
-  btn.style.background=compactMode?'var(--gold)':'var(--line2)';
-  btn.querySelector('div').style.left=compactMode?'19px':'3px';
-  btn.querySelector('div').style.background=compactMode?'#07080a':'var(--t3)';
+  if(btn){btn.style.background=compactMode?'var(--gold)':'var(--line2)';btn.querySelector('div').style.left=compactMode?'19px':'3px';btn.querySelector('div').style.background=compactMode?'#07080a':'var(--t3)';}
   document.documentElement.style.fontSize=compactMode?'13px':'15px';
-  toast(compactMode?'Kompakt-Modus aktiviert':'Kompakt-Modus deaktiviert','blue');
+  toast(compactMode?'Kompakt-Modus an':'Kompakt-Modus aus','blue');
 }
+function toggleCompactMode(){toggleCompact(null);}
 
 // LOGIN TAB
 function loginTab(tab){
@@ -1394,17 +1425,17 @@ async function doMemberLogin(){
 
 function openPortalAsMember(m){
   const cfg=DEPT_CFG[m.dept]||DEPT_CFG.Mitglied;
-  const badge=document.getElementById('nav-badge');
-  // Avatar in Badge wenn Discord-Login
-  const avatarEl=m.avatar
-    ?`<img src="${m.avatar}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;margin-right:2px" onerror="this.remove()">`
-    :'';
-  badge.innerHTML=avatarEl+m.name;
-  badge.style.cssText='display:inline-flex;align-items:center;gap:5px;color:'+cfg.col+';background:'+cfg.bg+';border:1px solid '+cfg.border+';font-family:var(--fm);font-size:11px;font-weight:600;padding:4px 13px;border-radius:20px;letter-spacing:.05em';
+  // Pill updaten — Avatar (rund) + Name, kein Ausloggen-Text im Pill
   const pill=document.getElementById('login-pill');
-  const pillAvatar=m.avatar?`<img src="${m.avatar}" style="width:20px;height:20px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'">`:'<span class="lp-dot">👤</span>';
-  pill.innerHTML=pillAvatar+' '+m.name+' <span style="font-size:11px;opacity:.6;margin-left:4px">Ausloggen</span>';
-  pill.className='login-pill out';pill.onclick=doLogout;
+  const avatarEl=m.avatar
+    ?`<img src="${m.avatar}" class="lp-avatar" onerror="this.outerHTML='<div class=\\'lp-avatar-init\\'>${(m.name||'?')[0].toUpperCase()}</div>'">`
+    :`<div class="lp-avatar-init">${(m.name||'?')[0].toUpperCase()}</div>`;
+  pill.innerHTML=`${avatarEl} ${m.name}`;
+  pill.className='login-pill out';
+  pill.onclick=toggleProfileDropdown;
+  // Badge ausblenden (Info ist jetzt im Dropdown)
+  const badge=document.getElementById('nav-badge');
+  if(badge)badge.style.display='none';
   showPortalLink(true);
   updateSettingsPanel();
   buildMemberSidebar(m);
@@ -1412,6 +1443,81 @@ function openPortalAsMember(m){
   document.getElementById('vw-portal').classList.add('on');
   document.getElementById('sidebar').classList.add('show');
   switchP('pv-member-home');
+}
+
+function toggleProfileDropdown(){
+  const d=document.getElementById('profile-dropdown');
+  if(!d)return;
+  const open=d.style.display==='none'||!d.style.display;
+  d.style.display=open?'':'none';
+  if(open)buildProfileDropdown();
+}
+function closeProfileDropdown(){
+  const d=document.getElementById('profile-dropdown');
+  if(d)d.style.display='none';
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#profile-dropdown')&&!e.target.closest('#login-pill')){
+    closeProfileDropdown();
+  }
+  if(!e.target.closest('#settings-panel')&&!e.target.closest('[onclick="toggleSettings()"]')){
+    const sp=document.getElementById('settings-panel');
+    if(sp)sp.style.display='none';
+  }
+});
+function buildProfileDropdown(){
+  const m=currentMember;
+  // Abteilungs-Login (kein currentMember)
+  if(!m&&dept){
+    const hdr=document.getElementById('pd-header');
+    if(hdr)hdr.innerHTML=`
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="lp-avatar-init" style="width:44px;height:44px;font-size:20px">⚡</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:var(--t1)">${dept}</div>
+          <div style="font-size:11px;color:var(--t3);font-family:var(--fm)">Abteilungs-Login</div>
+        </div>
+      </div>`;
+    const stats=document.getElementById('pd-stats');if(stats)stats.innerHTML='';
+    const pw=document.getElementById('pd-pw');if(pw)pw.style.display='none';
+    const lo=document.getElementById('pd-logout');if(lo)lo.style.display='';
+    return;
+  }
+  if(!m){closeProfileDropdown();return;}
+  const myLogs=ld('activity_logs').filter(l=>l.agent===m.name).length;
+  const hdr=document.getElementById('pd-header');
+  if(hdr){
+    const av=m.avatar
+      ?`<img src="${m.avatar}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);flex-shrink:0" onerror="this.outerHTML='<div style=\\'width:44px;height:44px;border-radius:50%;background:rgba(180,140,40,.15);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gold3)\\'>${(m.name||'?')[0].toUpperCase()}</div>'">`
+      :`<div style="width:44px;height:44px;border-radius:50%;background:rgba(180,140,40,.15);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gold3);flex-shrink:0">${(m.name||'?')[0].toUpperCase()}</div>`;
+    hdr.innerHTML=`
+      <div style="display:flex;align-items:center;gap:12px">
+        ${av}
+        <div>
+          <div style="font-size:14px;font-weight:700;color:var(--t1)">${m.name}</div>
+          <div style="font-size:11px;color:var(--t3);font-family:var(--fm)">ID ${m.agentId}</div>
+          <div style="margin-top:5px"><span class="badge bg-gold" style="font-size:10px">${m.dept}</span>${m.discordId?'&nbsp;<span style="font-size:10px;color:var(--t3)">via Discord</span>':''}</div>
+        </div>
+      </div>`;
+  }
+  const stats=document.getElementById('pd-stats');
+  if(stats){
+    const items=[
+      {label:'RANG',val:m.rankN||'—',col:'var(--gold3)'},
+      {label:'LOGS',val:myLogs,col:'var(--cyan2)'},
+      {label:'DIVISION',val:(m.div||'—').slice(0,12),col:'var(--t2)'},
+      {label:'SEIT',val:(m.created||'—').split(' ')[0],col:'var(--t2)'},
+    ];
+    stats.innerHTML=items.map(i=>`
+      <div style="background:var(--card);padding:10px 14px;text-align:center">
+        <div style="font-size:15px;font-weight:700;color:${i.col}">${i.val}</div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:2px;letter-spacing:.08em">${i.label}</div>
+      </div>`).join('');
+  }
+  const pw=document.getElementById('pd-pw');
+  if(pw)pw.style.display=(m&&!m.discordId)?'':'none';
+  const lo=document.getElementById('pd-logout');
+  if(lo)lo.style.display='';
 }
 
 function buildMemberSidebar(m){
@@ -1942,10 +2048,13 @@ function doLogout(){
   dept=null;selDept=null;currentMember=null;
   getSB().then(sb=>{if(sb)sb.auth.signOut();}).catch(()=>{});
   document.querySelectorAll('.dg-item').forEach(el=>el.classList.remove('on'));
+  closeProfileDropdown();
   const pill=document.getElementById('login-pill');
-  pill.innerHTML='<span class="lp-dot">🔐</span> Einloggen';pill.className='login-pill';
+  pill.innerHTML='<div class="lp-dot">🔐</div> Einloggen';
+  pill.className='login-pill';
   pill.onclick=openLoginModal;
-  document.getElementById('nav-badge').style.display='none';
+  const badge=document.getElementById('nav-badge');
+  if(badge)badge.style.display='none';
   document.getElementById('sidebar').classList.remove('show');
   showPortalLink(false);
   goTo('home');
@@ -1955,14 +2064,12 @@ function doLogout(){
 // ═══════════════ PORTAL ════════════════
 function openPortal(){
   const cfg=DEPT_CFG[dept]||DEPT_CFG.TD;
-  const badge=document.getElementById('nav-badge');
-  badge.textContent=dept;
-  badge.style.cssText=`display:inline-flex;color:${cfg.col};background:${cfg.bg};border:1px solid ${cfg.border};font-family:var(--fm);font-size:11px;font-weight:700;padding:4px 13px;border-radius:20px;letter-spacing:.05em`;
   const pill=document.getElementById('login-pill');
-  pill.innerHTML=`<span class="lp-dot">👤</span> ${dept} &nbsp;<span style="font-size:11px;opacity:.6">Ausloggen</span>`;
+  pill.innerHTML=`<div class="lp-avatar-init">⚡</div> ${dept}`;
   pill.className='login-pill out';
-  pill.onclick=doLogout;
+  pill.onclick=toggleProfileDropdown;
   buildSidebar();
+  showPortalLink(true);
   document.querySelectorAll('.vw').forEach(v=>v.classList.remove('on'));
   document.getElementById('vw-portal').classList.add('on');
   document.getElementById('sidebar').classList.add('show');
