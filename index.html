@@ -1640,25 +1640,8 @@ function loginTab(tab){
 }
 
 // PASSWORT TOGGLE
-function togglePw(inputId,btn){const el=document.getElementById(inputId);if(!el)return;el.type=el.type==='password'?'text':'password';btn.textContent=el.type==='password'?'👁':'🙈';}
 
 // MITGLIED LOGIN
-async function doMemberLogin(){
-  const agentId=document.getElementById('li-id')?.value.trim();
-  const pw=document.getElementById('li-pw')?.value;
-  const err=document.getElementById('li-err');
-  if(err)err.textContent='';
-  if(!agentId||!pw){if(err)err.textContent='⚠ Bitte alle Felder ausfüllen.';return;}
-  const m=await findMember(agentId,pw);
-  if(!m){if(err)err.textContent='⚠ Agenten-ID oder Passwort falsch.';return;}
-  currentMember=m;dept=m.dept||'Mitglied';
-  if(document.getElementById('li-id'))document.getElementById('li-id').value='';
-  if(document.getElementById('li-pw'))document.getElementById('li-pw').value='';
-  closeLogin();
-  openPortalAsMember(m);
-  toast('Willkommen, '+m.name+'! ✅','green');
-  logAdd('Login: '+m.name+' (ID: '+m.agentId+') · '+m.dept);
-}
 
 function openPortalAsMember(m){
   const role=m.role||'member';
@@ -1682,27 +1665,6 @@ function openPortalAsMember(m){
   switchP(lastP&&validP.includes(lastP)?lastP:'pv-member-home');
 }
 
-function buildMemberSidebar(m){
-  const sb=document.getElementById('sidebar');
-  const role=m.role||'member';
-  const isL=role==='leaderschaft';
-  const isHR=role==='hr';
-  const r=ROLES[role]||ROLES.member;
-  let h='<div class="sg">MEIN BEREICH</div>';
-  h+=si('pv-member-home',r.icon,'Übersicht');
-  h+=si('pv-member-logs','📋','Meine Logs');
-  if(isL||role==='td'){h+=`<div class="sg" style="color:var(--cyan2)">TRAINING DIVISION</div>`;h+=si('pv-td-ausb','🎓','Ausbildungen');h+=si('pv-td-agenten','👤','Agenten');}
-  if(isL||isHR){h+=`<div class="sg" style="color:var(--amber2)">HUMAN RESOURCES</div>`;h+=si('pv-hr-list','👥','Mitarbeiter');h+=si('pv-hr-add','➕','Hinzufügen');}
-  if(isL||role==='fibco'){h+=`<div class="sg" style="color:var(--purple2)">FIBCO</div>`;h+=si('pv-fb-akten','🗂','Fallakten');h+=si('pv-fb-create','➕','Akte erstellen');h+=si('pv-fb-archiv','📦','Archiv');}
-  if(isL||role==='cid'){h+=`<div class="sg" style="color:var(--red2)">CID — BEWEISE</div>`;h+=si('pv-cid','🔍','Beweisakte');}
-  h+=`<div class="sg">TOOLS</div>`;h+=si('pv-bussgeld','💶','Bußgeldrechner');
-  if(isL||isHR){h+=`<div class="sg" style="color:var(--gold2)">${isL?'LEADERSCHAFT':'VERWALTUNG'}</div>`;
-    if(isL)h+=si('pv-ankuend','📢','Ankündigungen');
-    h+=si('pv-accounts','👤','Accounts verwalten');
-  }
-  h+=`<div class="sg">SYSTEM</div>`;h+=si('pv-log','📝','Protokoll');
-  sb.innerHTML=h;
-}
 
 function toggleProfileDropdown(){
   const d=document.getElementById('profile-dropdown');
@@ -1892,14 +1854,6 @@ async function doMemberLogin(){
   logAdd('Login: '+m.name+' ('+m.agentId+') · '+(m.role||'member'));
 }
 
-function openLoginModal(){
-  const err=document.getElementById('li-err');if(err)err.textContent='';
-  const errBox=document.getElementById('dc-error');if(errBox)errBox.style.display='none';
-  const loading=document.getElementById('dc-loading');if(loading)loading.style.display='none';
-  const btn=document.getElementById('dc-btn');if(btn)btn.style.display='';
-  document.getElementById('login-mb').classList.add('on');
-}
-function closeLogin(){document.getElementById('login-mb').classList.remove('on');}
 function togglePw(id,btn){const el=document.getElementById(id);if(!el)return;el.type=el.type==='password'?'text':'password';btn.textContent=el.type==='password'?'👁':'🙈';}
 
 // ── Member Helpers ──
@@ -1918,62 +1872,6 @@ async function createMemberAccount(name,agentId,pw,role,rankN,div){
   return true;
 }
 
-async function acCreate(){
-  const name=document.getElementById('ac-name')?.value.trim();
-  const agentId=document.getElementById('ac-id')?.value.trim();
-  const pw=document.getElementById('ac-pw')?.value.trim();
-  if(!name||!agentId||!pw){toast('Name, ID und Passwort sind Pflicht!','red');return;}
-  const role=document.getElementById('ac-role')?.value||'member';
-  if(role==='leaderschaft'&&currentMember?.role!=='leaderschaft'){toast('Nur Leaderschaft kann diese Rolle vergeben.','red');return;}
-  const rankN=parseInt(document.getElementById('ac-rank')?.value)||18;
-  const div=document.getElementById('ac-div')?.value.trim()||'—';
-  const discordId=document.getElementById('ac-discord')?.value.trim()||'';
-  const discordName=document.getElementById('ac-discord-name')?.value.trim()||'';
-  if(getMembers().find(m=>m.agentId===agentId)){toast('Agenten-ID bereits vergeben!','red');return;}
-  if(discordId&&getMembers().find(m=>m.discordId===discordId)){toast('Discord-ID bereits vergeben!','red');return;}
-  const pwHash=await hashPw(pw);
-  saveMember({name,agentId,pwHash,role,rankN,div,discordId,discordName,created:now()});
-  toast('✅ Account für '+name+' erstellt!','green');
-  logAdd('Account erstellt: '+name+' ('+agentId+') · '+role+(discordId?' · DC:'+discordId.slice(-4):''));
-  ['ac-name','ac-id','ac-pw','ac-rank','ac-div','ac-discord','ac-discord-name'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  acRender();
-}
-
-function acRender(){
-  const ms=getMembers();
-  const el=document.getElementById('ac-body');if(!el)return;
-  const cnt=document.getElementById('ac-count');if(cnt)cnt.textContent=ms.length+' Accounts';
-  const canSeeDiscord=currentMember?.role==='leaderschaft'||currentMember?.role==='hr';
-  const canDelete=currentMember?.role==='leaderschaft';
-  if(!ms.length){el.innerHTML=`<tr><td colspan="7" style="padding:24px;text-align:center;color:var(--t3)">Noch keine Accounts.</td></tr>`;return;}
-  el.innerHTML=ms.map(m=>{
-    const r=ROLES[m.role||'member']||ROLES.member;
-    const dcCell=canSeeDiscord
-      ?m.discordId
-        ?`<td style="font-family:var(--fm);font-size:11px">
-            <div style="color:var(--t2)">${m.discordName||'—'}</div>
-            <div style="color:var(--t3);font-size:10px">${m.discordId}</div>
-           </td>`
-        :`<td style="color:var(--t3);font-size:11px">—</td>`
-      :`<td style="color:var(--t3);font-size:12px">••••</td>`;
-    return`<tr>
-      <td class="b">${m.name}</td>
-      <td style="font-family:var(--fm);color:var(--gold3)">${m.agentId}</td>
-      <td><span class="badge" style="background:${r.color}15;color:${r.color};border-color:${r.color}30;font-size:10px">${r.icon} ${r.label}</span></td>
-      <td style="font-family:var(--fm);color:var(--t2);font-size:11px">${m.rankN||'—'}</td>
-      ${dcCell}
-      <td style="font-size:11px;color:var(--t3);font-family:var(--fm)">${(m.created||'—').split(' ')[0]}</td>
-      <td>
-        <div style="display:flex;gap:5px;flex-wrap:wrap">
-          <button class="btn btn-sm btn-amber" onclick="acResetPw('${m.agentId}')">PW</button>
-          <button class="btn btn-sm btn-cyan" onclick="acChangeRole('${m.agentId}')">Rolle</button>
-          <button class="btn btn-sm" style="background:rgba(88,101,242,.15);color:#93b8ff;border-color:rgba(88,101,242,.3)" onclick="acEditDiscord('${m.agentId}')">DC</button>
-          ${canDelete?`<button class="btn btn-sm btn-red" onclick="acDelete('${m.agentId}')">✕</button>`:''}
-        </div>
-      </td>
-    </tr>`;
-  }).join('');
-}
 
 function acEditDiscord(id){
   const ms=getMembers();const m=ms.find(x=>x.agentId===id);if(!m)return;
@@ -1986,20 +1884,6 @@ function acEditDiscord(id){
   logAdd('Discord geändert: '+m.name);acRender();
 }
 
-function acDelete(id){
-  if(!confirm('Account wirklich löschen?'))return;
-  sv('members',getMembers().filter(m=>m.agentId!==id));
-  toast('Account gelöscht.','amber');acRender();
-}
-
-function acResetPw(id){
-  const npw=prompt('Neues Passwort für Agent '+id+':');
-  if(!npw||npw.length<4){toast('Passwort zu kurz (min. 4 Zeichen).','red');return;}
-  hashPw(npw).then(h=>{
-    const ms=getMembers();const m=ms.find(x=>x.agentId===id);
-    if(m){m.pwHash=h;delete m.pw;sv('members',ms);toast('Passwort geändert!','green');logAdd('PW geändert: '+m.name);}
-  });
-}
 
 function acChangeRole(id){
   const roles=Object.keys(ROLES);
@@ -2764,21 +2648,6 @@ function fbRender(){
       </div>
     </div>`).join('');
 }
-function fbCreate(){
-  const title=document.getElementById('fb-title')?.value.trim();
-  const desc=document.getElementById('fb-desc')?.value.trim();
-  if(!title||!desc){toast('Bezeichnung und Beschreibung sind Pflichtfelder!','red');return}
-  const a={id:'FA-'+uid(),title,desc,
-    prio:document.getElementById('fb-prio')?.value,type:document.getElementById('fb-type')?.value,
-    unit:document.getElementById('fb-unit')?.value.trim(),lead:document.getElementById('fb-lead')?.value.trim(),
-    suspects:document.getElementById('fb-suspects')?.value.trim(),
-    classification:document.getElementById('fb-class')?.value,status:document.getElementById('fb-status')?.value,
-    notes:document.getElementById('fb-notes')?.value.trim(),ts:now()};
-  const d=ld('fb_akten');d.push(a);sv('fb_akten',d);
-  logAdd(`FIBCO Neue Akte: ${title} (${a.id}) · ${a.prio}`);
-  fbClear();toast('Fallakte gespeichert!','green');fbStats();fbRender();switchP('pv-fb-akten');
-}
-function fbClear(){['fb-title','fb-unit','fb-lead','fb-desc','fb-suspects','fb-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''})}
 function fbDetail(id){
   const all=[...ld('fb_akten'),...ld('fb_archiv')];
   const x=all.find(a=>a.id===id);if(!x)return;
@@ -3197,87 +3066,6 @@ function skInit(){
   skFilter();
 }
 
-function skFilter(){
-  const q=(document.getElementById('sk-search')||{value:''}).value.toLowerCase();
-  const filtered=LAW_DATA.filter(l=>{
-    if(q&&!l.name.toLowerCase().includes(q)&&!l.para.toLowerCase().includes(q))return false;
-    return true;
-  });
-  const cntEl=document.getElementById('sk-count');
-  if(cntEl)cntEl.textContent=Object.keys(skSelected).length+' ausgewählt';
-  // Group
-  const grouped={};
-  filtered.forEach(l=>{if(!grouped[l.group])grouped[l.group]=[];grouped[l.group].push(l);});
-  const el=document.getElementById('sk-catalog');if(!el)return;
-  el.innerHTML=Object.entries(grouped).map(([grpName,laws])=>{
-    const col=GROUP_COLORS[grpName]||'var(--t2)';
-    return`<div style="margin-bottom:20px">
-      <div style="background:${col}18;border:1px solid ${col}44;border-radius:10px;padding:10px 16px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:13px;font-weight:700;color:${col}">${grpName}</span>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:8px">
-        ${laws.map(l=>skLawCard(l)).join('')}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function skLawCard(l){
-  const sel=skSelected[l.id];
-  const gw=sel?sel.grayWanted:0;
-  const isOn=!!sel;
-  const totalW=l.fixedWanted+gw;
-  const col=GROUP_COLORS[l.group]||'var(--t2)';
-
-  // Stars display
-  const fixedStars=l.fixedWanted>0?`<span style="color:${isOn?'#fbbf24':'var(--t3)'}; font-size:12px">${'★'.repeat(l.fixedWanted)}</span>`:'';
-  const grayStars=l.grayWantedMax>0?`<span style="color:var(--t3);font-size:12px">${'★'.repeat(l.grayWantedMax)}</span>`:'';
-
-  return`<div id="skc-${l.id}" onclick="skToggle('${l.id}')" style="
-    background:${isOn?col+'15':'var(--card)'};
-    border:1px solid ${isOn?col+'60':'var(--line2)'};
-    border-radius:9px;padding:12px;cursor:pointer;
-    transition:all .15s;position:relative;
-  " onmouseover="if(!${isOn})this.style.borderColor='${col}40';this.style.background='${isOn?col+'18':col+'08'}'"
-     onmouseout="this.style.borderColor='${isOn?col+'60':'var(--line2)'}';this.style.background='${isOn?col+'15':'var(--card)'}'">
-    ${isOn?`<div style="position:absolute;top:8px;right:8px;width:16px;height:16px;border-radius:50%;background:${col};display:flex;align-items:center;justify-content:center;font-size:9px;color:#07080a;font-weight:700">✓</div>`:''}
-    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">${l.para}</div>
-    <div style="font-size:13px;font-weight:${isOn?'600':'500'};color:${isOn?'var(--t1)':'var(--t1)'};line-height:1.35;margin-bottom:8px;padding-right:${isOn?'18px':'0'}">${l.name}</div>
-    ${l.info?`<div style="font-size:10px;color:var(--amber2);margin-bottom:6px">ℹ ${l.info}</div>`:''}
-    <div style="display:flex;justify-content:space-between;align-items:flex-end">
-      <div style="font-size:15px;font-weight:800;color:${isOn?col:'var(--gold3)'};font-family:var(--fm)">$${l.fine.toLocaleString('de-DE')}</div>
-      <div style="display:flex;align-items:center;gap:3px">
-        ${fixedStars}${grayStars?`<span style="color:var(--t3);font-size:10px;margin:0 2px">+</span>${grayStars}`:''}
-      </div>
-    </div>
-    ${isOn&&l.grayWantedMax>0?`<div onclick="event.stopPropagation()" style="margin-top:8px;display:flex;align-items:center;gap:6px;border-top:1px solid ${col}30;padding-top:8px">
-      <span style="font-size:11px;color:var(--t3);flex:1">${totalW}/${l.fixedWanted+l.grayWantedMax}★</span>
-      <button onclick="event.stopPropagation();skChangeGray('${l.id}',-1)" style="background:var(--card2);border:1px solid var(--line2);color:var(--t1);width:22px;height:22px;border-radius:4px;cursor:pointer;font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center">−</button>
-      <button onclick="event.stopPropagation();skChangeGray('${l.id}',1)" style="background:var(--card2);border:1px solid var(--line2);color:var(--t1);width:22px;height:22px;border-radius:4px;cursor:pointer;font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center">+</button>
-    </div>`:''}
-  </div>`;
-}
-
-function skToggle(id){
-  const l=LAW_DATA.find(x=>x.id===id);if(!l)return;
-  if(skSelected[id])delete skSelected[id];
-  else skSelected[id]={law:l,grayWanted:0};
-  skRefreshCard(id);skCalc();skRenderSelected();
-}
-function skChangeGray(id,delta){
-  if(!skSelected[id])return;
-  const l=skSelected[id].law;
-  skSelected[id].grayWanted=Math.max(0,Math.min(l.grayWantedMax,skSelected[id].grayWanted+delta));
-  skRefreshCard(id);skCalc();skRenderSelected();
-}
-function skRefreshCard(id){
-  const l=LAW_DATA.find(x=>x.id===id);if(!l)return;
-  const card=document.getElementById('skc-'+id);
-  if(card)card.outerHTML=skLawCard(l);
-  // Update count badge
-  const cntEl=document.getElementById('sk-count');
-  if(cntEl)cntEl.textContent=Object.keys(skSelected).length+' ausgewählt';
-}
 function skRenderSelected(){
   const list=document.getElementById('sk-selected-list');if(!list)return;
   const entries=Object.values(skSelected);
