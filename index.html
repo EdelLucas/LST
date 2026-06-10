@@ -4,609 +4,992 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FIB — Federal Investigation Bureau</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  /* Premium Dark Theme - Edle Slate-Töne & Kontraste */
-  --bg:#030406;
-  --surface:#090b0e;
-  --card:#10141a;
-  --card2:#161c24;
-  --line:#1f2633;
-  --line2:#293345;
-  --line3:#3c4b66;
+/* ===== RESET & ROOT ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg-base:     #0b0e14;
+  --bg-panel:    #111620;
+  --bg-card:     #161d2e;
+  --bg-hover:    #1a2238;
+  --border:      #1e2a3f;
+  --border-l:    #263350;
+  --accent:      #2563eb;
+  --accent-glow: #2563eb44;
+  --accent2:     #0ea5e9;
+  --gold:        #c8941a;
+  --gold-l:      #e8b030;
+  --text-1:      #e8edf5;
+  --text-2:      #8a9ab8;
+  --text-3:      #4a5a78;
+  --green:       #22c55e;
+  --red:         #ef4444;
+  --amber:       #f59e0b;
+  --purple:      #a855f7;
+  --cyan:        #06b6d4;
+  --font-head:   'Rajdhani', sans-serif;
+  --font-mono:   'JetBrains Mono', monospace;
+  --font-body:   'Inter', sans-serif;
+  --nav-w:       220px;
+  --radius:      10px;
+  scrollbar-width: thin;
+  scrollbar-color: #1e2a3f #0b0e14;
+}
+html, body { height: 100%; background: var(--bg-base); color: var(--text-1); font-family: var(--font-body); overflow: hidden; }
 
-  /* Text */
-  --t1:#f4f6f9;
-  --t2:#a3b8cc;
-  --t3:#5c738f;
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--border-l); border-radius: 3px; }
 
-  /* FIB Signature Gold - Glühend & Kontrastreich */
-  --gold:#c99d2e;
-  --gold2:#e5b53b;
-  --gold3:#fcd86a;
-  --gold-glow:rgba(201,157,46,0.18);
+/* ===== LAYOUT ===== */
+.app { display: flex; height: 100vh; width: 100vw; overflow: hidden; }
 
-  /* Semantic UI Colors */
-  --blue:#2463eb;
-  --blue2:#4f83f7;
-  --green:#149451;
-  --green2:#1ec76f;
-  --red:#bc2f2f;
-  --red2:#dd4747;
-  --amber:#bc8113;
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: var(--nav-w); flex-shrink: 0;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: relative; z-index: 10;
+}
+.sidebar::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(180deg, rgba(37,99,235,0.03) 0%, transparent 40%);
+  pointer-events: none;
+}
+.sidebar-logo {
+  padding: 20px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.logo-emblem {
+  width: 42px; height: 42px; flex-shrink: 0;
+  background: radial-gradient(circle at 40% 35%, #e8b030 0%, #c8941a 45%, #7a5800 100%);
+  border-radius: 50%;
+  border: 2px solid #c8941a;
+  box-shadow: 0 0 16px #c8941a33, inset 0 1px 0 rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head); font-weight: 700; font-size: 15px; color: #0b0e14;
+  letter-spacing: -0.5px;
+}
+.logo-text { line-height: 1; }
+.logo-text h1 { font-family: var(--font-head); font-size: 20px; font-weight: 700; color: var(--text-1); letter-spacing: 1px; }
+.logo-text p { font-size: 9px; color: var(--text-3); letter-spacing: 0.15em; margin-top: 2px; }
 
-  --fn:'Outfit',sans-serif;
-  --fm:'IBM Plex Mono',monospace;
+.sidebar-section { padding: 16px 10px 6px; }
+.sidebar-section-label { font-size: 9px; letter-spacing: 0.15em; color: var(--text-3); padding: 0 8px; margin-bottom: 4px; font-family: var(--font-mono); }
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 7px; cursor: pointer;
+  transition: background .15s, color .15s; margin-bottom: 1px;
+  font-size: 13px; color: var(--text-2); font-weight: 500;
+  position: relative; user-select: none;
+}
+.nav-item:hover { background: var(--bg-card); color: var(--text-1); }
+.nav-item.active {
+  background: linear-gradient(90deg, rgba(37,99,235,0.2), rgba(37,99,235,0.05));
+  color: #60a5fa;
+  border-left: 2px solid #2563eb;
+  padding-left: 10px;
+}
+.nav-item.active .nav-icon { color: #60a5fa; }
+.nav-icon { font-size: 16px; width: 18px; text-align: center; flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto; background: var(--accent); color: #fff;
+  font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 10px;
+  font-family: var(--font-mono);
 }
 
-html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--t1);font-family:var(--fn);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-thumb{background:var(--line2);border-radius:4px}
-::-webkit-scrollbar-track{background:transparent}
-
-/* LAYOUT STRUCTURE */
-.shell{display:flex;flex-direction:column;height:100vh}
-
-/* NAVIGATION */
-nav{
-  height:65px;flex-shrink:0;
-  background:rgba(4,5,7,.97);
-  border-bottom:1px solid var(--line2);
-  display:flex;align-items:center;
-  padding:0 32px;position:relative;z-index:100;
-  backdrop-filter:blur(15px);
+.sidebar-bottom {
+  margin-top: auto; border-top: 1px solid var(--border); padding: 12px 10px;
 }
-nav::before{
-  content:'';position:absolute;left:0;top:10px;bottom:10px;
-  width:3px;background:linear-gradient(180deg,transparent,var(--gold2),transparent);
-  border-radius:2px;
+.online-status { display: flex; align-items: center; gap: 8px; padding: 8px 10px; }
+.dot-pulse { width: 7px; height: 7px; background: var(--green); border-radius: 50%; box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(0.8)} }
+.status-text { font-size: 11px; color: var(--text-3); }
+.status-text strong { color: var(--green); font-size: 10px; }
+
+/* ===== MAIN AREA ===== */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+/* ===== TOPBAR ===== */
+.topbar {
+  height: 52px; flex-shrink: 0;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 20px; gap: 14px;
 }
-.nav-brand{display:flex;align-items:center;gap:14px;cursor:pointer;margin-right:40px}
-.nav-logo{
-  width:40px;height:40px;border-radius:8px;flex-shrink:0;
-  background:var(--card2);border:1px solid var(--gold);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--fm);font-weight:600;font-size:14px;color:var(--gold3);
-  letter-spacing:.05em;box-shadow:0 0 15px var(--gold-glow);
+.topbar-title { font-family: var(--font-head); font-size: 18px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-1); }
+.topbar-sub { font-size: 11px; color: var(--text-3); margin-left: 4px; font-family: var(--font-mono); }
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.topbar-time { font-family: var(--font-mono); font-size: 12px; color: var(--text-3); }
+
+.search-box {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 7px;
+  padding: 5px 10px;
 }
-.nav-brand-text{line-height:1.2}
-.nav-brand-text strong{font-size:17px;font-weight:800;letter-spacing:.03em;display:block;color:var(--t1)}
-.nav-brand-text span{font-size:9px;color:var(--t3);letter-spacing:.2em;font-family:var(--fm);text-transform:uppercase}
-
-.nav-links{display:flex;gap:6px}
-.nl{
-  padding:10px 20px;border-radius:6px;cursor:pointer;
-  font-size:14px;font-weight:500;color:var(--t2);
-  transition:all .2s;white-space:nowrap;
+.search-box input {
+  background: none; border: none; outline: none; color: var(--text-1);
+  font-size: 12px; width: 160px; font-family: var(--font-body);
 }
-.nl:hover{color:var(--t1);background:var(--card)}
-.nl.on{color:var(--gold3);background:var(--card);border-bottom:2px solid var(--gold2);border-radius:6px 6px 0 0}
+.search-box input::placeholder { color: var(--text-3); }
+.search-icon { color: var(--text-3); font-size: 13px; }
 
-.nav-right{margin-left:auto;display:flex;align-items:center;gap:16px}
-.nav-clock{
-  font-family:var(--fm);font-size:12px;color:var(--t3);
-  background:var(--card);border:1px solid var(--line2);
-  padding:6px 14px;border-radius:6px;letter-spacing:.05em;
+/* ===== PAGE CONTENT ===== */
+.page { display: none; flex: 1; overflow-y: auto; padding: 20px; flex-direction: column; gap: 16px; }
+.page.active { display: flex; }
+
+/* ===== DASHBOARD ===== */
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.stat-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px 18px; position: relative; overflow: hidden;
 }
-
-/* DISCORD LOGIN BUTTON PILL */
-.login-pill{
-  display:flex;align-items:center;gap:10px;
-  background:var(--card);border:1px solid var(--line2);
-  color:var(--t1);padding:6px 14px 6px 8px;border-radius:8px;
-  font-size:13px;font-weight:600;cursor:pointer;transition:all .25s;
+.stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
 }
-.login-pill:hover{border-color:var(--gold);color:var(--gold3);background:rgba(201,157,46,.08);box-shadow:0 0 12px var(--gold-glow)}
-.login-pill.dc-connected{border-color:#5865F2;background:rgba(88,101,242,.1);color:#fff}
-.lp-avatar{width:28px;height:28px;border-radius:50%;background:#5865F2;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;color:#fff;overflow:hidden}
-.lp-avatar img{width:100%;height:100%;object-fit:cover}
+.stat-card.blue::before { background: linear-gradient(90deg, var(--accent), transparent); }
+.stat-card.cyan::before { background: linear-gradient(90deg, var(--cyan), transparent); }
+.stat-card.green::before { background: linear-gradient(90deg, var(--green), transparent); }
+.stat-card.gold::before { background: linear-gradient(90deg, var(--gold), transparent); }
+.stat-label { font-size: 10px; letter-spacing: 0.1em; color: var(--text-3); font-family: var(--font-mono); margin-bottom: 6px; }
+.stat-value { font-family: var(--font-head); font-size: 32px; font-weight: 700; color: var(--text-1); line-height: 1; }
+.stat-value.blue { color: #60a5fa; }
+.stat-value.cyan { color: var(--cyan); }
+.stat-value.green { color: var(--green); }
+.stat-value.gold { color: var(--gold-l); }
+.stat-sub { font-size: 10px; color: var(--text-3); margin-top: 4px; }
 
-/* BODY WORKSPACE */
-.body{flex:1;display:flex;overflow:hidden}
+.dash-grid { display: grid; grid-template-columns: 1fr 320px; gap: 12px; }
 
-/* SIDEBAR NAVIGATION */
-.sidebar{
-  width:240px;flex-shrink:0;background:var(--surface);
-  border-right:1px solid var(--line2);padding:20px 12px;
-  display:flex;flex-direction:column;gap:4px;overflow-y:auto;
+.section-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden;
 }
-.sg{
-  margin-top:16px;margin-bottom:6px;padding:0 12px;
-  font-size:10px;letter-spacing:.15em;color:var(--t3);
-  font-family:var(--fm);text-transform:uppercase;
+.section-head {
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
 }
-.si-item{
-  display:flex;align-items:center;gap:12px;
-  padding:10px 14px;border-radius:8px;cursor:pointer;
-  font-size:14px;font-weight:500;color:var(--t2);transition:all .18s;
+.section-title { font-family: var(--font-head); font-size: 14px; font-weight: 600; letter-spacing: 0.05em; }
+.section-badge { font-size: 9px; font-family: var(--font-mono); color: var(--text-3); }
+
+/* ===== RANK DIST ===== */
+.rank-bar-list { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+.rank-bar-item { display: flex; align-items: center; gap: 10px; }
+.rb-label { font-size: 10px; color: var(--text-2); width: 180px; flex-shrink: 0; font-family: var(--font-mono); }
+.rb-track { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.rb-fill { height: 100%; border-radius: 3px; transition: width 1s cubic-bezier(.4,0,.2,1); }
+.rb-count { font-size: 10px; color: var(--text-3); width: 24px; text-align: right; font-family: var(--font-mono); }
+
+/* ===== ABT OVERVIEW ===== */
+.abt-list { padding: 8px 16px 12px; }
+.abt-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 7px 0; border-bottom: 1px solid var(--border);
 }
-.si-item:hover{background:var(--card);color:var(--t1)}
-.si-item.on{
-  background:rgba(201,157,46,.08);color:var(--gold3);font-weight:600;
-  border-left:3px solid var(--gold2);padding-left:11px;
+.abt-row:last-child { border: none; }
+.abt-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-right: 8px; }
+.abt-name { font-size: 12px; color: var(--text-2); flex: 1; }
+.abt-cnt { font-family: var(--font-mono); font-size: 12px; font-weight: 600; }
+
+/* ===== ACTIVITY FEED ===== */
+.feed { padding: 8px 0; }
+.feed-item { padding: 8px 16px; display: flex; gap: 12px; border-bottom: 1px solid var(--border); }
+.feed-item:last-child { border: none; }
+.feed-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+.feed-text { font-size: 12px; color: var(--text-2); line-height: 1.4; }
+.feed-text strong { color: var(--text-1); }
+.feed-time { font-size: 10px; color: var(--text-3); font-family: var(--font-mono); margin-top: 2px; }
+
+/* ===== MITARBEITERLISTE ===== */
+.table-controls {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 12px 16px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
 }
-
-/* VIEW MANAGEMENT */
-.page-wrap{flex:1;overflow-y:auto;padding:32px 40px;display:flex;flex-direction:column;gap:24px}
-.vw{display:none;flex-direction:column;gap:24px}
-.vw.on{display:flex;animation:vwIn .25s cubic-bezier(.4,0,.2,1)}
-@keyframes vwIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
-/* HERO SECTION */
-.hero{
-  border-radius:16px;overflow:hidden;position:relative;
-  background:var(--surface);border:1px solid var(--line2);
-  padding:70px 60px;display:flex;align-items:center;
+.tc-label { font-size: 10px; color: var(--text-3); font-family: var(--font-mono); letter-spacing: 0.08em; }
+.tc-input, .tc-select {
+  background: var(--bg-panel); border: 1px solid var(--border); color: var(--text-1);
+  padding: 6px 10px; border-radius: 6px; font-size: 11px; font-family: var(--font-mono);
+  transition: border .15s;
 }
-.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.hero-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 5% 50%,rgba(201,157,46,.08) 0%,transparent 60%)}
-.hero-inner{position:relative;z-index:1;max-width:600px}
-.hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(201,157,46,.08);border:1px solid rgba(201,157,46,.25);color:var(--gold3);font-size:11px;font-family:var(--fm);letter-spacing:.15em;padding:6px 16px;border-radius:4px;margin-bottom:24px;text-transform:uppercase}
-.hero-dot{width:6px;height:6px;border-radius:50%;background:var(--green2);animation:blink 2s ease-in-out infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.hero-h1{font-size:48px;font-weight:800;line-height:1;letter-spacing:-.02em;margin-bottom:12px}
-.hero-h1 em{font-style:normal;color:var(--gold2)}
-.hero-p{font-size:15px;color:var(--t2);line-height:1.7}
+.tc-input:focus, .tc-select:focus { outline: none; border-color: var(--accent); }
+.tc-input { width: 180px; }
+.tc-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+.tc-count { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); margin-left: auto; }
 
-/* STRUCTURE CARD & TABLES */
-.sc{background:var(--card);border:1px solid var(--line2);border-radius:12px;overflow:hidden}
-.sc-h{padding:18px 24px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.01)}
-.sc-t{font-size:15px;font-weight:700;letter-spacing:.01em;color:var(--t1)}
-.sc-b{padding:24px}
-
-.tbl{width:100%;border-collapse:collapse}
-.tbl thead th{
-  font-size:11px;font-family:var(--fm);letter-spacing:.1em;color:var(--t3);
-  padding:12px 16px;border-bottom:1px solid var(--line2);text-align:left;
-  background:var(--surface);text-transform:uppercase;
+.table-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.table-inner { overflow-x: auto; overflow-y: auto; max-height: calc(100vh - 260px); }
+table { width: 100%; border-collapse: collapse; min-width: 1100px; }
+thead { position: sticky; top: 0; z-index: 5; }
+thead th {
+  background: var(--bg-panel); color: var(--text-3); font-size: 10px; letter-spacing: 0.1em;
+  font-family: var(--font-mono); padding: 10px 10px; border-bottom: 1px solid var(--border);
+  text-align: center; white-space: nowrap; font-weight: 500; user-select: none;
 }
-.tbl tbody tr{border-bottom:1px solid rgba(31,39,51,.5);transition:background .15s}
-.tbl tbody tr:hover{background:var(--card2)}
-.tbl td{padding:14px 16px;font-size:14px;font-family:var(--fm);color:var(--t2);vertical-align:middle}
-.tbl td.bold-text{color:var(--t1);font-weight:600;font-family:var(--fn);font-size:15px}
+thead th.left { text-align: left; }
+thead th.sortable { cursor: pointer; }
+thead th.sortable:hover { color: var(--text-1); }
 
-/* Ranks & Badges */
-.badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:5px;font-size:11px;font-weight:600;font-family:var(--fm);border:1px solid}
-.r28{background:rgba(36,99,235,.12);color:var(--blue2);border-color:rgba(36,99,235,.3)}
-.r20{background:rgba(201,157,46,.12);color:var(--gold3);border-color:rgba(201,157,46,.3)}
+tbody tr { border-bottom: 1px solid #111820; transition: background .1s; cursor: pointer; }
+tbody tr:hover { background: var(--bg-hover); }
+tbody tr.selected { background: rgba(37,99,235,0.1); border-left: 2px solid var(--accent); }
+td { padding: 7px 10px; text-align: center; vertical-align: middle; font-size: 12px; }
+td.left { text-align: left; }
+.td-id { color: var(--text-3); font-family: var(--font-mono); font-size: 11px; }
+.td-name { color: var(--text-1); font-weight: 500; }
 
-/* Info Grid Cards */
-.info-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:16px}
-.info-card{background:var(--card);border:1px solid var(--line2);border-radius:10px;padding:20px;transition:all .2s}
-.info-card:hover{border-color:var(--line3);transform:translateY(-2px)}
-.info-card-title{font-size:16px;font-weight:700;color:var(--gold3);margin-bottom:8px}
-.info-card-desc{font-size:13.5px;color:var(--t2);line-height:1.6}
+/* RANK BADGE */
+.rank-badge {
+  display: inline-block; padding: 2px 9px; border-radius: 4px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.02em; white-space: nowrap;
+  font-family: var(--font-mono);
+}
+.r30 { background: #1a1040; color: #a78bfa; border: 1px solid #4c1d95; }
+.r29 { background: #120d30; color: #818cf8; border: 1px solid #312e81; }
+.r28 { background: #0c1a36; color: #60a5fa; border: 1px solid #1e3a6a; }
+.r27 { background: #2a0d0d; color: #f87171; border: 1px solid #7f1d1d; }
+.r26 { background: #0d2010; color: #4ade80; border: 1px solid #14532d; }
+.r25 { background: #0c1a30; color: #38bdf8; border: 1px solid #0c4a6e; }
+.r24 { background: #1a1808; color: #fbbf24; border: 1px solid #713f12; }
+.r23 { background: #0c1828; color: #7dd3fc; border: 1px solid #075985; }
+.r22 { background: #181a10; color: #bef264; border: 1px solid #365314; }
+.r21 { background: #181818; color: #d1d5db; border: 1px solid #374151; }
+.r20 { background: #181510; color: #d4a96a; border: 1px solid #44300a; }
+.r19 { background: #1a1208; color: #fb923c; border: 1px solid #7c2d12; }
+.r18 { background: #141414; color: #9ca3af; border: 1px solid #374151; }
 
-/* Forms & Inputs */
-.fg{display:grid;gap:16px}
-.ff{display:flex;flex-direction:column;gap:6px}
-.fl{font-size:11px;color:var(--t2);font-weight:600;letter-spacing:.05em;text-transform:uppercase;font-family:var(--fm)}
-.fi,.fs{background:var(--surface);border:1px solid var(--line2);color:var(--t1);padding:11px 14px;border-radius:8px;font-size:14px;font-family:var(--fn);transition:all .2s;width:100%}
-.fi:focus,.fs:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,157,46,.15)}
+/* DIV BADGE */
+.div-badge { display: inline-block; padding: 2px 9px; border-radius: 4px; font-size: 9px; font-weight: 700; font-family: var(--font-mono); letter-spacing: 0.04em; }
+.dv-leitung    { background: rgba(37,99,235,0.15); color: #60a5fa; border: 1px solid #1d4ed8; }
+.dv-curator    { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid #991b1b; }
+.dv-hcl        { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid #14532d; }
+.dv-hc         { background: rgba(14,165,233,0.12); color: #38bdf8; border: 1px solid #075985; }
+.dv-divlead    { background: rgba(168,85,247,0.12); color: #c084fc; border: 1px solid #6b21a8; }
+.dv-abt        { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid #92400e; }
+.dv-default    { background: var(--bg-hover); color: var(--text-2); border: 1px solid var(--border); }
 
-/* Buttons */
-.btn{padding:10px 22px;border-radius:8px;cursor:pointer;font-family:var(--fn);font-size:14px;font-weight:600;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:8px;letter-spacing:.01em}
-.btn-blue{background:var(--blue);color:#fff}
-.btn-blue:hover{background:var(--blue2);transform:translateY(-1px)}
-.btn-gold{background:rgba(201,157,46,.12);color:var(--gold3);border:1px solid rgba(201,157,46,.3)}
-.btn-gold:hover{background:var(--gold);color:#030406}
-.btn-red{background:var(--red);color:#fff}
-.btn-red:hover{background:var(--red2)}
-.btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--line2)}
-.btn-ghost:hover{background:var(--card2);color:var(--t1)}
+/* ABT PILL */
+.abt-pill { display: inline-block; font-size: 9px; font-weight: 600; padding: 1px 6px; border-radius: 3px; margin: 1px; font-family: var(--font-mono); }
 
-/* MODAL BOX */
-.mb{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(10px)}
-.mb.on{display:flex;animation:mbIn .2s ease}
-@keyframes mbIn{from{opacity:0}to{opacity:1}}
-.modal{background:var(--surface);border:1px solid var(--line2);border-radius:14px;padding:32px;max-width:92vw;box-shadow:0 30px 70px rgba(0,0,0,.8);max-height:85vh;overflow-y:auto}
-.modal::before{content:'';display:block;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:-32px -32px 24px;border-radius:14px 14px 0 0}
-.modal-t{font-size:20px;font-weight:700;margin-bottom:20px}
-.modal-act{display:flex;gap:10px;justify-content:flex-end;margin-top:24px;border-top:1px solid var(--line2);padding-top:18px}
-.lm{width:420px}
+/* CHECKBOX */
+.cb-wrap { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 3px; }
+.cb-on  { background: rgba(34,197,94,0.15); border: 1px solid #16a34a; color: #22c55e; font-size: 10px; }
+.cb-off { background: var(--bg-panel); border: 1px solid var(--border); }
 
-/* TOAST NOTIFICATION */
-.toast{position:fixed;bottom:30px;right:30px;z-index:500;background:var(--card);border:1px solid var(--line3);padding:14px 22px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 20px 50px rgba(0,0,0,.6);transform:translateY(120px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:10px}
-.toast.on{transform:translateY(0);opacity:1}
+.strike-0 { color: var(--green); font-family: var(--font-mono); font-size: 11px; }
+.strike-1 { color: var(--amber); font-family: var(--font-mono); font-size: 11px; }
+.strike-2 { color: var(--red); font-family: var(--font-mono); font-size: 11px; }
+td.date-cell { color: var(--text-3); font-family: var(--font-mono); font-size: 10px; }
+
+/* ===== PROFIL PAGE ===== */
+.profile-page { display: none; flex-direction: column; }
+.profile-page.active { display: flex; }
+
+.profile-hero {
+  height: 150px; flex-shrink: 0; position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #0a1020 0%, #0f1e3c 35%, #0a1828 70%, #080e1c 100%);
+}
+.hero-mesh {
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(ellipse at 15% 60%, rgba(37,99,235,0.2) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 30%, rgba(6,182,212,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 90%, rgba(37,99,235,0.08) 0%, transparent 40%);
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(37,99,235,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37,99,235,0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.hero-vignette { position: absolute; bottom: 0; left: 0; right: 0; height: 80px; background: linear-gradient(to bottom, transparent, #0b0e14); }
+
+.profile-header-info {
+  padding: 0 24px 16px;
+  display: flex; align-items: flex-end; gap: 18px;
+  margin-top: -50px; position: relative; z-index: 2;
+}
+.p-avatar {
+  width: 90px; height: 90px; border-radius: 50%; flex-shrink: 0;
+  background: var(--bg-card); border: 3px solid var(--border-l);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; color: var(--text-3);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+}
+.p-info-main { padding-bottom: 8px; }
+.p-name { font-family: var(--font-head); font-size: 22px; font-weight: 700; color: var(--text-1); }
+.p-rank-label { font-size: 12px; color: var(--text-3); margin-top: 2px; font-family: var(--font-mono); }
+.p-dates { margin-left: auto; padding-bottom: 10px; display: flex; gap: 24px; }
+.p-date-block { text-align: center; }
+.p-date-val { font-family: var(--font-head); font-size: 16px; font-weight: 600; color: var(--text-1); }
+.p-date-label { font-size: 10px; color: var(--text-3); font-family: var(--font-mono); margin-top: 2px; letter-spacing: 0.06em; }
+.p-date-sep { width: 1px; background: var(--border); align-self: stretch; margin-bottom: 8px; }
+
+.profile-content { flex: 1; display: grid; grid-template-columns: 260px 1fr; gap: 16px; padding: 0 24px 24px; overflow-y: auto; }
+.p-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; }
+.p-card-title { font-family: var(--font-head); font-size: 17px; font-weight: 700; color: var(--text-1); margin-bottom: 3px; }
+.p-card-sub { font-size: 11px; color: var(--text-3); margin-bottom: 14px; line-height: 1.4; }
+.p-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+.p-info-row { display: flex; align-items: center; gap: 12px; padding: 7px 0; }
+.p-info-icon { font-size: 15px; color: var(--text-3); width: 20px; text-align: center; }
+.p-info-val { font-size: 13px; color: var(--text-2); font-family: var(--font-mono); }
+
+.abt-table-wrap { overflow: hidden; }
+.abt-tbl { width: 100%; border-collapse: collapse; }
+.abt-tbl thead th { font-size: 10px; letter-spacing: 0.1em; color: var(--text-3); font-family: var(--font-mono); border-bottom: 1px solid var(--border); padding: 6px 0 8px; text-align: left; }
+.abt-tbl thead th.r { text-align: right; }
+.abt-tbl tbody tr { border-bottom: 1px solid #111820; }
+.abt-tbl tbody tr:last-child { border: none; }
+.abt-tbl td { padding: 8px 0; font-size: 12px; color: var(--text-2); font-family: var(--font-mono); }
+.abt-tbl td.r { text-align: right; }
+
+.sb-bestanden { color: var(--green); background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 3px; letter-spacing: 0.05em; }
+.sb-offen { color: var(--red); background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 3px; letter-spacing: 0.05em; }
+.sb-ausstehend { color: var(--amber); background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25); font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 3px; letter-spacing: 0.05em; }
+
+.p-stats-row { display: flex; gap: 8px; margin-bottom: 14px; }
+.p-stat { flex: 1; text-align: center; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 7px; padding: 9px; }
+.p-stat-n { font-family: var(--font-head); font-size: 22px; font-weight: 700; }
+.p-stat-l { font-size: 10px; color: var(--text-3); font-family: var(--font-mono); margin-top: 1px; }
+
+/* ===== BACK BUTTON ===== */
+.back-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  color: var(--text-2); padding: 6px 12px; border-radius: 6px;
+  cursor: pointer; font-size: 11px; font-family: var(--font-mono);
+  transition: all .15s; margin-bottom: 0; letter-spacing: 0.05em;
+}
+.back-btn:hover { background: var(--bg-hover); color: var(--text-1); border-color: var(--border-l); }
+
+/* ===== PAGE TRANSITIONS ===== */
+.page { animation: fadeIn .2s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===== RESPONSIVE TOPBAR ===== */
+@media (max-width: 900px) { .tc-input { width: 120px; } }
 </style>
 </head>
 <body>
-<div class="shell">
+<div class="app">
 
-<!-- ═══ NAV BAR ═══ -->
-<nav>
-  <div class="nav-brand" onclick="switchView('home')">
-    <div class="nav-logo">FIB</div>
-    <div class="nav-brand-text">
-      <strong>FIB</strong>
-      <span>FEDERAL INVESTIGATION BUREAU</span>
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-emblem">FIB</div>
+    <div class="logo-text">
+      <h1>FIB</h1>
+      <p>FEDERAL INVESTIGATION BUREAU</p>
     </div>
   </div>
 
-  <div class="nav-links">
-    <div class="nl on" id="nl-home" onclick="switchView('home')">Dashboard</div>
-    <div class="nl" id="nl-mitarbeiter" onclick="switchView('mitarbeiter')">Datenbanken</div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">NAVIGATION</div>
+    <div class="nav-item active" onclick="showPage('dashboard')">
+      <span class="nav-icon">⬛</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPage('mitarbeiter')">
+      <span class="nav-icon">👥</span> Mitarbeiterliste
+      <span class="nav-badge" id="nav-count">49</span>
+    </div>
+    <div class="nav-item" onclick="showPage('abteilungen')">
+      <span class="nav-icon">🏛</span> Abteilungen
+    </div>
   </div>
 
-  <div class="nav-right">
-    <div class="nav-clock" id="nav-clock">00:00:00</div>
-    <button class="login-pill" id="login-pill" onclick="redirectToDiscord()">
-      <span class="lp-avatar">👾</span> Discord Login
-    </button>
-  </div>
-</nav>
-
-<!-- ═══ APPLICATION BODY ═══ -->
-<div class="body">
-  
-  <!-- SIDEBAR CATEGORIES -->
-  <div class="sidebar">
-    <div class="sg">Zentrale</div>
-    <div class="si-item on" id="si-home" onclick="switchView('home')">🏢 Übersicht</div>
-    <div class="si-item" id="si-mitarbeiter" onclick="switchView('mitarbeiter')">👥 Mitarbeiterliste</div>
-    
-    <div class="sg">Kategorien</div>
-    <div class="si-item" id="si-abteilungen" onclick="switchView('abteilungen')">🗂️ Abteilungen</div>
-    <div class="si-item" id="si-strafkatalog" onclick="switchView('strafkatalog')">📜 Strafkatalog</div>
-    <div class="si-item" id="si-panels" onclick="switchView('panels')">🖥️ Panels</div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">VERWALTUNG</div>
+    <div class="nav-item" onclick="showPage('ausbildungen')">
+      <span class="nav-icon">📋</span> Ausbildungen
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">⚡</span> Einsätze
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">📊</span> Berichte
+    </div>
   </div>
 
-  <!-- MAIN PAGE WRAPPER -->
-  <div class="page-wrap">
-    
-    <!-- DASHBOARD VIEW -->
-    <div class="vw on" id="vw-home">
-      <div class="hero">
-        <div class="hero-glow"></div>
-        <div class="hero-inner">
-          <div class="hero-pill"><div class="hero-dot"></div> SECURE CORE ONLINE</div>
-          <h1 class="hero-h1">Federal <em>Investigation</em> Bureau</h1>
-          <p class="hero-p">Zentralisiertes Management-Netzwerk des FIB. Zugriff ausschließlich für autorisierte Agents der Bundesbehörde. Überwachung und Dokumentation aktiv.</p>
-        </div>
+  <div class="sidebar-bottom">
+    <div class="online-status">
+      <div class="dot-pulse"></div>
+      <div class="status-text">System <strong>ONLINE</strong></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div>
+      <span class="topbar-title" id="page-title">Dashboard</span>
+      <span class="topbar-sub" id="page-sub">/ Übersicht</span>
+    </div>
+    <div class="topbar-right">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="global-search" placeholder="Suche..." oninput="onGlobalSearch()">
+      </div>
+      <div class="topbar-time" id="topbar-time">--:--:--</div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: DASHBOARD ===== -->
+  <div class="page active" id="page-dashboard">
+    <!-- STATS -->
+    <div class="stat-grid">
+      <div class="stat-card blue">
+        <div class="stat-label">AGENTEN GESAMT</div>
+        <div class="stat-value blue" id="ds-total">49</div>
+        <div class="stat-sub">aktive Mitarbeiter</div>
+      </div>
+      <div class="stat-card cyan">
+        <div class="stat-label">HOCHRANGIG (25+)</div>
+        <div class="stat-value cyan" id="ds-high">0</div>
+        <div class="stat-sub">Rang 25 und höher</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">OHNE STRIKES</div>
+        <div class="stat-value green" id="ds-clean">0</div>
+        <div class="stat-sub">0/3 Strikes</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-label">DIVISIONEN</div>
+        <div class="stat-value gold">5</div>
+        <div class="stat-sub">aktive Abteilungen</div>
       </div>
     </div>
 
-    <!-- MITARBEITER VIEW -->
-    <div class="vw" id="vw-mitarbeiter">
-      <div class="sc">
-        <div class="sc-h">
-          <span class="sc-t">Mitarbeiter-Register</span>
-          <button class="btn btn-blue" onclick="openAddMemberModal()" id="add-member-btn" style="display:none;">+ Mitarbeiter eintragen</button>
+    <div class="dash-grid">
+      <!-- Rang Verteilung -->
+      <div class="section-card">
+        <div class="section-head">
+          <span class="section-title">RANG VERTEILUNG</span>
+          <span class="section-badge">ALLE RÄNGE</span>
         </div>
-        <div class="sc-b">
-          <table class="tbl">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Badge</th>
-                <th>Dienstrang</th>
-                <th>Discord ID</th>
-                <th>Management</th>
-              </tr>
-            </thead>
-            <tbody id="member-table-body">
-              <!-- Wird per JS befüllt -->
-            </tbody>
+        <div class="rank-bar-list" id="rank-dist"></div>
+      </div>
+
+      <!-- Abteilungen -->
+      <div class="section-card">
+        <div class="section-head">
+          <span class="section-title">ABTEILUNGEN</span>
+          <span class="section-badge">ÜBERSICHT</span>
+        </div>
+        <div class="abt-list" id="abt-overview-dash"></div>
+      </div>
+    </div>
+
+    <!-- Activity -->
+    <div class="section-card">
+      <div class="section-head">
+        <span class="section-title">AKTIVITÄTS-LOG</span>
+        <span class="section-badge" style="color:var(--green)">● LIVE</span>
+      </div>
+      <div class="feed" id="activity-feed"></div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: MITARBEITER ===== -->
+  <div class="page" id="page-mitarbeiter">
+    <div class="table-controls">
+      <span class="tc-label">SUCHE</span>
+      <input class="tc-input" type="text" id="tbl-search" placeholder="Name / ID / Rang ..." oninput="filterTable()">
+      <div class="tc-sep"></div>
+      <span class="tc-label">DIVISION</span>
+      <select class="tc-select" id="tbl-div" onchange="filterTable()">
+        <option value="">Alle</option>
+        <option value="Leuderschaft">Leuderschaft</option>
+        <option value="Curator of Dmsns">Curator of Dmsns</option>
+        <option value="High Command Lead">High Command Lead</option>
+        <option value="High Command">High Command</option>
+        <option value="Division Lead">Division Lead</option>
+        <option value="Abteilungsarma">Abteilungsarma</option>
+      </select>
+      <div class="tc-sep"></div>
+      <span class="tc-label">RANG</span>
+      <select class="tc-select" id="tbl-rank" onchange="filterTable()">
+        <option value="0">Alle</option>
+        <option value="28">28+</option>
+        <option value="25">25+</option>
+        <option value="23">23+</option>
+        <option value="22">22+</option>
+      </select>
+      <span class="tc-count" id="tbl-count">49 Einträge</span>
+    </div>
+    <div class="table-wrap">
+      <div class="table-inner">
+        <table id="main-table">
+          <thead><tr>
+            <th class="left sortable" onclick="sortBy('id')">ID</th>
+            <th class="left sortable" onclick="sortBy('name')">NAME</th>
+            <th class="left sortable" onclick="sortBy('rankN')">RANG</th>
+            <th class="sortable" onclick="sortBy('dn')">DN</th>
+            <th class="left">DIVISION</th>
+            <th class="sortable" onclick="sortBy('strike')">STRIKE</th>
+            <th>INVITE DATE</th>
+            <th>LAST RANK</th>
+            <th class="left">ABTEILUNGEN</th>
+            <th>GA</th><th>EV8</th><th>AK8</th><th>T8T</th><th>VHF/EL</th><th>JUR</th><th>UC</th><th>FTK</th>
+          </tr></thead>
+          <tbody id="tbl-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: PROFIL ===== -->
+  <div class="page profile-page" id="page-profil">
+    <div style="padding:16px 24px 12px; display:flex; align-items:center; gap:12px;">
+      <div class="back-btn" onclick="showPage('mitarbeiter')">← ZURÜCK ZUR LISTE</div>
+    </div>
+    <div class="profile-hero">
+      <div class="hero-mesh"></div>
+      <div class="hero-grid"></div>
+      <div class="hero-vignette"></div>
+    </div>
+    <div class="profile-header-info">
+      <div class="p-avatar" id="p-avatar">👤</div>
+      <div class="p-info-main">
+        <div class="p-name" id="p-name">—</div>
+        <div class="p-rank-label" id="p-rank-label">—</div>
+      </div>
+      <div class="p-dates">
+        <div class="p-date-block">
+          <div class="p-date-val" id="p-invite">—</div>
+          <div class="p-date-label">EINGESTELLT AM</div>
+        </div>
+        <div class="p-date-sep"></div>
+        <div class="p-date-block">
+          <div class="p-date-val" id="p-lastrank">—</div>
+          <div class="p-date-label">LETZTE BEFÖRDERUNG</div>
+        </div>
+      </div>
+    </div>
+    <div class="profile-content">
+      <!-- Über Mich -->
+      <div class="p-card">
+        <div class="p-card-title">Über Mich</div>
+        <div class="p-card-sub">Hier findest du alle Grund<br>Informationen über diesen Agenten.</div>
+        <hr class="p-divider">
+        <div class="p-info-row"><span class="p-info-icon">🪪</span><span class="p-info-val" id="pi-id">—</span></div>
+        <div class="p-info-row"><span class="p-info-icon">👤</span><span class="p-info-val" id="pi-name">—</span></div>
+        <div class="p-info-row"><span class="p-info-icon">📞</span><span class="p-info-val" id="pi-phone">—</span></div>
+        <div class="p-info-row"><span class="p-info-icon">📅</span><span class="p-info-val" id="pi-date">—</span></div>
+        <div class="p-info-row"><span class="p-info-icon">💼</span><span class="p-info-val" id="pi-rank">—</span></div>
+        <div class="p-info-row"><span class="p-info-icon">🔏</span><span class="p-info-val" id="pi-dn">—</span></div>
+      </div>
+      <!-- Ausbildungen -->
+      <div class="p-card">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px;">
+          <div>
+            <div class="p-card-title">Ausbildungen / Schulungen</div>
+          </div>
+          <div class="p-stats-row" style="margin:0">
+            <div class="p-stat">
+              <div class="p-stat-n" style="color:var(--green)" id="cnt-best">0</div>
+              <div class="p-stat-l">BESTANDEN</div>
+            </div>
+            <div class="p-stat">
+              <div class="p-stat-n" style="color:var(--red)" id="cnt-offen">0</div>
+              <div class="p-stat-l">OFFEN</div>
+            </div>
+          </div>
+        </div>
+        <div class="abt-table-wrap">
+          <table class="abt-tbl">
+            <thead><tr><th>NAME</th><th class="r">STATUS</th></tr></thead>
+            <tbody id="ausb-body"></tbody>
           </table>
         </div>
       </div>
     </div>
-
-    <!-- ABTEILUNGEN VIEW -->
-    <div class="vw" id="vw-abteilungen">
-      <h2 style="font-size:22px; font-weight:700; color:var(--gold3);">Strukturelle Abteilungen des FIB</h2>
-      <div class="info-grid">
-        <div class="info-card">
-          <div class="info-card-title">TD — Tactical Division</div>
-          <div class="info-card-desc">Zuständig für Hochrisiko-Einsätze, Geiselnahmen, taktische Zugriffe und operative Unterstützung aller Sondereinheiten im Staat.</div>
-        </div>
-        <div class="info-card">
-          <div class="info-card-title">CID — Criminal Investigation Division</div>
-          <div class="info-card-desc">Fokus auf Langzeitermittlungen, verdeckte Observationen, Bandenkriminalität sowie präzise Akten- und Beweisführung gegen kriminelle Organisationen.</div>
-        </div>
-        <div class="info-card">
-          <div class="info-card-title">FIBCO — Anti-Korruption</div>
-          <div class="info-card-desc">Interne Kontrollinstanz zur Überwachung der Integrität aller Staatsbeamten. Erstellt Berichte und dokumentiert Fehlverhalten im Dienst.</div>
-        </div>
-        <div class="info-card">
-          <div class="info-card-title">Ausbildungsabteilung</div>
-          <div class="info-card-desc">Verantwortlich für das Rekrutierungsverfahren, die Grundausbildung neuer Agents sowie die Abnahme strategischer Zwischenprüfungen.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- STRAFKATALOG VIEW -->
-    <div class="vw" id="vw-strafkatalog">
-      <div class="sc">
-        <div class="sc-h"><span class="sc-t">Auszug aus dem aktuellen Bundes-Strafkatalog</span></div>
-        <div class="sc-b">
-          <table class="tbl">
-            <thead>
-              <tr>
-                <th>Delikt</th>
-                <th>Haftstrafen-Maß (UT)</th>
-                <th>Geldstrafe</th>
-                <th>Bemerkung</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td class="bold-text">Hochverrat gegen den Staat</td><td>30 UT</td><td>$50.000</td><td>FIBCO / Direktion-Freigabe nötig</td></tr>
-              <tr><td class="bold-text">Amtsmissbrauch / Korruption</td><td>20 UT</td><td>$35.000</td><td>Sofortige Suspendierung</td></tr>
-              <tr><td class="bold-text">Unerlaubter Waffen- / Schwarzmarktbesitz</td><td>15 UT</td><td>$20.000</td><td>Beschlagnahmung aller illegalen Güter</td></tr>
-              <tr><td class="bold-text">Widerstand gegen Vollstreckungsbeamte</td><td>10 UT</td><td>$10.000</td><td>Erhöhung bei Fluchtversuch</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- PANELS VIEW -->
-    <div class="vw" id="vw-panels">
-      <h2 style="font-size:22px; font-weight:700; color:var(--gold3);">Operative Leitstellen-Panels</h2>
-      <div class="info-grid">
-        <div class="info-card" style="border-left: 3px solid var(--blue);">
-          <div class="info-card-title">🖥️ Funkfrequenzen & Statusmonitor</div>
-          <div class="info-card-desc">Überwachung des aktuellen verschlüsselten Behördenfunks und Zuweisung operativer Taktik-Frequenzen.</div>
-        </div>
-        <div class="info-card" style="border-left: 3px solid var(--red);">
-          <div class="info-card-title">🚨 Ortungspanel & Fahndungen</div>
-          <div class="info-card-desc">Live-Abfrage offener Haftbefehle im System und GPS-Verfolgung registrierter Peilsender.</div>
-        </div>
-        <div class="info-card" style="border-left: 3px solid var(--gold);">
-          <div class="info-card-title">🗄️ Aktenarchiv & Freigaben</div>
-          <div class="info-card-desc">Zentrale Verwaltung für Ermittlungsakten. Bearbeitung und Löschung nur ab Rang 28 (Assistant Director).</div>
-        </div>
-      </div>
-    </div>
-
   </div>
-</div>
 
-</div>
+  <!-- ===== PAGE: ABTEILUNGEN ===== -->
+  <div class="page" id="page-abteilungen">
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px;" id="abt-cards"></div>
+  </div>
 
-<!-- MITARBEITER ERFASSEN MODAL -->
-<div class="mb" id="member-modal">
-  <div class="modal lm">
-    <div class="modal-t">Mitarbeiter im Register erfassen</div>
-    <div class="fg">
-      <div class="ff">
-        <label class="fl">Name</label>
-        <input class="fi" type="text" id="m-name" placeholder="Vegas Murano">
+  <!-- ===== PAGE: AUSBILDUNGEN ===== -->
+  <div class="page" id="page-ausbildungen">
+    <div class="section-card" style="flex:none">
+      <div class="section-head"><span class="section-title">ALLE AUSBILDUNGEN</span><span class="section-badge">ÜBERSICHT</span></div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;min-width:900px">
+          <thead><tr>
+            <th style="text-align:left;padding:10px;font-size:10px;letter-spacing:.1em;color:var(--text-3);font-family:var(--font-mono);border-bottom:1px solid var(--border)">AUSBILDUNG</th>
+            <th style="padding:10px;font-size:10px;letter-spacing:.1em;color:var(--text-3);font-family:var(--font-mono);border-bottom:1px solid var(--border);text-align:center">BESTANDEN</th>
+            <th style="padding:10px;font-size:10px;letter-spacing:.1em;color:var(--text-3);font-family:var(--font-mono);border-bottom:1px solid var(--border);text-align:center">OFFEN</th>
+            <th style="padding:10px;font-size:10px;letter-spacing:.1em;color:var(--text-3);font-family:var(--font-mono);border-bottom:1px solid var(--border);text-align:center">QUOTE</th>
+          </tr></thead>
+          <tbody id="ausb-overview-body"></tbody>
+        </table>
       </div>
-      <div class="ff">
-        <label class="fl">Dienstnummer (Badge)</label>
-        <input class="fi" type="text" id="m-badge" placeholder="Ex: 299574">
-      </div>
-      <div class="ff">
-        <label class="fl">Rang</label>
-        <select class="fs" id="m-rank">
-          <option value="20">20. Agent</option>
-          <option value="28">28. Assistant Director of FIB</option>
-        </select>
-      </div>
-      <div class="ff">
-        <label class="fl">Discord ID (Pflichtfeld)</label>
-        <input class="fi" type="text" id="m-discord" placeholder="Ex: 1226929673309655112">
-      </div>
-    </div>
-    <div class="modal-act">
-      <button class="btn btn-ghost" onclick="closeModal('member-modal')">Abbrechen</button>
-      <button class="btn btn-blue" onclick="saveMember()">Eintragen</button>
     </div>
   </div>
-</div>
 
-<!-- TOAST NOTIFICATION SYSTEM -->
-<div class="toast" id="toast"></div>
+</div><!-- /main -->
+</div><!-- /app -->
 
-<!-- ═══ CORE LOGIC SCRIPT ═══ -->
 <script>
-// CONFIGURATION FOR DISCORD DEVELOPER PORTAL APPS
-const DISCORD_CLIENT_ID = "DEINE_DISCORD_CLIENT_ID_HIER_EINTRAGEN"; 
-const REDIRECT_URI = window.location.origin + window.location.pathname;
-
-// Lokale Datenbank-Mitarbeiter initialisieren
-let members = JSON.parse(localStorage.getItem('fib_members')) || [
-  { name: "Tim Chessee", badge: "28", rank: "28", discord: "1226929673309655112" }
+// ======= DATA =======
+const AUSBILDUNGEN = [
+  "Grundausbildung","Erste Hilfe Kurs","Officer Prüfung","Ortskunde Plus",
+  "Fahrtauglichkeitsprüfung","Fahrsicherheit","Tactical Shooting Training",
+  "Senior Officer Prüfung","AUB Streifen Schulung","Leitstellen Prüfung",
+  "Jura Prüfung","Verhandlungs-/ Einsatzleitung Prüfung",
+  "Flugausbildung / Overwatch","TOW Ausbildung (Abschlepper)",
 ];
-let currentUser = null;
 
-// Uhrzeit-Zentrale
-function updateClock() {
-  const n = new Date();
-  document.getElementById('nav-clock').textContent = n.toLocaleTimeString('de-DE');
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-// View Management Switcher (Navbar & Sidebar synchronisiert)
-function switchView(viewId) {
-  document.querySelectorAll('.vw').forEach(v => v.classList.remove('on'));
-  document.querySelectorAll('.nl').forEach(n => n.classList.remove('on'));
-  document.querySelectorAll('.si-item').forEach(s => s.classList.remove('on'));
-  
-  const targetView = document.getElementById('vw-' + viewId);
-  const targetLink = document.getElementById('nl-' + viewId);
-  const targetSidebar = document.getElementById('si-' + viewId);
-  
-  if(targetView) targetView.classList.add('on');
-  if(targetLink) targetLink.classList.add('on');
-  if(targetSidebar) targetSidebar.classList.add('on');
-
-  if(viewId === 'mitarbeiter') renderMembers();
-}
-
-// Toast Notifier
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('on');
-  setTimeout(() => t.classList.remove('on'), 3500);
-}
-
-// Modal Handlers
-function closeModal(id) { document.getElementById(id).classList.remove('on'); }
-function openAddMemberModal() {
-  if(!currentUser || !currentUser.isAdmin) return;
-  document.getElementById('m-name').value = '';
-  document.getElementById('m-badge').value = '';
-  document.getElementById('m-discord').value = '';
-  document.getElementById('member-modal').classList.add('on');
-}
-
-// DISCORD OAUTH2 DEVELOPER PORTAL LOGIC
-function redirectToDiscord() {
-  if(currentUser) {
-    if(confirm('Möchtest du dich ausloggen?')) {
-      currentUser = null;
-      window.location.hash = "";
-      updateUIOnLoginStatus();
-      switchView('home');
-    }
-    return;
-  }
-  
-  if(DISCORD_CLIENT_ID === "DEINE_DISCORD_CLIENT_ID_HIER_EINTRAGEN") {
-    showToast("Fehler: Trag zuerst deine Discord Client ID im Code ganz unten ein!");
-    return;
-  }
-
-  const url = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
-  window.location.href = url;
-}
-
-// Check URL Hash on page load for Discord Callback Token
-function processDiscordOAuthCallback() {
-  const fragment = new URLSearchParams(window.location.hash.slice(1));
-  const accessToken = fragment.get('access_token');
-
-  if (accessToken) {
-    // Rufe Benutzerdaten direkt von der Discord API ab
-    fetch('https://discord.com/api/users/@me', {
-      headers: { Authorization: `Bearer ${accessToken}` }
-    })
-    .then(res => res.json())
-    .then(discordUser => {
-      if (discordUser && discordUser.id) {
-        handleUserVerification(discordUser.id, discordUser.username);
-      }
-    })
-    .catch(err => {
-      showToast("Verbindung zu Discord fehlgeschlagen.");
-      console.error(err);
-    });
-  }
-}
-
-// Discord-ID Verifizierung & automatischer Rollenabruf aus dem Register
-function handleUserVerification(discordId, username) {
-  // Hardcoded Chef / Admin Check für dich
-  if(discordId === "1226929673309655112") {
-    currentUser = { 
-      name: "Tim Chessee", 
-      badge: "28", 
-      rank: "28", 
-      discord: "1226929673309655112", 
-      isAdmin: true 
-    };
-    showToast(`Willkommen zurück, Assistant Director Chessee (Admin)!`);
-  } else {
-    // Suche im Register nach der übermittelten Discord ID
-    const registeredUser = members.find(m => m.discord === discordId);
-    if(registeredUser) {
-      currentUser = { 
-        ...registeredUser, 
-        isAdmin: registeredUser.rank === "28" 
-      };
-      showToast(`Verifiziert als ${currentUser.name} (Rang ${currentUser.rank})`);
-    } else {
-      showToast(`Zugriff verweigert: Discord-ID (${discordId}) ist nicht im Register hinterlegt!`);
-      currentUser = null;
-      window.location.hash = "";
-    }
-  }
-  updateUIOnLoginStatus();
-}
-
-function updateUIOnLoginStatus() {
-  const pill = document.getElementById('login-pill');
-  const addBtn = document.getElementById('add-member-btn');
-  
-  if(currentUser) {
-    pill.classList.add('dc-connected');
-    pill.innerHTML = `<span class="lp-avatar">👑</span> ${currentUser.name} (Rang ${currentUser.rank})`;
-    if(currentUser.isAdmin) {
-      addBtn.style.display = 'inline-flex';
-    } else {
-      addBtn.style.display = 'none';
-    }
-  } else {
-    pill.classList.remove('dc-connected');
-    pill.innerHTML = `<span class="lp-avatar">👾</span> Discord Login`;
-    addBtn.style.display = 'none';
-  }
-  if(document.getElementById('vw-mitarbeiter').classList.contains('on')) renderMembers();
-}
-
-// Mitarbeiter Speichern
-function saveMember() {
-  const name = document.getElementById('m-name').value.trim();
-  const badge = document.getElementById('m-badge').value.trim();
-  const rank = document.getElementById('m-rank').value;
-  const discord = document.getElementById('m-discord').value.trim();
-
-  if(!name || !badge || !discord) { 
-    showToast('Fehler: Alle Felder inklusive der Discord ID sind Pflichtfelder.'); 
-    return; 
-  }
-
-  members.push({ name, badge, rank, discord });
-  localStorage.setItem('fib_members', JSON.stringify(members));
-  showToast('Mitarbeiter erfolgreich in Datenbank erfasst.');
-  closeModal('member-modal');
-  renderMembers();
-}
-
-// Mitarbeiter Entfernen
-function deleteMember(idx) {
-  if(!currentUser || !currentUser.isAdmin) return;
-  members.splice(idx, 1);
-  localStorage.setItem('fib_members', JSON.stringify(members));
-  renderMembers();
-}
-
-// Render Members Table with Privacy Safeguard (Discord-ID Verschleierung)
-function renderMembers() {
-  const tbody = document.getElementById('member-table-body');
-  tbody.innerHTML = '';
-
-  members.forEach((m, idx) => {
-    const tr = document.createElement('tr');
-    
-    // Datenschutz-Prüfung: Nur Admins oder die Person selbst darf die echte Discord ID sehen
-    const hasPrivilege = currentUser && (currentUser.isAdmin || currentUser.discord === m.discord);
-    const visibleDiscord = hasPrivilege ? m.discord : `***********`;
-
-    tr.innerHTML = `
-      <td class="bold-text">${m.name}</td>
-      <td>#${m.badge}</td>
-      <td><span class="badge r${m.rank}">${m.rank}. ${m.rank === '28' ? 'Assistant Director' : 'Agent'}</span></td>
-      <td style="color:var(--t3); font-size:12px; letter-spacing: 1px;">${visibleDiscord}</td>
-      <td>
-        ${currentUser && currentUser.isAdmin ? `<button class="btn btn-red" style="padding:5px 12px; font-size:12px;" onclick="deleteMember(${idx})">Entfernen</button>` : `<span style="color:var(--t3); font-size:12px;">Keine Rechte</span>`}
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-// Window Onload Lifecycle Execution
-window.onload = () => {
-  processDiscordOAuthCallback();
-  updateUIOnLoginStatus();
+const RANKS = {
+  30:{label:"30. Director of FIB",cls:"r30"},
+  29:{label:"29. Deputy Director of FIB",cls:"r29"},
+  28:{label:"28. Assistant Director of FIB",cls:"r28"},
+  27:{label:"27. Divisional Director",cls:"r27"},
+  26:{label:"26. Inspector of the FIB",cls:"r26"},
+  25:{label:"25. Supervisory Head Agent",cls:"r25"},
+  24:{label:"24. Supervisory Agent",cls:"r24"},
+  23:{label:"23. Special Agent in Charge",cls:"r23"},
+  22:{label:"22. Division Chief",cls:"r22"},
+  21:{label:"21. Deputy Division Chief",cls:"r21"},
+  20:{label:"20. Senior Special Agent",cls:"r20"},
+  19:{label:"19. Tactical Operator",cls:"r19"},
+  18:{label:"18. Department Specialist",cls:"r18"},
 };
+
+const DIVMAP = {
+  "Leuderschaft":"dv-leitung","Curator of Dmsns":"dv-curator",
+  "High Command Lead":"dv-hcl","High Command":"dv-hc",
+  "Division Lead":"dv-divlead","Abteilungsarma":"dv-abt",
+};
+
+const ABT_COLORS = {
+  CID:"#f87171",CIRG:"#4ade80",FIBCO:"#818cf8",HR:"#fb923c",
+  PR:"#f472b6",TD:"#38bdf8",LAW:"#bef264",IA:"#fbbf24",CIR:"#f43f5e",
+};
+
+const AGENTS = [
+  {id:17450,name:"Eko Plasta",rankN:30,dn:1,div:"Leuderschaft",strike:0,invite:"25.06.2026",lastrank:"25.06.2026",phone:"18-01-174",abt:"Chief Executive Curator, Chairman of the Directorate",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,1,1,1,1]},
+  {id:264694,name:"Tim Chessee",rankN:29,dn:2,div:"Leuderschaft",strike:0,invite:"25.06.2026",lastrank:"25.06.2026",phone:"18-02-264",abt:"Deputy Executive Curator, Director of Integrity",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,1,1,1,1]},
+  {id:240601,name:"Nils Brandenburger",rankN:28,dn:777,div:"Leuderschaft",strike:0,invite:"25.06.2026",lastrank:"25.06.2026",phone:"18-777-240",abt:"Assistant Executive Curator, Director of Bureau Administration",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,0,0,1,1]},
+  {id:158935,name:"Assan Diop",rankN:28,dn:999,div:"Leuderschaft",strike:0,invite:"25.06.2026",lastrank:"25.06.2026",phone:"18-999-158",abt:"Assistant Executive Curator, Director of People",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,1,0,1,1]},
+  {id:76002,name:"Dan Reacher",rankN:28,dn:5,div:"Leuderschaft",strike:0,invite:"25.06.2026",lastrank:"25.06.2026",phone:"18-05-760",abt:"Assistant Executive Curator, Director of Criminal Investigations",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,1,1,1,1]},
+  {id:85558,name:"Dimi Nevargona",rankN:28,dn:3,div:"Leuderschaft",strike:0,invite:"25.06.2026",lastrank:"25.06.2026",phone:"18-03-855",abt:"Assistant Executive Curator, Director of National Security",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,1,1,1,1]},
+  {id:130547,name:"Anja Sloficz",rankN:28,dn:361,div:"Leuderschaft",strike:0,invite:"24.06.2026",lastrank:"25.06.2026",phone:"18-361-130",abt:"Assistant Executive Curator",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,0,1,1,1]},
+  {id:6180,name:"Paul Nao",rankN:28,dn:17,div:"Leuderschaft",strike:0,invite:"26.06.2026",lastrank:"26.06.2026",phone:"18-17-061",abt:"Assistant Executive Curator, Director of Law & Order",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,1,1,1,1]},
+  {id:102262,name:"Hakurl Schrom",rankN:28,dn:262,div:"Leuderschaft",strike:1,invite:"02.06.2026",lastrank:"02.06.2026",phone:"18-262-102",abt:"Assistant Executive Curator",ga:0,ev8:0,ak8:0,t8t:0,vhf:0,jur:0,uc:0,ftk:0,ausb:[1,1,1,1,1,1,1,1,0,0,0,0,0,0]},
+  {id:135691,name:"Joachim vonWanza",rankN:27,dn:10,div:"Curator of Dmsns",strike:0,invite:"25.06.2026",lastrank:"25.06.2026",phone:"18-10-135",abt:"Curator | HR, FIBCO",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,1,0,1,0]},
+  {id:157291,name:"Hugo Faderov",rankN:27,dn:7,div:"Curator of Dmsns",strike:0,invite:"25.06.2026",lastrank:"25.06.2026",phone:"18-07-157",abt:"Curator | FIBCO",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,0,0,1,1]},
+  {id:128034,name:"Bali Nevargona",rankN:27,dn:27,div:"Curator of Dmsns",strike:0,invite:"26.06.2026",lastrank:"26.06.2026",phone:"18-27-128",abt:"Curator | CIRG, FIBCO",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,1,1,1,1]},
+  {id:156327,name:"Felikov Faderov",rankN:27,dn:8,div:"Curator of Dmsns",strike:0,invite:"26.06.2026",lastrank:"04.06.2026",phone:"18-08-156",abt:"Curator | PR, FIBCO",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,0,0,0,1,1]},
+  {id:286473,name:"Felix Mccallay",rankN:26,dn:6,div:"High Command Lead",strike:0,invite:"25.06.2026",lastrank:"25.06.2026",phone:"18-06-286",abt:"Head of High Command, FIBCO",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,1,1,1,1]},
+  {id:217060,name:"Raff Yana",rankN:25,dn:4,div:"High Command",strike:0,invite:"25.06.2026",lastrank:"25.06.2026",phone:"18-04-217",abt:"HR Leitung, FIBCO",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,0,0,1,1]},
+  {id:26899,name:"Amanda Carillo",rankN:25,dn:31,div:"High Command",strike:0,invite:"25.06.2026",lastrank:"25.06.2026",phone:"18-31-268",abt:"TD Leitung, FIBCO",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,1,0,1,1]},
+  {id:142213,name:"Yannick Yur",rankN:25,dn:187,div:"High Command",strike:0,invite:"25.06.2026",lastrank:"25.06.2026",phone:"18-187-142",abt:"CIO Stellv. Leitung, FIBCO",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,0,1,1,1]},
+  {id:34258,name:"Fynn Andraas",rankN:25,dn:11,div:"High Command",strike:0,invite:"25.06.2026",lastrank:"25.06.2026",phone:"18-11-342",abt:"FIBCO",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,1,1,1,1]},
+  {id:106544,name:"Marcel Grubear",rankN:25,dn:15,div:"High Command",strike:0,invite:"25.06.2026",lastrank:"25.06.2026",phone:"18-15-106",abt:"",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,0,0,0,1,1]},
+  {id:256009,name:"Kayne Smoker",rankN:24,dn:25,div:"High Command",strike:0,invite:"25.06.2026",lastrank:"25.06.2026",phone:"18-25-256",abt:"TD Stellv. Leitung, CIRG",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,0,0,1,1]},
+  {id:142220,name:"Simon Kellarmann",rankN:24,dn:143,div:"High Command",strike:0,invite:"29.06.2026",lastrank:"29.06.2026",phone:"18-143-142",abt:"FIBCO",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,0,0,0,0,1,0]},
+  {id:176902,name:"Filip vonWanza",rankN:23,dn:32,div:"High Command",strike:0,invite:"26.06.2026",lastrank:"26.06.2026",phone:"18-32-176",abt:"TD",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,0,0,0,0,0,0,0]},
+  {id:219257,name:"Ranjio Bay",rankN:23,dn:33,div:"High Command",strike:0,invite:"26.06.2026",lastrank:"26.06.2026",phone:"18-33-219",abt:"CIRG",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,0,0,0,0,0,0]},
+  {id:218360,name:"Sebastian Kuroyama",rankN:23,dn:52,div:"High Command",strike:0,invite:"26.06.2026",lastrank:"26.06.2026",phone:"18-52-218",abt:"CID",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,0,0,0,0,0]},
+  {id:94468,name:"Kai Herzog",rankN:23,dn:45,div:"High Command",strike:0,invite:"26.06.2026",lastrank:"26.06.2026",phone:"18-45-944",abt:"HR",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,0,0,0,0,0,0]},
+  {id:253321,name:"Mickey Maybach",rankN:23,dn:53,div:"High Command",strike:0,invite:"26.06.2026",lastrank:"26.06.2026",phone:"18-53-253",abt:"FIBCO",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,0,0,0,0,0,0]},
+  {id:50091,name:"Syn Vano",rankN:23,dn:59,div:"High Command",strike:0,invite:"26.06.2026",lastrank:"26.06.2026",phone:"18-59-500",abt:"CID",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,0,0,0,0,0,0,0]},
+  {id:244186,name:"Anton Motuda",rankN:23,dn:9,div:"High Command",strike:0,invite:"05.06.2026",lastrank:"05.06.2026",phone:"18-09-244",abt:"FIBCO Stellv. Leitung",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,0,0,0,0,1,1]},
+  {id:109487,name:"Falko Cunningham",rankN:23,dn:87,div:"High Command",strike:0,invite:"05.06.2026",lastrank:"05.06.2026",phone:"18-87-109",abt:"CID Stellv. Leitung",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,0,0,0,0,0]},
+  {id:192812,name:"Riko Salle",rankN:23,dn:63,div:"High Command",strike:0,invite:"05.06.2026",lastrank:"05.06.2026",phone:"18-63-192",abt:"TD Stellv. Leitung",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,0,0,0,0,0,0]},
+  {id:105534,name:"Akin Kaplan",rankN:23,dn:71,div:"High Command",strike:0,invite:"26.06.2026",lastrank:"05.06.2026",phone:"18-71-105",abt:"FIBCO, CID",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,0,0,0,0,0,0]},
+  {id:257441,name:"Hugo Pirsel",rankN:23,dn:128,div:"High Command",strike:0,invite:"26.06.2026",lastrank:"05.06.2026",phone:"18-128-257",abt:"FIBCO Stellv. Leitung, HR",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,0,0,0,1,0]},
+  {id:290275,name:"Tomek Dick",rankN:23,dn:56,div:"High Command",strike:0,invite:"26.06.2026",lastrank:"05.06.2026",phone:"18-56-290",abt:"PR",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,0,0,0,0,0,0]},
+  {id:289893,name:"Bernhard Wolf",rankN:23,dn:36,div:"High Command",strike:0,invite:"26.06.2026",lastrank:"26.06.2026",phone:"18-36-289",abt:"FIBCO",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,0,0,0,0,0,0]},
+  {id:230288,name:"Noah Ralin",rankN:23,dn:444,div:"High Command",strike:0,invite:"26.06.2026",lastrank:"05.06.2026",phone:"18-444-230",abt:"FIBCO, HR",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,0,0,0,0,0,0]},
+  {id:12263,name:"Fabi Astro",rankN:23,dn:107,div:"High Command",strike:0,invite:"26.06.2026",lastrank:"05.06.2026",phone:"18-107-122",abt:"HR Senior, FIBCO",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,0,0,0,1,0]},
+  {id:136176,name:"Quantin Wash",rankN:23,dn:111,div:"High Command",strike:0,invite:"26.06.2026",lastrank:"05.06.2026",phone:"18-111-136",abt:"CIRG Stellv. Leitung, TD",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,0,0,0,0,0,0]},
+  {id:79712,name:"Angus Newlon",rankN:23,dn:62,div:"High Command",strike:0,invite:"26.06.2026",lastrank:"05.06.2026",phone:"18-62-797",abt:"FIBCO",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,0,0,0,0,0,0,0]},
+  {id:53462,name:"Bansai Fam",rankN:23,dn:92,div:"High Command",strike:0,invite:"05.06.2026",lastrank:"05.06.2026",phone:"18-92-534",abt:"",ga:1,ev8:1,ak8:1,t8t:1,vhf:0,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,0,0,0,0,0,0,0]},
+  {id:179462,name:"Nico Schlumpf",rankN:22,dn:28,div:"Division Lead",strike:0,invite:"26.06.2026",lastrank:"26.06.2026",phone:"18-28-179",abt:"IA Leitung, FIBCO",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,0,0,0,1,1]},
+  {id:140983,name:"Johannes Brecher",rankN:22,dn:14,div:"Division Lead",strike:0,invite:"26.06.2026",lastrank:"26.06.2026",phone:"18-14-140",abt:"CIRG Leitung, CID",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,0,0,1,1]},
+  {id:126482,name:"Nila vonWanza",rankN:22,dn:22,div:"Division Lead",strike:0,invite:"27.06.2026",lastrank:"27.06.2026",phone:"18-22-126",abt:"TD Leitung",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,0,0,0,1,0]},
+  {id:190803,name:"Berloli Midnight",rankN:22,dn:39,div:"Division Lead",strike:0,invite:"27.06.2026",lastrank:"27.06.2026",phone:"18-39-190",abt:"PR Leitung",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,1,1,0,0,1,1]},
+  {id:200311,name:"Jonas Rak",rankN:21,dn:13,div:"Division Lead",strike:0,invite:"26.06.2026",lastrank:"26.06.2026",phone:"18-13-200",abt:"HR Stellv. Leitung",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:0,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,0,0,0,0,0,0]},
+  {id:5545,name:"Fredo Frost",rankN:21,dn:69,div:"Division Lead",strike:0,invite:"25.06.2026",lastrank:"25.06.2026",phone:"18-69-055",abt:"CID Stellv. Leitung",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,1,0,0,0,0,0,0]},
+  {id:220196,name:"Bellobatz Dacruza",rankN:21,dn:77,div:"Division Lead",strike:0,invite:"25.06.2026",lastrank:"25.06.2026",phone:"18-77-220",abt:"CIRG Stellv. Leitung",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,1,1,1,1,0,0,0,0,0,0,0]},
+  {id:218003,name:"Frosty Dick",rankN:19,dn:85,div:"Abteilungsarma",strike:0,invite:"26.06.2026",lastrank:"25.06.2026",phone:"18-85-218",abt:"CIRG",ga:1,ev8:1,ak8:0,t8t:1,vhf:1,jur:1,uc:0,ftk:1,ausb:[1,1,1,1,1,1,1,0,0,0,0,0,0,0]},
+  {id:253775,name:"Zigi Hauptmann",rankN:18,dn:38,div:"Abteilungsarma",strike:0,invite:"26.06.2026",lastrank:"26.06.2026",phone:"18-38-253",abt:"CID, PR",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:1,ausb:[1,1,1,0,0,0,0,0,0,0,0,0,0,0]},
+  {id:9895,name:"Kate Osbornas",rankN:18,dn:57,div:"Abteilungsarma",strike:0,invite:"27.06.2026",lastrank:"27.06.2026",phone:"18-57-098",abt:"TD",ga:1,ev8:1,ak8:1,t8t:1,vhf:1,jur:1,uc:1,ftk:0,ausb:[1,1,1,0,0,0,0,0,0,0,0,0,0,0]},
+];
+
+// ======= STATE =======
+let filtered = [...AGENTS];
+let sortCol = 'rankN', sortDir = -1;
+let currentPage = 'dashboard';
+
+// ======= NAVIGATION =======
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const pageEl = document.getElementById('page-' + name);
+  if (pageEl) pageEl.classList.add('active');
+  const navMap = {dashboard:'Dashboard',mitarbeiter:'Mitarbeiterliste',profil:'Agentenprofil',abteilungen:'Abteilungen',ausbildungen:'Ausbildungen'};
+  const subMap = {dashboard:'/ Übersicht',mitarbeiter:'/ Alle Agenten',profil:'/ Details',abteilungen:'/ Übersicht',ausbildungen:'/ Schulungen'};
+  document.getElementById('page-title').textContent = navMap[name] || name;
+  document.getElementById('page-sub').textContent = subMap[name] || '';
+  const navItems = document.querySelectorAll('.nav-item');
+  const navNames = ['dashboard','mitarbeiter','abteilungen','ausbildungen'];
+  navItems.forEach((el,i) => { if(navNames[i] === name) el.classList.add('active'); });
+  currentPage = name;
+}
+
+// ======= CLOCK =======
+function updateClock() {
+  document.getElementById('topbar-time').textContent = new Date().toLocaleTimeString('de-DE');
+}
+setInterval(updateClock, 1000); updateClock();
+
+// ======= DASHBOARD =======
+function initDashboard() {
+  const total = AGENTS.length;
+  const high = AGENTS.filter(a=>a.rankN>=25).length;
+  const clean = AGENTS.filter(a=>a.strike===0).length;
+  document.getElementById('ds-total').textContent = total;
+  document.getElementById('ds-high').textContent = high;
+  document.getElementById('ds-clean').textContent = clean;
+  document.getElementById('nav-count').textContent = total;
+
+  // Rank distribution
+  const rankGroups = {};
+  AGENTS.forEach(a => {
+    const r = RANKS[a.rankN];
+    const label = r ? r.label : `Rang ${a.rankN}`;
+    rankGroups[label] = (rankGroups[label]||0)+1;
+  });
+  const sorted = Object.entries(rankGroups).sort((a,b)=>b[0].localeCompare(a[0]));
+  const max = Math.max(...Object.values(rankGroups));
+  const colors = ['#60a5fa','#a78bfa','#4ade80','#38bdf8','#fbbf24','#f87171','#c084fc','#34d399','#f472b6'];
+  const rankDist = document.getElementById('rank-dist');
+  rankDist.innerHTML = sorted.map(([label,cnt],i) => `
+    <div class="rank-bar-item">
+      <div class="rb-label">${label}</div>
+      <div class="rb-track"><div class="rb-fill" style="width:${(cnt/max*100)}%;background:${colors[i%colors.length]}"></div></div>
+      <div class="rb-count">${cnt}</div>
+    </div>`).join('');
+
+  // Abt overview
+  const abtCounts = {FIBCO:0,CID:0,CIRG:0,HR:0,TD:0,PR:0,IA:0};
+  AGENTS.forEach(a => {
+    Object.keys(abtCounts).forEach(k => { if(a.abt.toUpperCase().includes(k)) abtCounts[k]++; });
+  });
+  const abtEl = document.getElementById('abt-overview-dash');
+  abtEl.innerHTML = Object.entries(abtCounts).map(([name,cnt]) => `
+    <div class="abt-row">
+      <div class="abt-dot" style="background:${ABT_COLORS[name]||'#888'}"></div>
+      <div class="abt-name">${name}</div>
+      <div class="abt-cnt" style="color:${ABT_COLORS[name]||'#888'}">${cnt}</div>
+    </div>`).join('');
+
+  // Feed
+  const feed = [
+    {dot:'var(--green)',text:'<strong>Eko Plasta</strong> wurde als Director of FIB bestätigt.',time:'25.06.2026 · 09:14'},
+    {dot:'var(--accent)',text:'<strong>Raff Yana</strong> wurde zum Supervisory Head Agent befördert.',time:'25.06.2026 · 11:03'},
+    {dot:'var(--amber)',text:'<strong>Hakurl Schrom</strong> hat Strike 1/3 erhalten.',time:'02.06.2026 · 14:22'},
+    {dot:'var(--cyan)',text:'<strong>Felix Mccallay</strong> wurde High Command Lead.',time:'25.06.2026 · 10:00'},
+    {dot:'var(--green)',text:'<strong>Frosty Dick</strong> hat die Grundausbildung absolviert.',time:'26.06.2026 · 08:45'},
+  ];
+  document.getElementById('activity-feed').innerHTML = feed.map(f=>`
+    <div class="feed-item">
+      <div class="feed-dot" style="background:${f.dot}"></div>
+      <div><div class="feed-text">${f.text}</div><div class="feed-time">${f.time}</div></div>
+    </div>`).join('');
+}
+
+// ======= ABTPILL =======
+function abtPills(txt) {
+  if(!txt) return '';
+  return txt.split(',').map(p=>{
+    p = p.trim();
+    const key = Object.keys(ABT_COLORS).find(k=>p.toUpperCase().includes(k));
+    const col = key ? ABT_COLORS[key] : '#888';
+    return `<span class="abt-pill" style="background:${col}20;color:${col};border:1px solid ${col}44">${p}</span>`;
+  }).join('');
+}
+
+// ======= CB =======
+function cb(v) {
+  return v
+    ? `<div class="cb-wrap cb-on">✓</div>`
+    : `<div class="cb-wrap" style="background:var(--bg-panel);border:1px solid var(--border)"></div>`;
+}
+
+// ======= TABLE =======
+function filterTable() {
+  const q = (document.getElementById('tbl-search')||{value:''}).value.toLowerCase();
+  const div = (document.getElementById('tbl-div')||{value:''}).value;
+  const minRank = parseInt((document.getElementById('tbl-rank')||{value:'0'}).value)||0;
+  filtered = AGENTS.filter(a => {
+    if(q && !a.name.toLowerCase().includes(q) && !String(a.id).includes(q) && !(RANKS[a.rankN]?.label||'').toLowerCase().includes(q)) return false;
+    if(div && a.div !== div) return false;
+    if(minRank && a.rankN < minRank) return false;
+    return true;
+  });
+  renderTable();
+}
+
+function sortBy(col) {
+  if(sortCol===col) sortDir*=-1; else {sortCol=col;sortDir=-1;}
+  renderTable();
+}
+
+function renderTable() {
+  filtered.sort((a,b)=>{
+    let av=a[sortCol],bv=b[sortCol];
+    if(typeof av==='string'){av=av.toLowerCase();bv=bv.toLowerCase();}
+    return av<bv?sortDir:av>bv?-sortDir:0;
+  });
+  const cnt = document.getElementById('tbl-count');
+  if(cnt) cnt.textContent = `${filtered.length} Einträge`;
+  const tbody = document.getElementById('tbl-body');
+  if(!tbody) return;
+  tbody.innerHTML = filtered.map(a => {
+    const r = RANKS[a.rankN]||{label:`Rang ${a.rankN}`,cls:'r18'};
+    const dCls = DIVMAP[a.div]||'dv-default';
+    const sc = a.strike===0?'strike-0':a.strike===1?'strike-1':'strike-2';
+    return `<tr onclick="openProfile(${a.id})">
+      <td class="left td-id">${a.id}</td>
+      <td class="left td-name">${a.name}</td>
+      <td class="left"><span class="rank-badge ${r.cls}">${r.label}</span></td>
+      <td style="color:var(--text-3);font-family:var(--font-mono);font-size:11px">${a.dn}</td>
+      <td class="left"><span class="div-badge ${dCls}">${a.div}</span></td>
+      <td class="${sc}">${a.strike}/3</td>
+      <td class="date-cell">${a.invite}</td>
+      <td class="date-cell">${a.lastrank}</td>
+      <td class="left">${abtPills(a.abt)}</td>
+      <td>${cb(a.ga)}</td><td>${cb(a.ev8)}</td><td>${cb(a.ak8)}</td>
+      <td>${cb(a.t8t)}</td><td>${cb(a.vhf)}</td><td>${cb(a.jur)}</td>
+      <td>${cb(a.uc)}</td><td>${cb(a.ftk)}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ======= PROFIL =======
+function openProfile(id) {
+  const a = AGENTS.find(x=>x.id===id);
+  if(!a) return;
+  const r = RANKS[a.rankN]||{label:`Rang ${a.rankN}`};
+  document.getElementById('p-name').textContent = `${a.name} (ID: ${a.id})`;
+  document.getElementById('p-rank-label').textContent = r.label;
+  document.getElementById('p-invite').textContent = a.invite;
+  document.getElementById('p-lastrank').textContent = a.lastrank;
+  document.getElementById('pi-id').textContent = a.id;
+  document.getElementById('pi-name').textContent = a.name;
+  document.getElementById('pi-phone').textContent = a.phone;
+  document.getElementById('pi-date').textContent = a.invite;
+  document.getElementById('pi-rank').textContent = r.label;
+  document.getElementById('pi-dn').textContent = a.dn;
+
+  let best=0, offen=0;
+  document.getElementById('ausb-body').innerHTML = AUSBILDUNGEN.map((name,i)=>{
+    const v = a.ausb[i];
+    if(v) best++; else offen++;
+    const cls = v ? 'sb-bestanden' : 'sb-offen';
+    const label = v ? 'BESTANDEN' : 'NICHT ABSOLVIERT';
+    return `<tr><td>${name}</td><td class="r"><span class="${cls}">${label}</span></td></tr>`;
+  }).join('');
+  document.getElementById('cnt-best').textContent = best;
+  document.getElementById('cnt-offen').textContent = offen;
+  showPage('profil');
+}
+
+// ======= ABTEILUNGEN PAGE =======
+function initAbteilungen() {
+  const abtDefs = [
+    {key:'FIBCO',name:'FIBCO',desc:'Federal Intelligence Bureau Command Office',color:'#818cf8'},
+    {key:'CID',name:'Criminal Investigative Division',desc:'Ermittlungen schwerer Straftaten',color:'#f87171'},
+    {key:'CIRG',name:'Critical Incident Response Group',desc:'Krisenreaktion und Sondereinsätze',color:'#4ade80'},
+    {key:'HR',name:'Human Resources',desc:'Personalverwaltung und Rekrutierung',color:'#fb923c'},
+    {key:'TD',name:'Training Division',desc:'Ausbildung und Weiterentwicklung',color:'#38bdf8'},
+    {key:'PR',name:'Public Relations',desc:'Öffentlichkeitsarbeit und Kommunikation',color:'#f472b6'},
+    {key:'IA',name:'Internal Affairs',desc:'Interne Angelegenheiten und Compliance',color:'#fbbf24'},
+  ];
+  document.getElementById('abt-cards').innerHTML = abtDefs.map(a => {
+    const members = AGENTS.filter(ag=>ag.abt.toUpperCase().includes(a.key));
+    const leads = members.filter(ag=>ag.rankN>=25);
+    return `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;border-top:2px solid ${a.color}">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div style="width:10px;height:10px;border-radius:50%;background:${a.color}"></div>
+        <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--text-1)">${a.name}</div>
+      </div>
+      <div style="font-size:11px;color:var(--text-3);margin-bottom:14px">${a.desc}</div>
+      <div style="display:flex;gap:12px;margin-bottom:12px">
+        <div style="flex:1;text-align:center;background:var(--bg-panel);border:1px solid var(--border);border-radius:6px;padding:8px">
+          <div style="font-family:var(--font-head);font-size:20px;font-weight:700;color:${a.color}">${members.length}</div>
+          <div style="font-size:10px;color:var(--text-3);font-family:var(--font-mono)">MITGLIEDER</div>
+        </div>
+        <div style="flex:1;text-align:center;background:var(--bg-panel);border:1px solid var(--border);border-radius:6px;padding:8px">
+          <div style="font-family:var(--font-head);font-size:20px;font-weight:700;color:var(--cyan)">${leads.length}</div>
+          <div style="font-size:10px;color:var(--text-3);font-family:var(--font-mono)">FÜHRUNG</div>
+        </div>
+      </div>
+      <div style="font-size:10px;color:var(--text-3);font-family:var(--font-mono);margin-bottom:6px">MITGLIEDER</div>
+      ${members.slice(0,5).map(m=>`<div style="padding:4px 0;font-size:11px;color:var(--text-2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between"><span>${m.name}</span><span style="color:var(--text-3);font-family:var(--font-mono)">${(RANKS[m.rankN]||{}).label?.split('.')[0]||''}</span></div>`).join('')}
+      ${members.length>5?`<div style="font-size:10px;color:var(--text-3);margin-top:4px;text-align:center">+${members.length-5} weitere</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ======= AUSBILDUNGEN PAGE =======
+function initAusbildungen() {
+  const tbody = document.getElementById('ausb-overview-body');
+  if(!tbody) return;
+  tbody.innerHTML = AUSBILDUNGEN.map((name,i) => {
+    const best = AGENTS.filter(a=>a.ausb[i]).length;
+    const offen = AGENTS.length - best;
+    const pct = Math.round(best/AGENTS.length*100);
+    const col = pct>=90?'var(--green)':pct>=60?'var(--amber)':'var(--red)';
+    return `<tr style="border-bottom:1px solid var(--border)">
+      <td style="padding:9px 10px;font-size:12px;color:var(--text-2);font-family:var(--font-mono);text-align:left">${name}</td>
+      <td style="padding:9px 10px;text-align:center;font-family:var(--font-mono);color:var(--green);font-weight:600">${best}</td>
+      <td style="padding:9px 10px;text-align:center;font-family:var(--font-mono);color:var(--red);font-weight:600">${offen}</td>
+      <td style="padding:9px 10px;text-align:center">
+        <div style="display:flex;align-items:center;gap:8px;justify-content:center">
+          <div style="width:80px;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
+            <div style="width:${pct}%;height:100%;background:${col};border-radius:2px"></div>
+          </div>
+          <span style="font-family:var(--font-mono);font-size:11px;color:${col}">${pct}%</span>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ======= GLOBAL SEARCH =======
+function onGlobalSearch() {
+  const q = document.getElementById('global-search').value;
+  if(q.length > 0 && currentPage !== 'mitarbeiter') {
+    showPage('mitarbeiter');
+    document.getElementById('tbl-search').value = q;
+  }
+  if(document.getElementById('tbl-search')) {
+    document.getElementById('tbl-search').value = q;
+    filterTable();
+  }
+}
+
+// ======= INIT =======
+initDashboard();
+filterTable();
+initAbteilungen();
+initAusbildungen();
 </script>
 </body>
 </html>
