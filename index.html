@@ -8,297 +8,216 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  /* Premium dark — Optimierte Slate-Töne für edleren Kontrast */
-  --bg:#050608;
-  --surface:#0b0d11;
-  --card:#11151c;
-  --card2:#171d26;
-  --line:#1f2733;
-  --line2:#2b3647;
-  --line3:#3f4f66;
+  /* Premium Dark Theme - Edle Slate-Töne & Kontraste */
+  --bg:#030406;
+  --surface:#090b0e;
+  --card:#10141a;
+  --card2:#161c24;
+  --line:#1f2633;
+  --line2:#293345;
+  --line3:#3c4b66;
 
-  /* Text — Optimierte Lesbarkeit */
-  --t1:#f3f5f8;
-  --t2:#9ab0c7;
-  --t3:#536982;
+  /* Text */
+  --t1:#f4f6f9;
+  --t2:#a3b8cc;
+  --t3:#5c738f;
 
-  /* Gold accent — Satteres FIB Signature-Gold */
-  --gold:#c49a2d;
-  --gold2:#e0b238;
-  --gold3:#f9cf62;
+  /* FIB Signature Gold - Glühend & Kontrastreich */
+  --gold:#c99d2e;
+  --gold2:#e5b53b;
+  --gold3:#fcd86a;
+  --gold-glow:rgba(201,157,46,0.18);
 
-  /* Semantic */
-  --blue:#2865df;
-  --blue2:#548bf3;
-  --green:#169655;
-  --green2:#20c476;
-  --red:#be3535;
-  --red2:#de4e4e;
-  --amber:#aa740e;
-  --amber2:#d3981d;
-  --purple:#6443bd;
-  --purple2:#8563cf;
-  --cyan:#0f909e;
-  --cyan2:#15b5c9;
+  /* Semantic UI Colors */
+  --blue:#2463eb;
+  --blue2:#4f83f7;
+  --green:#149451;
+  --green2:#1ec76f;
+  --red:#bc2f2f;
+  --red2:#dd4747;
+  --amber:#bc8113;
 
   --fn:'Outfit',sans-serif;
   --fm:'IBM Plex Mono',monospace;
 }
 
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--t1);font-family:var(--fn);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
-::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-thumb{background:var(--line2);border-radius:4px}
 ::-webkit-scrollbar-track{background:transparent}
 
-/* ── LAYOUT ── */
+/* LAYOUT STRUCTURE */
 .shell{display:flex;flex-direction:column;height:100vh}
 
-/* ── NAV ── */
+/* NAVIGATION */
 nav{
-  height:60px;flex-shrink:0;
-  background:rgba(5,6,8,.96);
+  height:65px;flex-shrink:0;
+  background:rgba(4,5,7,.97);
   border-bottom:1px solid var(--line2);
   display:flex;align-items:center;
-  padding:0 32px;gap:0;
-  position:relative;z-index:100;
-  backdrop-filter:blur(12px);
+  padding:0 32px;position:relative;z-index:100;
+  backdrop-filter:blur(15px);
 }
 nav::before{
-  content:'';position:absolute;left:0;top:8px;bottom:8px;
-  width:2px;background:linear-gradient(180deg,transparent,var(--gold2),transparent);
+  content:'';position:absolute;left:0;top:10px;bottom:10px;
+  width:3px;background:linear-gradient(180deg,transparent,var(--gold2),transparent);
   border-radius:2px;
 }
-.nav-brand{display:flex;align-items:center;gap:14px;cursor:pointer;margin-right:36px}
+.nav-brand{display:flex;align-items:center;gap:14px;cursor:pointer;margin-right:40px}
 .nav-logo{
-  width:38px;height:38px;border-radius:8px;flex-shrink:0;
-  background:var(--card2);
-  border:1px solid var(--gold);
+  width:40px;height:40px;border-radius:8px;flex-shrink:0;
+  background:var(--card2);border:1px solid var(--gold);
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--fm);font-weight:500;font-size:13px;color:var(--gold3);
-  letter-spacing:.05em;
-  box-shadow:0 0 12px rgba(196,154,45,.15);
+  font-family:var(--fm);font-weight:600;font-size:14px;color:var(--gold3);
+  letter-spacing:.05em;box-shadow:0 0 15px var(--gold-glow);
 }
-.nav-brand-text{line-height:1.25}
-.nav-brand-text strong{font-size:16px;font-weight:700;letter-spacing:.04em;display:block;color:var(--t1)}
-.nav-brand-text span{font-size:9px;color:var(--t3);letter-spacing:.18em;font-family:var(--fm);text-transform:uppercase}
+.nav-brand-text{line-height:1.2}
+.nav-brand-text strong{font-size:17px;font-weight:800;letter-spacing:.03em;display:block;color:var(--t1)}
+.nav-brand-text span{font-size:9px;color:var(--t3);letter-spacing:.2em;font-family:var(--fm);text-transform:uppercase}
 
-.nav-links{display:flex;gap:4px}
+.nav-links{display:flex;gap:6px}
 .nl{
-  padding:8px 18px;border-radius:6px;cursor:pointer;
-  font-size:14px;font-weight:400;color:var(--t2);
-  transition:all .15s;white-space:nowrap;letter-spacing:.01em;
+  padding:10px 20px;border-radius:6px;cursor:pointer;
+  font-size:14px;font-weight:500;color:var(--t2);
+  transition:all .2s;white-space:nowrap;
 }
 .nl:hover{color:var(--t1);background:var(--card)}
-.nl.on{color:var(--t1);font-weight:500;background:var(--card);border-bottom:2px solid var(--gold2);border-radius:6px 6px 0 0;padding-bottom:6px}
+.nl.on{color:var(--gold3);background:var(--card);border-bottom:2px solid var(--gold2);border-radius:6px 6px 0 0}
 
-.nav-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:16px}
 .nav-clock{
   font-family:var(--fm);font-size:12px;color:var(--t3);
   background:var(--card);border:1px solid var(--line2);
-  padding:6px 13px;border-radius:7px;letter-spacing:.06em;
-}
-.nav-badge{
-  font-family:var(--fm);font-size:11px;font-weight:500;
-  padding:4px 13px;border-radius:4px;letter-spacing:.06em;display:none;
+  padding:6px 14px;border-radius:6px;letter-spacing:.05em;
 }
 
-/* LOGIN PILL */
+/* DISCORD LOGIN BUTTON PILL */
 .login-pill{
-  display:flex;align-items:center;gap:9px;
+  display:flex;align-items:center;gap:10px;
   background:var(--card);border:1px solid var(--line2);
   color:var(--t1);padding:6px 14px 6px 8px;border-radius:8px;
-  font-family:var(--fn);font-size:13px;font-weight:500;
-  cursor:pointer;transition:all .2s;letter-spacing:.01em;
+  font-size:13px;font-weight:600;cursor:pointer;transition:all .25s;
 }
-.login-pill:hover{border-color:var(--gold);color:var(--gold3);background:rgba(196,154,45,.06)}
-.login-pill.out{border-color:var(--gold);color:var(--gold3);background:rgba(196,154,45,.08)}
-.login-pill.out:hover{background:rgba(196,154,45,.14)}
-.lp-dot{
-  width:26px;height:26px;border-radius:50%;flex-shrink:0;
-  background:rgba(196,154,45,.15);border:1px solid var(--gold);
-  display:flex;align-items:center;justify-content:center;font-size:13px;
-}
-.lp-avatar-init{
-  width:26px;height:26px;border-radius:50%;flex-shrink:0;
-  background:rgba(196,154,45,.2);border:1.5px solid var(--gold);
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:700;color:var(--gold3);
-}
+.login-pill:hover{border-color:var(--gold);color:var(--gold3);background:rgba(201,157,46,.08);box-shadow:0 0 12px var(--gold-glow)}
+.login-pill.dc-connected{border-color:#5865F2;background:rgba(88,101,242,.1);color:#fff}
+.lp-avatar{width:28px;height:28px;border-radius:50%;background:#5865F2;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;color:#fff;overflow:hidden}
+.lp-avatar img{width:100%;height:100%;object-fit:cover}
 
-/* ── BODY ── */
+/* BODY WORKSPACE */
 .body{flex:1;display:flex;overflow:hidden}
 
-/* ── SIDEBAR ── */
+/* SIDEBAR NAVIGATION */
 .sidebar{
-  width:226px;flex-shrink:0;
-  background:var(--surface);
-  border-right:1px solid var(--line2);
-  padding:18px 10px;
-  display:none;flex-direction:column;gap:2px;
-  overflow-y:auto;
+  width:240px;flex-shrink:0;background:var(--surface);
+  border-right:1px solid var(--line2);padding:20px 12px;
+  display:flex;flex-direction:column;gap:4px;overflow-y:auto;
 }
-.sidebar.show{display:flex}
 .sg{
-  margin-top:16px;margin-bottom:5px;padding:0 12px;
-  font-size:10px;letter-spacing:.16em;color:var(--t3);
+  margin-top:16px;margin-bottom:6px;padding:0 12px;
+  font-size:10px;letter-spacing:.15em;color:var(--t3);
   font-family:var(--fm);text-transform:uppercase;
 }
 .si-item{
-  display:flex;align-items:center;gap:11px;
-  padding:9px 14px;border-radius:7px;cursor:pointer;
-  font-size:14px;font-weight:400;color:var(--t2);
-  transition:all .14s;letter-spacing:.01em;
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px;border-radius:8px;cursor:pointer;
+  font-size:14px;font-weight:500;color:var(--t2);transition:all .18s;
 }
 .si-item:hover{background:var(--card);color:var(--t1)}
 .si-item.on{
-  background:rgba(196,154,45,.1);color:var(--gold3);font-weight:500;
-  border-left:2px solid var(--gold2);padding-left:12px;
+  background:rgba(201,157,46,.08);color:var(--gold3);font-weight:600;
+  border-left:3px solid var(--gold2);padding-left:11px;
 }
 
-/* ── PAGE ── */
-.page-wrap{flex:1;overflow-y:auto;padding:28px 32px 60px;display:flex;flex-direction:column;gap:22px}
+/* VIEW MANAGEMENT */
+.page-wrap{flex:1;overflow-y:auto;padding:32px 40px;display:flex;flex-direction:column;gap:24px}
+.vw{display:none;flex-direction:column;gap:24px}
+.vw.on{display:flex;animation:vwIn .25s cubic-bezier(.4,0,.2,1)}
+@keyframes vwIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── VIEWS ── */
-.vw{display:none;flex-direction:column;gap:22px}
-.vw.on{display:flex;animation:vwIn .22s cubic-bezier(.4,0,.2,1)}
-@keyframes vwIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── HERO ── */
+/* HERO SECTION */
 .hero{
   border-radius:16px;overflow:hidden;position:relative;
-  background:var(--surface);
-  border:1px solid var(--line2);
-  padding:64px 60px;min-height:340px;display:flex;align-items:center;
+  background:var(--surface);border:1px solid var(--line2);
+  padding:70px 60px;display:flex;align-items:center;
 }
-.hero::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
-}
-.hero-glow{
-  position:absolute;inset:0;pointer-events:none;
-  background:
-    radial-gradient(ellipse at 2% 60%,rgba(196,154,45,.08) 0%,transparent 50%),
-    radial-gradient(ellipse at 90% 10%,rgba(40,101,223,.06) 0%,transparent 45%);
-}
-.hero-lines{
-  position:absolute;inset:0;pointer-events:none;
-  background-image:
-    linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);
-  background-size:48px 48px;
-  mask-image:radial-gradient(ellipse at 35% 50%,black 10%,transparent 70%);
-  -webkit-mask-image:radial-gradient(ellipse at 35% 50%,black 10%,transparent 70%);
-}
-.hero-inner{position:relative;z-index:1;max-width:580px}
-.hero-pill{
-  display:inline-flex;align-items:center;gap:8px;
-  background:rgba(196,154,45,.08);border:1px solid rgba(196,154,45,.25);
-  color:var(--gold3);font-size:11px;font-family:var(--fm);
-  letter-spacing:.14em;padding:6px 16px;border-radius:4px;margin-bottom:24px;
-  text-transform:uppercase;
-}
-.hero-dot{width:5px;height:5px;border-radius:50%;background:var(--green2);animation:blink 2.5s ease-in-out infinite}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.hero-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 5% 50%,rgba(201,157,46,.08) 0%,transparent 60%)}
+.hero-inner{position:relative;z-index:1;max-width:600px}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(201,157,46,.08);border:1px solid rgba(201,157,46,.25);color:var(--gold3);font-size:11px;font-family:var(--fm);letter-spacing:.15em;padding:6px 16px;border-radius:4px;margin-bottom:24px;text-transform:uppercase}
+.hero-dot{width:6px;height:6px;border-radius:50%;background:var(--green2);animation:blink 2s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.hero-h1{
-  font-size:52px;font-weight:700;line-height:.95;
-  letter-spacing:-.02em;color:var(--t1);margin-bottom:10px;
-}
+.hero-h1{font-size:48px;font-weight:800;line-height:1;letter-spacing:-.02em;margin-bottom:12px}
 .hero-h1 em{font-style:normal;color:var(--gold2)}
-.hero-p{font-size:15px;color:var(--t2);margin-bottom:32px;line-height:1.7;font-weight:400;max-width:460px}
-.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
-.hb{
-  padding:11px 26px;border-radius:7px;cursor:pointer;border:none;
-  font-family:var(--fn);font-size:14px;font-weight:600;transition:all .2s;letter-spacing:.02em;
-}
-.hb-p{background:var(--gold);color:#050608}
-.hb-p:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(196,154,45,.25)}
-.hb-g{background:transparent;color:var(--t2);border:1px solid var(--line2)}
-.hb-g:hover{background:var(--card);color:var(--t1);border-color:var(--line3)}
+.hero-p{font-size:15px;color:var(--t2);line-height:1.7}
 
-.hero-aside{
-  position:absolute;right:60px;top:50%;transform:translateY(-50%);
-  display:flex;flex-direction:column;gap:12px;z-index:1;
-}
-.ha-card{
-  background:var(--card);border:1px solid var(--line2);border-radius:10px;
-  padding:16px 22px;text-align:center;min-width:118px;
-}
-.ha-n{font-size:30px;font-weight:700;line-height:1;letter-spacing:-.03em}
-.ha-l{font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.12em;margin-top:4px;text-transform:uppercase}
-
-/* ── CARDS & TABLES ── */
-.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.ic{
-  background:var(--card);border:1px solid var(--line2);border-radius:12px;
-  padding:24px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;
-}
-.ic::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;opacity:.7}
-.ic:hover{border-color:var(--line3);transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,.35)}
-.ic.c-blue::after{background:linear-gradient(90deg,var(--blue),transparent)}
-.ic.c-cyan::after{background:linear-gradient(90deg,var(--cyan),transparent)}
-.ic.c-gold::after{background:linear-gradient(90deg,var(--gold),transparent)}
-.ic.c-green::after{background:linear-gradient(90deg,var(--green),transparent)}
-
+/* STRUCTURE CARD & TABLES */
 .sc{background:var(--card);border:1px solid var(--line2);border-radius:12px;overflow:hidden}
-.sc-h{padding:15px 20px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between}
-.sc-t{font-size:14px;font-weight:600;letter-spacing:.02em;color:var(--t1)}
-.sc-b{padding:20px}
+.sc-h{padding:18px 24px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.01)}
+.sc-t{font-size:15px;font-weight:700;letter-spacing:.01em;color:var(--t1)}
+.sc-b{padding:24px}
 
 .tbl{width:100%;border-collapse:collapse}
 .tbl thead th{
-  font-size:10px;font-family:var(--fm);letter-spacing:.12em;color:var(--t3);
-  padding:11px 14px;border-bottom:1px solid var(--line2);text-align:left;
-  background:var(--surface);white-space:nowrap;text-transform:uppercase;
+  font-size:11px;font-family:var(--fm);letter-spacing:.1em;color:var(--t3);
+  padding:12px 16px;border-bottom:1px solid var(--line2);text-align:left;
+  background:var(--surface);text-transform:uppercase;
 }
-.tbl tbody tr{border-bottom:1px solid rgba(31,39,51,.6);transition:background .12s}
+.tbl tbody tr{border-bottom:1px solid rgba(31,39,51,.5);transition:background .15s}
 .tbl tbody tr:hover{background:var(--card2)}
-.tbl td{padding:11px 14px;font-size:13px;font-family:var(--fm);color:var(--t2);vertical-align:middle}
-.tbl td.b{color:var(--t1);font-weight:500;font-family:var(--fn);font-size:14px}
+.tbl td{padding:14px 16px;font-size:14px;font-family:var(--fm);color:var(--t2);vertical-align:middle}
+.tbl td.bold-text{color:var(--t1);font-weight:600;font-family:var(--fn);font-size:15px}
 
-/* Badges & Ranks */
-.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:4px;font-size:11px;font-weight:500;font-family:var(--fm);letter-spacing:.03em;border:1px solid}
-.bg-gold{background:rgba(196,154,45,.1);color:var(--gold3);border-color:rgba(196,154,45,.28)}
-.bg-gray{background:rgba(83,105,130,.1);color:var(--t2);border-color:rgba(83,105,130,.22)}
+/* Ranks & Badges */
+.badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:5px;font-size:11px;font-weight:600;font-family:var(--fm);border:1px solid}
+.r28{background:rgba(36,99,235,.12);color:var(--blue2);border-color:rgba(36,99,235,.3)}
+.r20{background:rgba(201,157,46,.12);color:var(--gold3);border-color:rgba(201,157,46,.3)}
 
-.r28{background:rgba(40,101,223,.12);color:var(--blue2);border:1px solid rgba(40,101,223,.3);border-radius:4px}
-.r20{background:rgba(196,154,45,.12);color:var(--gold3);border:1px solid rgba(196,154,45,.3);border-radius:4px}
+/* Info Grid Cards */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:16px}
+.info-card{background:var(--card);border:1px solid var(--line2);border-radius:10px;padding:20px;transition:all .2s}
+.info-card:hover{border-color:var(--line3);transform:translateY(-2px)}
+.info-card-title{font-size:16px;font-weight:700;color:var(--gold3);margin-bottom:8px}
+.info-card-desc{font-size:13.5px;color:var(--t2);line-height:1.6}
 
-/* Forms */
-.fg{display:grid;gap:14px}
-.fg2{grid-template-columns:1fr 1fr}
+/* Forms & Inputs */
+.fg{display:grid;gap:16px}
 .ff{display:flex;flex-direction:column;gap:6px}
-.fl{font-size:12px;color:var(--t2);font-weight:500;letter-spacing:.04em;text-transform:uppercase;font-family:var(--fm)}
-.fi,.fs{background:var(--surface);border:1px solid var(--line2);color:var(--t1);padding:10px 14px;border-radius:7px;font-size:14px;font-family:var(--fn);transition:all .15s;width:100%}
-.fi:focus,.fs:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(196,154,45,.15)}
+.fl{font-size:11px;color:var(--t2);font-weight:600;letter-spacing:.05em;text-transform:uppercase;font-family:var(--fm)}
+.fi,.fs{background:var(--surface);border:1px solid var(--line2);color:var(--t1);padding:11px 14px;border-radius:8px;font-size:14px;font-family:var(--fn);transition:all .2s;width:100%}
+.fi:focus,.fs:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,157,46,.15)}
 
-.btn{padding:10px 20px;border-radius:7px;cursor:pointer;font-family:var(--fn);font-size:14px;font-weight:500;border:none;transition:all .18s;display:inline-flex;align-items:center;gap:7px;letter-spacing:.02em}
+/* Buttons */
+.btn{padding:10px 22px;border-radius:8px;cursor:pointer;font-family:var(--fn);font-size:14px;font-weight:600;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:8px;letter-spacing:.01em}
 .btn-blue{background:var(--blue);color:#fff}
-.btn-blue:hover{background:#1e56cb;transform:translateY(-1px)}
-.btn-gold{background:rgba(196,154,45,.15);color:var(--gold3);border:1px solid rgba(196,154,45,.35)}
-.btn-gold:hover{background:rgba(196,154,45,.25)}
+.btn-blue:hover{background:var(--blue2);transform:translateY(-1px)}
+.btn-gold{background:rgba(201,157,46,.12);color:var(--gold3);border:1px solid rgba(201,157,46,.3)}
+.btn-gold:hover{background:var(--gold);color:#030406}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:var(--red2)}
 .btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--line2)}
 .btn-ghost:hover{background:var(--card2);color:var(--t1)}
 
-/* ── MODAL ── */
-.mb{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(12px)}
-.mb.on{display:flex;animation:mbIn .18s ease}
+/* MODAL BOX */
+.mb{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(10px)}
+.mb.on{display:flex;animation:mbIn .2s ease}
 @keyframes mbIn{from{opacity:0}to{opacity:1}}
-.modal{background:var(--surface);border:1px solid var(--line2);border-radius:14px;padding:32px;max-width:94vw;box-shadow:0 40px 80px rgba(0,0,0,.7);max-height:88vh;overflow-y:auto}
-.modal::before{content:'';display:block;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:-32px -32px 28px;border-radius:14px 14px 0 0}
-.modal-t{font-size:20px;font-weight:700;letter-spacing:.02em;margin-bottom:20px}
-.modal-act{display:flex;gap:9px;justify-content:flex-end;margin-top:20px;border-top:1px solid var(--line2);padding-top:16px}
-.lm{width:400px}
+.modal{background:var(--surface);border:1px solid var(--line2);border-radius:14px;padding:32px;max-width:92vw;box-shadow:0 30px 70px rgba(0,0,0,.8);max-height:85vh;overflow-y:auto}
+.modal::before{content:'';display:block;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:-32px -32px 24px;border-radius:14px 14px 0 0}
+.modal-t{font-size:20px;font-weight:700;margin-bottom:20px}
+.modal-act{display:flex;gap:10px;justify-content:flex-end;margin-top:24px;border-top:1px solid var(--line2);padding-top:18px}
+.lm{width:420px}
 
-/* ── TOAST ── */
-.toast{position:fixed;bottom:28px;right:28px;z-index:500;background:var(--card);border:1px solid var(--line3);padding:13px 20px;border-radius:9px;font-size:14px;font-weight:500;box-shadow:0 16px 48px rgba(0,0,0,.6);transform:translateY(100px);opacity:0;transition:all .3s cubic-bezier(.34,1.4,.64,1);display:flex;align-items:center;gap:10px}
+/* TOAST NOTIFICATION */
+.toast{position:fixed;bottom:30px;right:30px;z-index:500;background:var(--card);border:1px solid var(--line3);padding:14px 22px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 20px 50px rgba(0,0,0,.6);transform:translateY(120px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:10px}
 .toast.on{transform:translateY(0);opacity:1}
 </style>
 </head>
 <body>
 <div class="shell">
 
+<!-- ═══ NAV BAR ═══ -->
 <nav>
-  <div class="nav-brand" onclick="goTo('home')">
+  <div class="nav-brand" onclick="switchView('home')">
     <div class="nav-logo">FIB</div>
     <div class="nav-brand-text">
       <strong>FIB</strong>
@@ -307,55 +226,137 @@ nav::before{
   </div>
 
   <div class="nav-links">
-    <div class="nl on" id="nl-home" onclick="goTo('home')">Start</div>
-    <div class="nl" id="nl-mitarbeiter" onclick="goTo('mitarbeiter')">Mitarbeiter</div>
+    <div class="nl on" id="nl-home" onclick="switchView('home')">Dashboard</div>
+    <div class="nl" id="nl-mitarbeiter" onclick="switchView('mitarbeiter')">Datenbanken</div>
   </div>
 
   <div class="nav-right">
-    <div class="nav-clock" id="nav-clock">00:00</div>
-    <div style="position:relative">
-      <button class="login-pill" id="login-pill" onclick="openLoginModal()">
-        <span class="lp-dot">🔐</span> Einloggen
-      </button>
-    </div>
+    <div class="nav-clock" id="nav-clock">00:00:00</div>
+    <button class="login-pill" id="login-pill" onclick="redirectToDiscord()">
+      <span class="lp-avatar">👾</span> Discord Login
+    </button>
   </div>
 </nav>
 
+<!-- ═══ APPLICATION BODY ═══ -->
 <div class="body">
+  
+  <!-- SIDEBAR CATEGORIES -->
+  <div class="sidebar">
+    <div class="sg">Zentrale</div>
+    <div class="si-item on" id="si-home" onclick="switchView('home')">🏢 Übersicht</div>
+    <div class="si-item" id="si-mitarbeiter" onclick="switchView('mitarbeiter')">👥 Mitarbeiterliste</div>
+    
+    <div class="sg">Kategorien</div>
+    <div class="si-item" id="si-abteilungen" onclick="switchView('abteilungen')">🗂️ Abteilungen</div>
+    <div class="si-item" id="si-strafkatalog" onclick="switchView('strafkatalog')">📜 Strafkatalog</div>
+    <div class="si-item" id="si-panels" onclick="switchView('panels')">🖥️ Panels</div>
+  </div>
+
+  <!-- MAIN PAGE WRAPPER -->
   <div class="page-wrap">
     
+    <!-- DASHBOARD VIEW -->
     <div class="vw on" id="vw-home">
       <div class="hero">
         <div class="hero-glow"></div>
-        <div class="hero-lines"></div>
         <div class="hero-inner">
-          <div class="hero-pill"><div class="hero-dot"></div> SYSTEM ONLINE</div>
+          <div class="hero-pill"><div class="hero-dot"></div> SECURE CORE ONLINE</div>
           <h1 class="hero-h1">Federal <em>Investigation</em> Bureau</h1>
-          <p class="hero-p">Interne Verwaltungs- und Aktenstruktur zur Überwachung und Koordination strategischer Operationen.</p>
+          <p class="hero-p">Zentralisiertes Management-Netzwerk des FIB. Zugriff ausschließlich für autorisierte Agents der Bundesbehörde. Überwachung und Dokumentation aktiv.</p>
         </div>
       </div>
     </div>
 
+    <!-- MITARBEITER VIEW -->
     <div class="vw" id="vw-mitarbeiter">
       <div class="sc">
         <div class="sc-h">
-          <span class="sc-t">Mitarbeiterregister</span>
-          <button class="btn btn-blue btn-sm" onclick="openAddMemberModal()" id="add-member-btn" style="display:none;">+ Mitarbeiter hinzufügen</button>
+          <span class="sc-t">Mitarbeiter-Register</span>
+          <button class="btn btn-blue" onclick="openAddMemberModal()" id="add-member-btn" style="display:none;">+ Mitarbeiter eintragen</button>
         </div>
         <div class="sc-b">
           <table class="tbl">
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Dienstnummer</th>
-                <th>Rang</th>
+                <th>Badge</th>
+                <th>Dienstrang</th>
                 <th>Discord ID</th>
-                <th>Aktionen</th>
+                <th>Management</th>
               </tr>
             </thead>
             <tbody id="member-table-body">
-              </tbody>
+              <!-- Wird per JS befüllt -->
+            </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABTEILUNGEN VIEW -->
+    <div class="vw" id="vw-abteilungen">
+      <h2 style="font-size:22px; font-weight:700; color:var(--gold3);">Strukturelle Abteilungen des FIB</h2>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card-title">TD — Tactical Division</div>
+          <div class="info-card-desc">Zuständig für Hochrisiko-Einsätze, Geiselnahmen, taktische Zugriffe und operative Unterstützung aller Sondereinheiten im Staat.</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">CID — Criminal Investigation Division</div>
+          <div class="info-card-desc">Fokus auf Langzeitermittlungen, verdeckte Observationen, Bandenkriminalität sowie präzise Akten- und Beweisführung gegen kriminelle Organisationen.</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">FIBCO — Anti-Korruption</div>
+          <div class="info-card-desc">Interne Kontrollinstanz zur Überwachung der Integrität aller Staatsbeamten. Erstellt Berichte und dokumentiert Fehlverhalten im Dienst.</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-title">Ausbildungsabteilung</div>
+          <div class="info-card-desc">Verantwortlich für das Rekrutierungsverfahren, die Grundausbildung neuer Agents sowie die Abnahme strategischer Zwischenprüfungen.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STRAFKATALOG VIEW -->
+    <div class="vw" id="vw-strafkatalog">
+      <div class="sc">
+        <div class="sc-h"><span class="sc-t">Auszug aus dem aktuellen Bundes-Strafkatalog</span></div>
+        <div class="sc-b">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Delikt</th>
+                <th>Haftstrafen-Maß (UT)</th>
+                <th>Geldstrafe</th>
+                <th>Bemerkung</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="bold-text">Hochverrat gegen den Staat</td><td>30 UT</td><td>$50.000</td><td>FIBCO / Direktion-Freigabe nötig</td></tr>
+              <tr><td class="bold-text">Amtsmissbrauch / Korruption</td><td>20 UT</td><td>$35.000</td><td>Sofortige Suspendierung</td></tr>
+              <tr><td class="bold-text">Unerlaubter Waffen- / Schwarzmarktbesitz</td><td>15 UT</td><td>$20.000</td><td>Beschlagnahmung aller illegalen Güter</td></tr>
+              <tr><td class="bold-text">Widerstand gegen Vollstreckungsbeamte</td><td>10 UT</td><td>$10.000</td><td>Erhöhung bei Fluchtversuch</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANELS VIEW -->
+    <div class="vw" id="vw-panels">
+      <h2 style="font-size:22px; font-weight:700; color:var(--gold3);">Operative Leitstellen-Panels</h2>
+      <div class="info-grid">
+        <div class="info-card" style="border-left: 3px solid var(--blue);">
+          <div class="info-card-title">🖥️ Funkfrequenzen & Statusmonitor</div>
+          <div class="info-card-desc">Überwachung des aktuellen verschlüsselten Behördenfunks und Zuweisung operativer Taktik-Frequenzen.</div>
+        </div>
+        <div class="info-card" style="border-left: 3px solid var(--red);">
+          <div class="info-card-title">🚨 Ortungspanel & Fahndungen</div>
+          <div class="info-card-desc">Live-Abfrage offener Haftbefehle im System und GPS-Verfolgung registrierter Peilsender.</div>
+        </div>
+        <div class="info-card" style="border-left: 3px solid var(--gold);">
+          <div class="info-card-title">🗄️ Aktenarchiv & Freigaben</div>
+          <div class="info-card-desc">Zentrale Verwaltung für Ermittlungsakten. Bearbeitung und Löschung nur ab Rang 28 (Assistant Director).</div>
         </div>
       </div>
     </div>
@@ -365,33 +366,18 @@ nav::before{
 
 </div>
 
-<div class="mb" id="login-modal">
-  <div class="modal lm">
-    <div class="modal-t">FIB Autorisierung</div>
-    <div class="fg">
-      <div class="ff">
-        <label class="fl">Discord ID</label>
-        <input class="fi" type="text" id="login-discord-id" placeholder="Ex: 1226929673309655112">
-      </div>
-    </div>
-    <div class="modal-act">
-      <button class="btn btn-ghost" onclick="closeModal('login-modal')">Abbrechen</button>
-      <button class="btn btn-blue" onclick="doDiscordLogin()">Verifizieren</button>
-    </div>
-  </div>
-</div>
-
+<!-- MITARBEITER ERFASSEN MODAL -->
 <div class="mb" id="member-modal">
   <div class="modal lm">
-    <div class="modal-t">Mitarbeiter erfassen</div>
+    <div class="modal-t">Mitarbeiter im Register erfassen</div>
     <div class="fg">
       <div class="ff">
         <label class="fl">Name</label>
-        <input class="fi" type="text" id="m-name" placeholder="Max Mustermann">
+        <input class="fi" type="text" id="m-name" placeholder="Vegas Murano">
       </div>
       <div class="ff">
         <label class="fl">Dienstnummer (Badge)</label>
-        <input class="fi" type="text" id="m-badge" placeholder="Ex: 88">
+        <input class="fi" type="text" id="m-badge" placeholder="Ex: 299574">
       </div>
       <div class="ff">
         <label class="fl">Rang</label>
@@ -407,120 +393,183 @@ nav::before{
     </div>
     <div class="modal-act">
       <button class="btn btn-ghost" onclick="closeModal('member-modal')">Abbrechen</button>
-      <button class="btn btn-blue" onclick="saveMember()">Speichern</button>
+      <button class="btn btn-blue" onclick="saveMember()">Eintragen</button>
     </div>
   </div>
 </div>
 
+<!-- TOAST NOTIFICATION SYSTEM -->
 <div class="toast" id="toast"></div>
 
+<!-- ═══ CORE LOGIC SCRIPT ═══ -->
 <script>
-// Lokaler Speicher & State
+// CONFIGURATION FOR DISCORD DEVELOPER PORTAL APPS
+const DISCORD_CLIENT_ID = "DEINE_DISCORD_CLIENT_ID_HIER_EINTRAGEN"; 
+const REDIRECT_URI = window.location.origin + window.location.pathname;
+
+// Lokale Datenbank-Mitarbeiter initialisieren
 let members = JSON.parse(localStorage.getItem('fib_members')) || [
   { name: "Tim Chessee", badge: "28", rank: "28", discord: "1226929673309655112" }
 ];
 let currentUser = null;
 
-// Clock
+// Uhrzeit-Zentrale
 function updateClock() {
   const n = new Date();
-  document.getElementById('nav-clock').textContent = n.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  document.getElementById('nav-clock').textContent = n.toLocaleTimeString('de-DE');
 }
 setInterval(updateClock, 1000);
 updateClock();
 
-// Navigation
-function goTo(view) {
+// View Management Switcher (Navbar & Sidebar synchronisiert)
+function switchView(viewId) {
   document.querySelectorAll('.vw').forEach(v => v.classList.remove('on'));
   document.querySelectorAll('.nl').forEach(n => n.classList.remove('on'));
+  document.querySelectorAll('.si-item').forEach(s => s.classList.remove('on'));
   
-  const targetView = document.getElementById('vw-' + view);
-  const targetLink = document.getElementById('nl-' + view);
+  const targetView = document.getElementById('vw-' + viewId);
+  const targetLink = document.getElementById('nl-' + viewId);
+  const targetSidebar = document.getElementById('si-' + viewId);
+  
   if(targetView) targetView.classList.add('on');
   if(targetLink) targetLink.classList.add('on');
+  if(targetSidebar) targetSidebar.classList.add('on');
 
-  if(view === 'mitarbeiter') renderMembers();
+  if(viewId === 'mitarbeiter') renderMembers();
 }
 
-// Toast
+// Toast Notifier
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('on');
-  setTimeout(() => t.classList.remove('on'), 3000);
+  setTimeout(() => t.classList.remove('on'), 3500);
 }
 
-// Modals Control
-function openLoginModal() { document.getElementById('login-modal').classList.add('on'); }
+// Modal Handlers
+function closeModal(id) { document.getElementById(id).classList.remove('on'); }
 function openAddMemberModal() {
+  if(!currentUser || !currentUser.isAdmin) return;
   document.getElementById('m-name').value = '';
   document.getElementById('m-badge').value = '';
   document.getElementById('m-discord').value = '';
   document.getElementById('member-modal').classList.add('on');
 }
-function closeModal(id) { document.getElementById(id).classList.remove('on'); }
 
-// Discord Login Core
-function doDiscordLogin() {
-  const inputId = document.getElementById('login-discord-id').value.trim();
-  if(!inputId) { showToast('Bitte eine Discord ID eingeben.'); return; }
-
-  // Hardcodierter Admin Check
-  if(inputId === "1226929673309655112") {
-    currentUser = { name: "Tim Chessee", badge: "28", rank: "28", discord: "1226929673309655112", isAdmin: true };
-  } else {
-    // Abruf aus Register über Discord-ID
-    const found = members.find(m => m.discord === inputId);
-    if(found) {
-      currentUser = { ...found, isAdmin: found.rank === "28" };
-    } else {
-      showToast('Discord ID nicht im Register gefunden.');
-      return;
+// DISCORD OAUTH2 DEVELOPER PORTAL LOGIC
+function redirectToDiscord() {
+  if(currentUser) {
+    if(confirm('Möchtest du dich ausloggen?')) {
+      currentUser = null;
+      window.location.hash = "";
+      updateUIOnLoginStatus();
+      switchView('home');
     }
+    return;
+  }
+  
+  if(DISCORD_CLIENT_ID === "DEINE_DISCORD_CLIENT_ID_HIER_EINTRAGEN") {
+    showToast("Fehler: Trag zuerst deine Discord Client ID im Code ganz unten ein!");
+    return;
   }
 
-  showToast(`Willkommen, ${currentUser.name}!`);
-  closeModal('login-modal');
-  updateLoginUI();
+  const url = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
+  window.location.href = url;
 }
 
-function updateLoginUI() {
+// Check URL Hash on page load for Discord Callback Token
+function processDiscordOAuthCallback() {
+  const fragment = new URLSearchParams(window.location.hash.slice(1));
+  const accessToken = fragment.get('access_token');
+
+  if (accessToken) {
+    // Rufe Benutzerdaten direkt von der Discord API ab
+    fetch('https://discord.com/api/users/@me', {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    })
+    .then(res => res.json())
+    .then(discordUser => {
+      if (discordUser && discordUser.id) {
+        handleUserVerification(discordUser.id, discordUser.username);
+      }
+    })
+    .catch(err => {
+      showToast("Verbindung zu Discord fehlgeschlagen.");
+      console.error(err);
+    });
+  }
+}
+
+// Discord-ID Verifizierung & automatischer Rollenabruf aus dem Register
+function handleUserVerification(discordId, username) {
+  // Hardcoded Chef / Admin Check für dich
+  if(discordId === "1226929673309655112") {
+    currentUser = { 
+      name: "Tim Chessee", 
+      badge: "28", 
+      rank: "28", 
+      discord: "1226929673309655112", 
+      isAdmin: true 
+    };
+    showToast(`Willkommen zurück, Assistant Director Chessee (Admin)!`);
+  } else {
+    // Suche im Register nach der übermittelten Discord ID
+    const registeredUser = members.find(m => m.discord === discordId);
+    if(registeredUser) {
+      currentUser = { 
+        ...registeredUser, 
+        isAdmin: registeredUser.rank === "28" 
+      };
+      showToast(`Verifiziert als ${currentUser.name} (Rang ${currentUser.rank})`);
+    } else {
+      showToast(`Zugriff verweigert: Discord-ID (${discordId}) ist nicht im Register hinterlegt!`);
+      currentUser = null;
+      window.location.hash = "";
+    }
+  }
+  updateUIOnLoginStatus();
+}
+
+function updateUIOnLoginStatus() {
   const pill = document.getElementById('login-pill');
   const addBtn = document.getElementById('add-member-btn');
   
   if(currentUser) {
-    pill.innerHTML = `<span class="lp-avatar-init">👑</span> ${currentUser.name} (${currentUser.rank}er)`;
-    pill.onclick = () => { if(confirm('Ausloggen?')) { currentUser = null; updateLoginUI(); goTo('home'); } };
+    pill.classList.add('dc-connected');
+    pill.innerHTML = `<span class="lp-avatar">👑</span> ${currentUser.name} (Rang ${currentUser.rank})`;
     if(currentUser.isAdmin) {
       addBtn.style.display = 'inline-flex';
     } else {
       addBtn.style.display = 'none';
     }
   } else {
-    pill.innerHTML = `<span class="lp-dot">🔐</span> Einloggen`;
-    pill.onclick = openLoginModal;
+    pill.classList.remove('dc-connected');
+    pill.innerHTML = `<span class="lp-avatar">👾</span> Discord Login`;
     addBtn.style.display = 'none';
   }
   if(document.getElementById('vw-mitarbeiter').classList.contains('on')) renderMembers();
 }
 
-// Save Member
+// Mitarbeiter Speichern
 function saveMember() {
   const name = document.getElementById('m-name').value.trim();
   const badge = document.getElementById('m-badge').value.trim();
   const rank = document.getElementById('m-rank').value;
   const discord = document.getElementById('m-discord').value.trim();
 
-  if(!name || !badge || !discord) { showToast('Alle Felder inklusive Discord ID sind Pflichtfelder.'); return; }
+  if(!name || !badge || !discord) { 
+    showToast('Fehler: Alle Felder inklusive der Discord ID sind Pflichtfelder.'); 
+    return; 
+  }
 
   members.push({ name, badge, rank, discord });
   localStorage.setItem('fib_members', JSON.stringify(members));
-  showToast('Mitarbeiter erfolgreich erfasst.');
+  showToast('Mitarbeiter erfolgreich in Datenbank erfasst.');
   closeModal('member-modal');
   renderMembers();
 }
 
-// Delete Member
+// Mitarbeiter Entfernen
 function deleteMember(idx) {
   if(!currentUser || !currentUser.isAdmin) return;
   members.splice(idx, 1);
@@ -528,7 +577,7 @@ function deleteMember(idx) {
   renderMembers();
 }
 
-// Render Members Table with Hidden Discord-ID Safeguard
+// Render Members Table with Privacy Safeguard (Discord-ID Verschleierung)
 function renderMembers() {
   const tbody = document.getElementById('member-table-body');
   tbody.innerHTML = '';
@@ -536,22 +585,28 @@ function renderMembers() {
   members.forEach((m, idx) => {
     const tr = document.createElement('tr');
     
-    // Check ob der Betrachter Admin ist, um Discord-ID unzensiert zu sehen
-    const isOwnerOrAdmin = currentUser && (currentUser.isAdmin || currentUser.discord === m.discord);
-    const visibleDiscord = isOwnerOrAdmin ? m.discord : `***********`;
+    // Datenschutz-Prüfung: Nur Admins oder die Person selbst darf die echte Discord ID sehen
+    const hasPrivilege = currentUser && (currentUser.isAdmin || currentUser.discord === m.discord);
+    const visibleDiscord = hasPrivilege ? m.discord : `***********`;
 
     tr.innerHTML = `
-      <td class="b">${m.name}</td>
+      <td class="bold-text">${m.name}</td>
       <td>#${m.badge}</td>
       <td><span class="badge r${m.rank}">${m.rank}. ${m.rank === '28' ? 'Assistant Director' : 'Agent'}</span></td>
-      <td style="color:var(--t3); font-size:12px;">${visibleDiscord}</td>
+      <td style="color:var(--t3); font-size:12px; letter-spacing: 1px;">${visibleDiscord}</td>
       <td>
-        ${currentUser && currentUser.isAdmin ? `<button class="btn btn-red btn-sm" onclick="deleteMember(${idx})">Entfernen</button>` : `<span style="color:var(--t3)">Keine Rechte</span>`}
+        ${currentUser && currentUser.isAdmin ? `<button class="btn btn-red" style="padding:5px 12px; font-size:12px;" onclick="deleteMember(${idx})">Entfernen</button>` : `<span style="color:var(--t3); font-size:12px;">Keine Rechte</span>`}
       </td>
     `;
     tbody.appendChild(tr);
   });
 }
+
+// Window Onload Lifecycle Execution
+window.onload = () => {
+  processDiscordOAuthCallback();
+  updateUIOnLoginStatus();
+};
 </script>
 </body>
 </html>
