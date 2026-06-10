@@ -9,10 +9,10 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   /* Premium dark — near black with warm undertone */
-  --bg:#07080a;
-  --surface:#0d0f12;
-  --card:#121519;
-  --card2:#181c22;
+  --bg:#050608;
+  --surface:#0f1115;
+  --card:rgba(20,24,30,.72);
+  --card2:rgba(28,34,42,.82);
   --line:#1e2329;
   --line2:#2d3440;
   --line3:#3d4857;
@@ -23,7 +23,7 @@
   --t3:#4a5568;
 
   /* Gold accent — the FIB signature */
-  --gold:#b8922a;
+  --gold:#d4af37;
   --gold2:#d4a843;
   --gold3:#f0c878;
 
@@ -462,6 +462,29 @@ nav::before{
 .ag-box-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 
 .div-label{font-size:11px;font-weight:500;letter-spacing:.12em;color:var(--t3);text-transform:uppercase;margin:16px 0 8px;font-family:var(--fm)}
+
+body::before{
+content:'';
+position:fixed;
+inset:0;
+background:
+radial-gradient(circle at top right, rgba(212,175,55,.08), transparent 30%),
+radial-gradient(circle at bottom left, rgba(255,255,255,.03), transparent 30%);
+pointer-events:none;
+z-index:-1;
+}
+.hero{
+backdrop-filter:blur(20px);
+border-radius:24px!important;
+}
+.ic,.sc,.stat,.pc,.fc,.ha-card{
+backdrop-filter:blur(18px);
+border-radius:18px!important;
+}
+.nav-logo{
+border-radius:12px!important;
+}
+
 </style>
 </head>
 <body>
