@@ -1401,7 +1401,7 @@ nav::before{
                 <div class="ff"><div class="fl">Agenten-ID *</div><input class="fi" id="ac-id" placeholder="z.B. 123456"></div>
                 <div class="ff"><div class="fl">Passwort *</div><input class="fi" id="ac-pw" placeholder="Sicheres Passwort" type="password"></div>
               </div>
-              <div class="fg fg3" style="margin-bottom:14px">
+              <div class="fg fg3" style="margin-bottom:12px">
                 <div class="ff"><div class="fl">Portal-Rolle</div>
                   <select class="fs" id="ac-role">
                     <option value="member">👤 Mitglied (nur eigenes Profil)</option>
@@ -1415,9 +1415,27 @@ nav::before{
                 <div class="ff"><div class="fl">Rang-Nr.</div><input class="fi" id="ac-rank" placeholder="z.B. 18" type="number" min="1" max="30"></div>
                 <div class="ff"><div class="fl">Division</div><input class="fi" id="ac-div" placeholder="z.B. High Command"></div>
               </div>
+              <!-- Discord ID Feld -->
+              <div class="fg fg2" style="margin-bottom:12px">
+                <div class="ff">
+                  <div class="fl" style="display:flex;align-items:center;gap:6px">
+                    Discord-ID
+                    <span style="font-size:10px;color:var(--t3);background:var(--card2);border:1px solid var(--line2);padding:2px 7px;border-radius:4px;font-family:var(--fm)">Rechtsklick auf DC-Name → ID kopieren</span>
+                  </div>
+                  <input class="fi" id="ac-discord" placeholder="z.B. 1226929673309655112" style="font-family:var(--fm)">
+                </div>
+                <div class="ff">
+                  <div class="fl">Discord-Name (optional)</div>
+                  <input class="fi" id="ac-discord-name" placeholder="z.B. feethunter.23">
+                </div>
+              </div>
+              <div style="background:rgba(88,101,242,.06);border:1px solid rgba(88,101,242,.2);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--t2);line-height:1.6">
+                <strong style="color:#93b8ff">ℹ Discord-ID findest du so:</strong><br>
+                Discord → Einstellungen → Erweitert → <strong>Entwicklermodus</strong> aktivieren → Rechtsklick auf den Namen → <strong>"ID kopieren"</strong>
+              </div>
               <div style="background:rgba(180,140,40,.06);border:1px solid rgba(180,140,40,.2);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--t2);line-height:1.6">
                 <strong style="color:var(--gold3)">Rollen-Übersicht:</strong><br>
-                <span style="color:var(--t3)">Mitglied</span> → nur eigenes Profil & Logs &nbsp;·&nbsp;
+                <span style="color:var(--t3)">Mitglied</span> → nur eigenes Profil &nbsp;·&nbsp;
                 <span style="color:var(--cyan2)">TD</span> → Ausbildungen &nbsp;·&nbsp;
                 <span style="color:var(--amber2)">HR</span> → Mitarbeiter + Accounts &nbsp;·&nbsp;
                 <span style="color:var(--purple2)">FIBCO</span> → Fallakten &nbsp;·&nbsp;
@@ -1434,7 +1452,7 @@ nav::before{
             </div>
             <div style="overflow-x:auto">
               <table class="tbl">
-                <thead><tr><th>NAME</th><th>AGENTEN-ID</th><th>ROLLE</th><th>RANG</th><th>ERSTELLT</th><th>AKTIONEN</th></tr></thead>
+                <thead><tr><th>NAME</th><th>AGENTEN-ID</th><th>ROLLE</th><th>RANG</th><th>DISCORD</th><th>ERSTELLT</th><th>AKTIONEN</th></tr></thead>
                 <tbody id="ac-body"></tbody>
               </table>
             </div>
@@ -1737,6 +1755,9 @@ function buildProfileDropdown(){
     hdr.innerHTML=`<div style="display:flex;align-items:center;gap:12px">${init}<div>
       <div style="font-size:14px;font-weight:700;color:var(--t1)">${m.name}</div>
       <div style="font-size:11px;color:var(--t3);font-family:var(--fm)">ID ${m.agentId}</div>
+      ${m.discordName?`<div style="font-size:11px;color:#93b8ff;font-family:var(--fm);margin-top:2px">
+        <svg width="12" height="10" viewBox="0 0 127.14 96.36" fill="#93b8ff" style="vertical-align:middle;margin-right:3px"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07Z"/></svg>
+        ${m.discordName}</div>`:''}
       <div style="margin-top:5px"><span class="badge" style="background:${r.color}15;color:${r.color};border-color:${r.color}30;font-size:10px">${r.icon} ${r.label}</span></div>
     </div></div>`;
   }
@@ -1857,37 +1878,67 @@ async function acCreate(){
   const pw=document.getElementById('ac-pw')?.value.trim();
   if(!name||!agentId||!pw){toast('Name, ID und Passwort sind Pflicht!','red');return;}
   const role=document.getElementById('ac-role')?.value||'member';
+  // HR darf keine Leaderschaft erstellen
+  if(role==='leaderschaft'&&currentMember?.role!=='leaderschaft'){toast('Nur Leaderschaft kann diese Rolle vergeben.','red');return;}
   const rankN=parseInt(document.getElementById('ac-rank')?.value)||18;
   const div=document.getElementById('ac-div')?.value.trim()||'—';
-  const ok=await createMemberAccount(name,agentId,pw,role,rankN,div);
-  if(ok){
-    logAdd('Account erstellt: '+name+' ('+agentId+') · '+role);
-    ['ac-name','ac-id','ac-pw','ac-rank','ac-div'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-    acRender();
-  }
+  const discordId=document.getElementById('ac-discord')?.value.trim()||'';
+  const discordName=document.getElementById('ac-discord-name')?.value.trim()||'';
+  if(getMembers().find(m=>m.agentId===agentId)){toast('Agenten-ID bereits vergeben!','red');return;}
+  if(discordId&&getMembers().find(m=>m.discordId===discordId)){toast('Discord-ID bereits vergeben!','red');return;}
+  const pwHash=await hashPw(pw);
+  saveMember({name,agentId,pwHash,role,rankN,div,discordId,discordName,created:now()});
+  toast('✅ Account für '+name+' erstellt!','green');
+  logAdd('Account erstellt: '+name+' ('+agentId+') · '+role+(discordId?' · DC:'+discordId.slice(-4):''));
+  ['ac-name','ac-id','ac-pw','ac-rank','ac-div','ac-discord','ac-discord-name'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  acRender();
 }
 
 function acRender(){
   const ms=getMembers();
   const el=document.getElementById('ac-body');if(!el)return;
   const cnt=document.getElementById('ac-count');if(cnt)cnt.textContent=ms.length+' Accounts';
-  if(!ms.length){el.innerHTML=`<tr><td colspan="6" style="padding:24px;text-align:center;color:var(--t3)">Noch keine Accounts. Oben erstellen.</td></tr>`;return;}
+  const canSeeDiscord=currentMember?.role==='leaderschaft'||currentMember?.role==='hr';
   const canDelete=currentMember?.role==='leaderschaft';
+  if(!ms.length){el.innerHTML=`<tr><td colspan="7" style="padding:24px;text-align:center;color:var(--t3)">Noch keine Accounts.</td></tr>`;return;}
   el.innerHTML=ms.map(m=>{
     const r=ROLES[m.role||'member']||ROLES.member;
+    const dcCell=canSeeDiscord
+      ?m.discordId
+        ?`<td style="font-family:var(--fm);font-size:11px">
+            <div style="color:var(--t2)">${m.discordName||'—'}</div>
+            <div style="color:var(--t3);font-size:10px">${m.discordId}</div>
+           </td>`
+        :`<td style="color:var(--t3);font-size:11px">—</td>`
+      :`<td style="color:var(--t3);font-size:12px">••••</td>`;
     return`<tr>
       <td class="b">${m.name}</td>
       <td style="font-family:var(--fm);color:var(--gold3)">${m.agentId}</td>
       <td><span class="badge" style="background:${r.color}15;color:${r.color};border-color:${r.color}30;font-size:10px">${r.icon} ${r.label}</span></td>
       <td style="font-family:var(--fm);color:var(--t2);font-size:11px">${m.rankN||'—'}</td>
-      <td style="font-size:11px;color:var(--t3);font-family:var(--fm)">${m.created||'—'}</td>
-      <td style="display:flex;gap:6px;flex-wrap:wrap">
-        <button class="btn btn-sm btn-amber" onclick="acResetPw('${m.agentId}')">PW</button>
-        <button class="btn btn-sm btn-cyan" onclick="acChangeRole('${m.agentId}')">Rolle</button>
-        ${canDelete?`<button class="btn btn-sm btn-red" onclick="acDelete('${m.agentId}')">✕</button>`:''}
+      ${dcCell}
+      <td style="font-size:11px;color:var(--t3);font-family:var(--fm)">${(m.created||'—').split(' ')[0]}</td>
+      <td>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <button class="btn btn-sm btn-amber" onclick="acResetPw('${m.agentId}')">PW</button>
+          <button class="btn btn-sm btn-cyan" onclick="acChangeRole('${m.agentId}')">Rolle</button>
+          <button class="btn btn-sm" style="background:rgba(88,101,242,.15);color:#93b8ff;border-color:rgba(88,101,242,.3)" onclick="acEditDiscord('${m.agentId}')">DC</button>
+          ${canDelete?`<button class="btn btn-sm btn-red" onclick="acDelete('${m.agentId}')">✕</button>`:''}
+        </div>
       </td>
     </tr>`;
   }).join('');
+}
+
+function acEditDiscord(id){
+  const ms=getMembers();const m=ms.find(x=>x.agentId===id);if(!m)return;
+  const newId=prompt('Discord-ID für '+m.name+':\n(leer lassen zum Entfernen)',m.discordId||'');
+  if(newId===null)return;
+  if(newId&&getMembers().find(x=>x.agentId!==id&&x.discordId===newId)){toast('Discord-ID bereits bei anderem Account!','red');return;}
+  const newName=newId?prompt('Discord-Name (z.B. feethunter.23):',m.discordName||''):'';
+  m.discordId=newId.trim();m.discordName=(newName||'').trim();sv('members',ms);
+  toast('Discord-Verknüpfung aktualisiert!','green');
+  logAdd('Discord geändert: '+m.name);acRender();
 }
 
 function acDelete(id){
@@ -1999,6 +2050,7 @@ function renderM(){
     dn:p.dn||'—',
     div:p.div||p.dept||'—', strike:parseInt(p.strike)||0,
     invite:p.date||p.created||'—', abt:p.abt||'',
+    // Discord-ID wird NICHT in die öffentliche Liste übertragen
     _fromHR:true,
   }));
   // Absteigend nach Rang sortieren (30 oben)
