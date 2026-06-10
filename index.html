@@ -61,8 +61,8 @@ nav{
   display:flex;align-items:center;
   padding:0 32px;gap:0;
   position:relative;z-index:100;
-  backdrop-filter: blur(12px);
 }
+/* golden left border accent */
 nav::before{
   content:'';position:absolute;left:0;top:8px;bottom:8px;
   width:2px;background:linear-gradient(180deg,transparent,var(--gold2),transparent);
@@ -81,50 +81,57 @@ nav::before{
 .nav-brand-text strong{font-size:16px;font-weight:700;letter-spacing:.04em;display:block;color:var(--t1)}
 .nav-brand-text span{font-size:9px;color:var(--t3);letter-spacing:.18em;font-family:var(--fm);text-transform:uppercase}
 
-.nav-links{display:flex;gap:4px}
+.nav-links{display:flex;gap:1px}
 .nl{
-  padding:8px 16px;border-radius:6px;cursor:pointer;
-  font-size:13px;font-weight:500;color:var(--t2);
-  transition:all .2s ease;white-space:nowrap;letter-spacing:.01em;
+  padding:8px 18px;border-radius:6px;cursor:pointer;
+  font-size:14px;font-weight:400;color:var(--t2);
+  transition:all .15s;white-space:nowrap;letter-spacing:.01em;
 }
-.nl:hover{color:var(--t1);background:rgba(255,255,255,0.03)}
-.nl.on{
-  color:var(--gold3);
-  background:rgba(180,140,40,0.08);
-  border:1px solid rgba(180,140,40,0.2);
-}
+.nl:hover{color:var(--t1);background:var(--card)}
+.nl.on{color:var(--t1);font-weight:500;background:var(--card);border-bottom:2px solid var(--gold2);border-radius:6px 6px 0 0;padding-bottom:6px}
 
 .nav-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.nav-clock{
+  font-family:var(--fm);font-size:12px;color:var(--t3);
+  background:var(--card);border:1px solid var(--line2);
+  padding:6px 13px;border-radius:7px;letter-spacing:.06em;
+}
+.nav-badge{
+  font-family:var(--fm);font-size:11px;font-weight:500;
+  padding:4px 13px;border-radius:4px;letter-spacing:.06em;display:none;
+}
 
-/* CLEAN PREMIUM LOGIN BUTTON */
+/* LOGIN PILL — slim, credential-style */
 .login-pill{
-  display:inline-flex;align-items:center;gap:10px;
-  background:linear-gradient(135deg, rgba(180,140,40,0.15), rgba(180,140,40,0.05));
-  border:1px solid rgba(180,140,40,0.3);
-  color:var(--gold3);padding:8px 16px;border-radius:8px;
-  font-family:var(--fn);font-size:13px;font-weight:600;
-  cursor:pointer;transition:all .25s ease;letter-spacing:.02em;
-  box-shadow:0 4px 15px rgba(0,0,0,0.2);
+  display:flex;align-items:center;gap:9px;
+  background:var(--card);border:1px solid var(--line2);
+  color:var(--t1);padding:6px 14px 6px 8px;border-radius:8px;
+  font-family:var(--fn);font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .2s;letter-spacing:.01em;
 }
-.login-pill:hover{
-  border-color:var(--gold3);
-  background:linear-gradient(135deg, rgba(180,140,40,0.25), rgba(180,140,40,0.1));
-  transform:translateY(-1px);
-  box-shadow:0 6px 20px rgba(180,140,40,0.15);
+.login-pill:hover{border-color:var(--gold);color:var(--gold3);background:rgba(180,140,40,.06)}
+.login-pill.out{border-color:var(--gold);color:var(--gold3);background:rgba(180,140,40,.08)}
+.login-pill.out:hover{background:rgba(180,140,40,.14)}
+/* dot nur für nicht-eingeloggt Zustand */
+.lp-dot{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:rgba(180,140,40,.15);border:1px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;font-size:13px;
 }
-.login-pill.out{
-  border-color:var(--red);
-  color:var(--red2);
-  background:rgba(194,59,59,0.08);
+/* Avatar im eingeloggten Zustand */
+.lp-avatar{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  object-fit:cover;border:1.5px solid var(--gold);
 }
-.login-pill.out:hover{
-  background:rgba(194,59,59,0.15);
-  border-color:var(--red2);
+.lp-avatar-init{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:rgba(180,140,40,.2);border:1.5px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:var(--gold3);
 }
-.lp-dot{font-size:14px;display:inline-block}
 
-/* ── MAIN CONTAINER ── */
-.main{display:flex;flex:1;overflow:hidden}
+/* ── BODY ── */
+.body{flex:1;display:flex;overflow:hidden}
 
 /* ── SIDEBAR ── */
 .sidebar{
@@ -153,13 +160,15 @@ nav::before{
   border-left:2px solid var(--gold2);padding-left:12px;
 }
 
-/* ── PAGE CONTAINER ── */
+/* ── PAGE ── */
 .page-wrap{flex:1;overflow-y:auto;padding:28px 32px 60px;display:flex;flex-direction:column;gap:22px}
 
 /* ── VIEWS ── */
 .vw{display:none;flex-direction:column;gap:22px}
 .vw.on{display:flex;animation:vwIn .22s cubic-bezier(.4,0,.2,1)}
 @keyframes vwIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 /* ── HERO ── */
 .hero{
@@ -168,6 +177,7 @@ nav::before{
   border:1px solid var(--line2);
   padding:64px 60px;min-height:340px;display:flex;align-items:center;
 }
+/* Top gold line */
 .hero::before{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent,var(--gold),transparent);
@@ -185,6 +195,7 @@ nav::before{
     linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
   background-size:48px 48px;
   mask-image:radial-gradient(ellipse at 35% 50%,black 10%,transparent 70%);
+  -webkit-mask-image:radial-gradient(ellipse at 35% 50%,black 10%,transparent 70%);
 }
 .hero-inner{position:relative;z-index:1;max-width:580px}
 .hero-pill{
@@ -196,101 +207,257 @@ nav::before{
 }
 .hero-dot{width:5px;height:5px;border-radius:50%;background:var(--green2);animation:blink 2.5s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.hero-h1{font-size:52px;font-weight:700;line-height:.95;letter-spacing:-.02em;color:var(--t1);margin-bottom:10px}
-.hero-h1 em{font-style:normal;color:var(--gold2)}
+.hero-h1{
+  font-size:52px;font-weight:700;line-height:.95;
+  letter-spacing:-.02em;color:var(--t1);margin-bottom:10px;
+}
+.hero-h1 em{
+  font-style:normal;color:var(--gold2);
+}
 .hero-p{font-size:15px;color:var(--t2);margin-bottom:32px;line-height:1.7;font-weight:400;max-width:460px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.hb{
+  padding:11px 26px;border-radius:7px;cursor:pointer;border:none;
+  font-family:var(--fn);font-size:14px;font-weight:600;transition:all .2s;letter-spacing:.02em;
+}
+.hb-p{background:var(--gold);color:#07080a}
+.hb-p:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(180,140,40,.3)}
+.hb-g{background:transparent;color:var(--t2);border:1px solid var(--line2)}
+.hb-g:hover{background:var(--card);color:var(--t1);border-color:var(--line3)}
+.hero-aside{
+  position:absolute;right:60px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:12px;z-index:1;
+}
+.ha-card{
+  background:var(--card);border:1px solid var(--line2);border-radius:10px;
+  padding:16px 22px;text-align:center;min-width:118px;
+}
+.ha-n{font-size:30px;font-weight:700;line-height:1;letter-spacing:-.03em}
+.ha-l{font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.12em;margin-top:4px;text-transform:uppercase}
 
-/* ── CARDS / STATS ── */
+/* ── INFO CARDS ── */
 .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .ic{
-  background:rgba(18,21,25,0.7);border:1px solid var(--line2);border-radius:12px;
+  background:var(--card);border:1px solid var(--line2);border-radius:12px;
   padding:24px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;
-  backdrop-filter:blur(8px);
 }
 .ic::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;opacity:.7}
-.ic:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,.35)}
-.ic.c-gold::after{background:linear-gradient(90deg,var(--gold),transparent)}
+.ic:hover{border-color:var(--line3);transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,.35)}
 .ic.c-blue::after{background:linear-gradient(90deg,var(--blue),transparent)}
+.ic.c-cyan::after{background:linear-gradient(90deg,var(--cyan),transparent)}
+.ic.c-gold::after{background:linear-gradient(90deg,var(--gold),transparent)}
+.ic.c-green::after{background:linear-gradient(90deg,var(--green),transparent)}
 .ic.c-purple::after{background:linear-gradient(90deg,var(--purple),transparent)}
+.ic.c-amber::after{background:linear-gradient(90deg,var(--amber),transparent)}
+.ic-ico{font-size:26px;margin-bottom:14px;display:block}
+.ic-t{font-size:15px;font-weight:600;margin-bottom:7px;letter-spacing:.01em}
+.ic-d{font-size:13px;color:var(--t2);line-height:1.65;font-weight:400}
+.ic-lock{display:flex;align-items:center;gap:6px;margin-top:14px;font-size:11px;color:var(--t3);font-family:var(--fm);letter-spacing:.04em}
 
-.ic-lbl{font-size:11px;font-family:var(--fm);color:var(--t3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px}
-.ic-val{font-size:28px;font-weight:700;color:var(--t1);letter-spacing:-.02em;font-family:var(--fm);line-height:1.2}
-.ic-sub{font-size:12px;color:var(--t2);margin-top:4px}
-.ic-sub span{font-family:var(--fm);font-weight:500}
-
-/* ── RECHTECKIGES DESIGN FÜR FORMULARE & TABELLEN ── */
-.sc{background:rgba(18,21,25,0.6);border:1px solid var(--line2);border-radius:12px;overflow:hidden;backdrop-filter:blur(10px)}
-.sc-h{padding:16px 20px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.15)}
-.sc-t{font-size:14px;font-weight:600;letter-spacing:.02em;color:var(--t1);text-transform:uppercase;font-family:var(--fm)}
+/* ── SECTION ── */
+.sc{background:var(--card);border:1px solid var(--line2);border-radius:12px;overflow:hidden}
+.sc-h{
+  padding:15px 20px;border-bottom:1px solid var(--line2);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sc-t{font-size:14px;font-weight:600;letter-spacing:.02em;color:var(--t1)}
 .sc-b{padding:20px}
 
-/* ── TABELLEN ── */
+/* ── TABLE ── */
 .tbl{width:100%;border-collapse:collapse}
 .tbl thead th{
-  font-size:11px;font-family:var(--fm);letter-spacing:.12em;color:var(--t3);
-  padding:12px 14px;border-bottom:1px solid var(--line2);text-align:left;
-  background:rgba(0,0,0,0.2);white-space:nowrap;text-transform:uppercase;
+  font-size:10px;font-family:var(--fm);letter-spacing:.12em;color:var(--t3);
+  padding:11px 14px;border-bottom:1px solid var(--line2);text-align:left;
+  background:var(--surface);white-space:nowrap;text-transform:uppercase;
 }
-.tbl tbody tr{border-bottom:1px solid var(--line);transition:background .12s}
-.tbl tbody tr:hover{background:rgba(255,255,255,0.02)}
-.tbl td{padding:12px 14px;font-size:13px;font-family:var(--fm);color:var(--t2);vertical-align:middle}
+.tbl tbody tr{border-bottom:1px solid rgba(30,35,41,.8);transition:background .12s}
+.tbl tbody tr:hover{background:var(--card2)}
+.tbl td{padding:11px 14px;font-size:13px;font-family:var(--fm);color:var(--t2);vertical-align:middle}
+.tbl td.b{color:var(--t1);font-weight:500;font-family:var(--fn);font-size:14px}
 
-/* UNIFIED COLOR PICKER MENU */
-.color-picker-container {display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
-.color-swatch {
-  height:40px;border-radius:6px;cursor:pointer;border:2px solid transparent;
-  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;
-  transition:all 0.2s ease;text-transform:uppercase;font-family:var(--fm);
+/* ── STATS ROW ── */
+.stats{display:flex;gap:12px}
+.stat{
+  flex:1;background:var(--card);border:1px solid var(--line2);
+  border-radius:12px;padding:18px 22px;transition:border .15s;
 }
-.color-swatch:hover {transform:scale(1.03)}
-.color-swatch.active {border-color:var(--t1);box-shadow:0 0 10px rgba(255,255,255,0.15)}
+.stat:hover{border-color:var(--line3)}
+.stat-n{font-size:32px;font-weight:700;line-height:1;letter-spacing:-.03em}
+.stat-l{font-size:11px;color:var(--t3);font-family:var(--fm);margin-top:6px;letter-spacing:.1em;text-transform:uppercase}
 
-/* ── FORM ELEMENTS ── */
+/* ── BADGE ── */
+.badge{
+  display:inline-flex;align-items:center;
+  padding:3px 9px;border-radius:4px;
+  font-size:11px;font-weight:500;font-family:var(--fm);letter-spacing:.03em;border:1px solid;
+}
+.bg-green{background:rgba(26,158,92,.09);color:var(--green2);border-color:rgba(26,158,92,.25)}
+.bg-red{background:rgba(194,59,59,.09);color:var(--red2);border-color:rgba(194,59,59,.25)}
+.bg-amber{background:rgba(176,122,16,.1);color:var(--amber2);border-color:rgba(176,122,16,.28)}
+.bg-blue{background:rgba(45,107,228,.1);color:var(--blue2);border-color:rgba(45,107,228,.25)}
+.bg-purple{background:rgba(107,74,196,.1);color:var(--purple2);border-color:rgba(107,74,196,.25)}
+.bg-cyan{background:rgba(16,152,168,.09);color:var(--cyan2);border-color:rgba(16,152,168,.25)}
+.bg-gold{background:rgba(180,140,40,.1);color:var(--gold3);border-color:rgba(180,140,40,.28)}
+.bg-gray{background:rgba(74,85,104,.1);color:var(--t2);border-color:rgba(74,85,104,.22)}
+
+/* Rank badges */
+.r30{background:rgba(107,74,196,.1);color:#c4b5fd;border:1px solid rgba(107,74,196,.25);border-radius:4px}
+.r28{background:rgba(45,107,228,.1);color:var(--blue2);border:1px solid rgba(45,107,228,.25);border-radius:4px}
+.r27{background:rgba(194,59,59,.09);color:#fca5a5;border:1px solid rgba(194,59,59,.22);border-radius:4px}
+.r26{background:rgba(26,158,92,.09);color:#86efac;border:1px solid rgba(26,158,92,.22);border-radius:4px}
+.r25{background:rgba(16,152,168,.09);color:var(--cyan2);border:1px solid rgba(16,152,168,.22);border-radius:4px}
+.r24{background:rgba(176,122,16,.1);color:var(--amber2);border:1px solid rgba(176,122,16,.25);border-radius:4px}
+.r23{background:rgba(16,152,168,.07);color:#a5f3fc;border:1px solid rgba(16,152,168,.16);border-radius:4px}
+.r22{background:rgba(132,204,22,.07);color:#bef264;border:1px solid rgba(132,204,22,.16);border-radius:4px}
+.r21{background:rgba(113,113,122,.08);color:#d4d4d8;border:1px solid rgba(113,113,122,.18);border-radius:4px}
+.r20{background:rgba(180,140,40,.09);color:var(--gold3);border:1px solid rgba(180,140,40,.22);border-radius:4px}
+.r18{background:rgba(74,85,104,.08);color:#a1a1aa;border:1px solid rgba(74,85,104,.18);border-radius:4px}
+
+/* Div badges */
+.dv-l{background:rgba(180,140,40,.1);color:var(--gold3);border-color:rgba(180,140,40,.28)}
+.dv-c{background:rgba(194,59,59,.09);color:#fca5a5;border-color:rgba(194,59,59,.22)}
+.dv-hcl{background:rgba(26,158,92,.09);color:#86efac;border-color:rgba(26,158,92,.22)}
+.dv-hc{background:rgba(16,152,168,.09);color:var(--cyan2);border-color:rgba(16,152,168,.22)}
+.dv-dl{background:rgba(107,74,196,.1);color:var(--purple2);border-color:rgba(107,74,196,.25)}
+.dv-ab{background:rgba(176,122,16,.1);color:var(--amber2);border-color:rgba(176,122,16,.25)}
+
+/* ── FORM ── */
+.fg{display:grid;gap:14px}
+.fg2{grid-template-columns:1fr 1fr}
+.fg3{grid-template-columns:1fr 1fr 1fr}
+.ff{display:flex;flex-direction:column;gap:6px}
+.fl{font-size:12px;color:var(--t2);font-weight:500;letter-spacing:.04em;text-transform:uppercase;font-family:var(--fm)}
 .fi,.fs,.fta{
-  background:rgba(7,8,10,0.6);border:1px solid var(--line2);
-  color:var(--t1);padding:11px 14px;border-radius:8px;
+  background:var(--surface);border:1px solid var(--line2);
+  color:var(--t1);padding:10px 14px;border-radius:7px;
   font-size:14px;font-family:var(--fn);transition:all .15s;width:100%;
 }
 .fi:focus,.fs:focus,.fta:focus{
   outline:none;border-color:var(--gold);
-  box-shadow:0 0 0 3px rgba(180,140,40,.15);
+  box-shadow:0 0 0 3px rgba(180,140,40,.1);
 }
+.fi::placeholder,.fta::placeholder{color:var(--t3)}
+.fta{resize:vertical;min-height:90px;line-height:1.6}
+.fs option{background:var(--card);color:var(--t1)}
 
 /* ── BUTTONS ── */
 .btn{
-  padding:10px 20px;border-radius:8px;cursor:pointer;
-  font-family:var(--fn);font-size:13px;font-weight:600;
+  padding:10px 20px;border-radius:7px;cursor:pointer;
+  font-family:var(--fn);font-size:14px;font-weight:500;
   border:none;transition:all .18s;
   display:inline-flex;align-items:center;gap:7px;letter-spacing:.02em;
 }
-.btn-gold{background:var(--gold);color:#07080a}
-.btn-gold:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-sm{padding:6px 13px;font-size:12px;border-radius:6px}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-blue:hover{background:#2060d4;transform:translateY(-1px)}
+.btn-green{background:rgba(26,158,92,.12);color:var(--green2);border:1px solid rgba(26,158,92,.28)}
+.btn-green:hover{background:rgba(26,158,92,.2)}
+.btn-cyan{background:rgba(16,152,168,.1);color:var(--cyan2);border:1px solid rgba(16,152,168,.28)}
+.btn-cyan:hover{background:rgba(16,152,168,.18)}
+.btn-amber{background:rgba(176,122,16,.1);color:var(--amber2);border:1px solid rgba(176,122,16,.28)}
+.btn-amber:hover{background:rgba(176,122,16,.18)}
+.btn-purple{background:rgba(107,74,196,.1);color:var(--purple2);border:1px solid rgba(107,74,196,.28)}
+.btn-purple:hover{background:rgba(107,74,196,.18)}
+.btn-gold{background:rgba(180,140,40,.15);color:var(--gold3);border:1px solid rgba(180,140,40,.35)}
+.btn-gold:hover{background:rgba(180,140,40,.25)}
+.btn-red{background:rgba(194,59,59,.09);color:var(--red2);border:1px solid rgba(194,59,59,.25)}
+.btn-red:hover{background:rgba(194,59,59,.16)}
 .btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--line2)}
 .btn-ghost:hover{background:var(--card2);color:var(--t1);border-color:var(--line3)}
 
-/* ── OVERLAYS ── */
-.mb{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(12px)}
-.mb.on{display:flex}
-.modal{background:var(--surface);border:1px solid var(--line2);border-radius:14px;padding:32px;width:480px;box-shadow:0 40px 80px rgba(0,0,0,.7)}
-.modal-t{font-size:18px;font-weight:700;letter-spacing:-.01em;margin-bottom:14px;color:var(--t1)}
+/* ── PERSON CARD ── */
+.pc{
+  background:var(--surface);border:1px solid var(--line2);border-radius:10px;
+  padding:16px 18px;display:flex;gap:14px;align-items:flex-start;transition:all .16s;
+}
+.pc:hover{border-color:var(--line3);background:var(--card)}
+.pc-av{
+  width:44px;height:44px;border-radius:10px;flex-shrink:0;
+  background:var(--card2);border:1px solid var(--line2);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.pc-inf{flex:1;min-width:0}
+.pc-name{font-size:14px;font-weight:600;margin-bottom:2px;letter-spacing:.01em}
+.pc-rank{font-size:11px;color:var(--t3);font-family:var(--fm);margin-bottom:8px;letter-spacing:.04em}
+.pc-tags{display:flex;gap:5px;flex-wrap:wrap}
+.pc-act{display:flex;gap:6px;flex-shrink:0}
 
-.toast{position:fixed;bottom:28px;right:28px;z-index:500;background:var(--card);border:1px solid var(--line3);padding:13px 20px;border-radius:9px;font-size:14px;font-weight:500;transform:translateY(100px);opacity:0;transition:all .3s cubic-bezier(.34,1.4,.64,1);display:flex;align-items:center;gap:10px}
+/* ── FALLAKTE CARD ── */
+.fc{
+  background:var(--surface);border:1px solid var(--line2);border-radius:10px;
+  padding:18px;cursor:pointer;transition:all .2s;
+}
+.fc:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.fc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.fc-id{font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.06em;margin-bottom:4px}
+.fc-title{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.fc-desc{font-size:12px;color:var(--t2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fc-meta{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap;align-items:center}
+
+/* ── NOTIFICATION CARD ── */
+.notif-card{background:var(--surface);border:1px solid var(--line2);border-radius:10px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start}
+.notif-type{width:36px;height:36px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px}
+.notif-inner{flex:1}
+.notif-title{font-size:15px;font-weight:600;margin-bottom:4px}
+.notif-body{font-size:13px;color:var(--t2);line-height:1.6}
+.notif-meta{font-size:11px;color:var(--t3);font-family:var(--fm);margin-top:6px;letter-spacing:.04em}
+
+/* ── LEADERBOARD ── */
+.lb-row{display:flex;align-items:center;gap:14px;padding:13px 18px;border-bottom:1px solid var(--line2);transition:background .12s}
+.lb-row:hover{background:var(--card2)}
+.lb-pos{font-family:var(--fm);font-size:13px;font-weight:500;width:28px;text-align:center;flex-shrink:0}
+.lb-pos.gold{color:var(--gold3)}
+.lb-pos.silver{color:#8a95a8}
+.lb-pos.bronze{color:#9a6b30}
+.lb-av{width:36px;height:36px;border-radius:9px;flex-shrink:0;background:var(--card2);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:16px}
+.lb-info{flex:1}
+.lb-name{font-size:14px;font-weight:500}
+.lb-rank{font-size:11px;color:var(--t3);font-family:var(--fm);letter-spacing:.04em}
+.lb-score{font-family:var(--fm);font-size:14px;font-weight:500;color:var(--gold3)}
+
+/* ── DIENSTPLAN ── */
+.dp-row{display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid var(--line2)}
+.dp-time{font-family:var(--fm);font-size:11px;color:var(--t3);width:90px;flex-shrink:0;letter-spacing:.04em}
+.dp-name{font-size:14px;font-weight:500;flex:1}
+.dp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* ── SEARCH BAR ── */
+.search-bar{background:var(--surface);border:1px solid var(--line2);color:var(--t1);padding:9px 14px;border-radius:7px;font-size:14px;font-family:var(--fn);transition:all .15s}
+.search-bar:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(180,140,40,.1)}
+.search-bar::placeholder{color:var(--t3)}
+
+/* ── MODAL ── */
+.mb{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(10px)}
+.mb.on{display:flex;animation:mbIn .18s ease}
+@keyframes mbIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--surface);border:1px solid var(--line2);border-radius:14px;padding:32px;max-width:94vw;box-shadow:0 40px 80px rgba(0,0,0,.7);max-height:88vh;overflow-y:auto;animation:modalSlide .22s cubic-bezier(.34,1.3,.64,1)}
+.modal::before{content:'';display:block;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:-32px -32px 28px;border-radius:14px 14px 0 0}
+@keyframes modalSlide{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-t{font-size:20px;font-weight:700;letter-spacing:.02em;margin-bottom:20px}
+.modal-act{display:flex;gap:9px;justify-content:flex-end;margin-top:20px;border-top:1px solid var(--line2);padding-top:16px}
+
+/* login modal */
+.lm{width:460px}
+.dept-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.dg-item{padding:16px 12px;border-radius:9px;cursor:pointer;border:1px solid var(--line2);background:var(--card);text-align:center;transition:all .18s;position:relative;overflow:hidden}
+.dg-item::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;opacity:0;transition:.2s}
+.dg-item:hover{border-color:var(--line3);background:var(--card2)}
+.dg-item:hover::after,.dg-item.on::after{opacity:1}
+.dg-item.on{border-color:var(--line3)}
+.dg-ico{font-size:22px;margin-bottom:8px}
+.dg-name{font-size:14px;font-weight:700;letter-spacing:.04em;margin-bottom:3px}
+.dg-desc{font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.1em;text-transform:uppercase}
+.dg-td::after{background:var(--cyan2)}.dg-td.on{background:rgba(16,152,168,.07);border-color:rgba(16,152,168,.4)!important}.dg-td .dg-name{color:var(--cyan2)}
+.dg-hr::after{background:var(--amber2)}.dg-hr.on{background:rgba(176,122,16,.07);border-color:rgba(176,122,16,.4)!important}.dg-hr .dg-name{color:var(--amber2)}
+.dg-fb::after{background:var(--purple2)}.dg-fb.on{background:rgba(107,74,196,.07);border-color:rgba(107,74,196,.4)!important}.dg-fb .dg-name{color:var(--purple2)}
+.dg-lk::after{background:var(--gold2)}.dg-lk.on{background:rgba(180,140,40,.08);border-color:rgba(180,140,40,.45)!important}.dg-lk .dg-name{color:var(--gold3)}
+.le{font-size:12px;color:var(--red2);font-family:var(--fm);margin-top:8px;text-align:center;min-height:18px}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;right:28px;z-index:500;background:var(--card);border:1px solid var(--line3);padding:13px 20px;border-radius:9px;font-size:14px;font-weight:500;box-shadow:0 16px 48px rgba(0,0,0,.6);transform:translateY(100px);opacity:0;transition:all .3s cubic-bezier(.34,1.4,.64,1);display:flex;align-items:center;gap:10px;pointer-events:none}
 .toast.on{transform:translateY(0);opacity:1}
-.toast-dot{width:6px;height:6px;border-radius:50%}
 
-/* ── SPECIAL DECORATIONS ── */
-.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;font-family:var(--fm);text-transform:uppercase}
-.b-gold{background:rgba(180,140,40,.1);color:var(--gold3);border:1px solid rgba(180,140,40,.2)}
-.b-blue{background:rgba(45,107,228,.1);color:var(--blue2);border:1px solid rgba(45,107,228,.2)}
-.b-green{background:rgba(26,158,92,.1);color:var(--green2);border:1px solid rgba(26,158,92,.2)}
-.b-red{background:rgba(194,59,59,.1);color:var(--red2);border:1px solid rgba(194,59,59,.2)}
-.b-cyan{background:rgba(16,152,168,.1);color:var(--cyan2);border:1px solid rgba(16,152,168,.2)}
-.b-purple{background:rgba(107,74,196,.1);color:var(--purple2);border:1px solid rgba(107,74,196,.2)}
-
-.sec-bar{display:flex;gap:14px;background:var(--card);padding:14px;border-radius:10px;border:1px solid var(--line);margin-bottom:14px}
-.sb-it{flex:1;background:var(--surface);border:1px solid var(--line2);padding:12px;border-radius:8px;text-align:center}
-.sb-it div:first-child{font-size:10px;font-family:var(--fm);color:var(--t3);text-transform:uppercase}
-.sb-it div:last-child{font-size:16px;font-weight:700;color:var(--t1);font-family:var(--fm);margin-top:2px}
+.div-label{font-size:11px;font-weight:500;letter-spacing:.12em;color:var(--t3);text-transform:uppercase;margin:16px 0 8px;font-family:var(--fm)}
 </style>
 </head>
 <body>
@@ -315,23 +482,33 @@ nav::before{
   </div>
 
   <div class="nav-right">
-    <button class="login-pill" id="login-pill" onclick="openLoginModal()">
-      <span class="lp-dot">🔐</span> Discord Login
-    </button>
+    <div class="nav-badge" id="nav-badge" style="display:none"></div>
+    <div style="position:relative">
+      <button class="login-pill" id="login-pill" onclick="openLoginModal()">
+        <span class="lp-dot">🔐</span> Einloggen
+      </button>
+      <div id="profile-dropdown" style="display:none;position:absolute;top:calc(100% + 10px);right:0;width:260px;background:var(--surface);border:1px solid var(--line2);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.5);overflow:hidden;z-index:200;">
+        <div id="pd-header" style="padding:16px;border-bottom:1px solid var(--line2)"></div>
+        <div id="pd-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2)"></div>
+        <div id="pd-pw" style="display:none;padding:12px 16px;border-top:1px solid var(--line2)">
+          <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.1em;margin-bottom:8px">PASSWORT ÄNDERN</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <input class="fi" type="password" id="pd-old" placeholder="Altes Passwort" style="font-size:12px;padding:7px 10px">
+            <input class="fi" type="password" id="pd-new" placeholder="Neues Passwort" style="font-size:12px;padding:7px 10px">
+            <button class="btn btn-blue btn-sm" onclick="changePassword()" style="justify-content:center">Speichern</button>
+          </div>
+        </div>
+        <div style="padding:8px;background:var(--card);border-top:1px solid var(--line2)">
+          <button class="btn btn-red btn-sm" onclick="logout()" style="width:100%;justify-content:center">Abmelden</button>
+        </div>
+      </div>
+    </div>
+    <div class="nav-clock" id="nav-clock">00:00:00</div>
   </div>
 </nav>
 
-<div class="main">
-  <div class="sidebar" id="main-sidebar">
-    <div class="sg">Management</div>
-    <div class="si-item on" id="si-m-reg" onclick="setSide('m-reg')">Mitarbeiter Register</div>
-    <div class="si-item" id="si-m-warns" onclick="setSide('m-warns')">Orga-Warns / Striking</div>
-    <div class="sg">Strukturen</div>
-    <div class="si-item" id="si-m-abts" onclick="setSide('m-abts')">Abteilungsleiter</div>
-    <div class="si-item" id="si-m-ränge" onclick="setSide('m-ränge')">Ränge Editieren</div>
-    <div class="sg">Präferenzen</div>
-    <div class="si-item" id="si-m-opt" onclick="setSide('m-opt')">Einstellungen</div>
-  </div>
+<div class="body">
+  <div class="sidebar" id="sidebar"></div>
 
   <div class="page-wrap">
 
@@ -340,695 +517,950 @@ nav::before{
         <div class="hero-glow"></div>
         <div class="hero-lines"></div>
         <div class="hero-inner">
-          <div class="hero-pill"><div class="hero-dot"></div>Zentralcomputer Synchron</div>
-          <h1 class="hero-h1">Federal <em>Investigation</em> Bureau</h1>
-          <p class="hero-p">Willkommen im abhörsicheren Mainframe des FIB. Koordiniere Agenten, verwalte Personalstrukturen und überwache interne Abläufe in Echtzeit.</p>
+          <div class="hero-pill"><span class="hero-dot"></span> System Aktiv</div>
+          <h1 class="hero-h1">Federal<br>Investigation <em>Bureau</em></h1>
+          <p class="hero-p">Willkommen im internen Verwaltungs- und Informationsnetzwerk des FIB. Nutzen Sie die obere Navigationsleiste oder loggen Sie sich ein.</p>
+          <div class="hero-btns">
+            <button class="hb hb-p" onclick="openLoginModal()">🔑 Interner Bereich</button>
+            <button class="hb hb-g" onclick="goTo('strafkatalog')">💶 Strafkatalog einsehen</button>
+          </div>
+        </div>
+        <div class="hero-aside">
+          <div class="ha-card"><div class="ha-n" style="color:var(--gold2)">30</div><div class="ha-l">Ränge</div></div>
+          <div class="ha-card"><div class="ha-n" style="color:var(--blue2)">4</div><div class="ha-l">Abteilungen</div></div>
         </div>
       </div>
+
       <div class="card-grid">
         <div class="ic c-gold" onclick="goTo('mitarbeiter')">
-          <div class="ic-lbl">Eingeschriebenes Personal</div>
-          <div class="ic-val" id="stat-total-members">0</div>
-          <div class="ic-sub">Davon im Dienst: <span style="color:var(--green2)">Aktiv</span></div>
+          <span class="ic-ico">👥</span>
+          <div class="ic-t">Mitarbeiterstruktur</div>
+          <div class="ic-d">Vollständige Übersicht aller aktiven Agenten, Dienstnummern und aktuellen Ränge im Bureau.</div>
         </div>
         <div class="ic c-blue" onclick="goTo('abteilungen')">
-          <div class="ic-lbl">Spezial-Direktionen</div>
-          <div class="ic-val">5</div>
-          <div class="ic-sub">Fokus: <span style="color:var(--blue2)">Operative Härte</span></div>
+          <span class="ic-ico">🏢</span>
+          <div class="ic-t">Spezialabteilungen</div>
+          <div class="ic-d">Einblick in die Organisationsstrukturen der Direktion, HR, Fallbearbeitung und Logistik.</div>
         </div>
-        <div class="ic c-purple" onclick="goTo('rangliste')">
-          <div class="ic-lbl">Führungsebene (Administration)</div>
-          <div class="ic-val">04</div>
-          <div class="ic-sub">Hierarchischer Status: <span style="color:var(--purple2)">Stabil</span></div>
+        <div class="ic c-cyan" onclick="goTo('rangliste')">
+          <span class="ic-ico">📊</span>
+          <div class="ic-t">Leistungs-Rangliste</div>
+          <div class="ic-d">Die aktivsten Agenten des Monats, gemessen an ihren eingereichten Akten und Ermittlungserfolgen.</div>
         </div>
       </div>
     </div>
 
     <div class="vw" id="vw-mitarbeiter">
+      <div style="display:flex;justify-content:between;align-items:center;margin-bottom:4px">
+        <div>
+          <h2 style="font-size:22px;font-weight:700">Bureau-Mitarbeiter</h2>
+          <p style="color:var(--t2);font-size:13px">Aktive Agenten im System registriert</p>
+        </div>
+        <input type="text" class="search-bar" id="ma-search" placeholder="Name oder ID suchen..." oninput="renderMitarbeiter()" style="width:240px;margin-left:auto">
+      </div>
       <div class="sc">
-        <div class="sc-h"><span class="sc-t">Mitarbeiter-Datenbank (Synchronisiert)</span></div>
-        <div class="sc-b">
+        <div class="sc-b" style="padding:0">
           <table class="tbl">
             <thead>
               <tr>
+                <th style="width:70px">ID</th>
                 <th>Name</th>
-                <th>Dienstnummer</th>
                 <th>Rang</th>
-                <th>Status / Freigabe</th>
-                <th>Discord-ID (Geschützt)</th>
+                <th>Abteilung</th>
+                <th>Eingestellt am</th>
               </tr>
             </thead>
-            <tbody id="tbl-members"></tbody>
+            <tbody id="ma-table-body"></tbody>
           </table>
         </div>
       </div>
     </div>
 
     <div class="vw" id="vw-abteilungen">
-      <div class="sc">
-        <div class="sc-h"><span class="sc-t">Strategische Direktionen & Divisionsleiter</span></div>
-        <div class="sc-b">
-          <table class="tbl">
-            <thead>
-              <tr>
-                <th>Abteilung</th>
-                <th>Kürzel</th>
-                <th>Leitung (1. Lead)</th>
-                <th>Stellvertretung (2. Lead)</th>
-                <th>Fokus-Direktive</th>
-              </tr>
-            </thead>
-            <tbody id="tbl-abts"></tbody>
-          </table>
-        </div>
+      <div>
+        <h2 style="font-size:22px;font-weight:700">Organisationsstruktur</h2>
+        <p style="color:var(--t2);font-size:13px">Übersicht der spezialisierten Einheiten des Bureau</p>
       </div>
+      <div class="card-grid" id="dept-cards-container"></div>
     </div>
 
     <div class="vw" id="vw-rangliste">
-      <div class="sc">
-        <div class="sc-h"><span class="sc-t">Offizielle Ranghierarchie & Gehaltsgefüge</span></div>
-        <div class="sc-b">
-          <table class="tbl">
-            <thead>
-              <tr>
-                <th>Rang-Stufe</th>
-                <th>Bezeichnung</th>
-                <th>Verantwortungsbereich</th>
-                <th>Dienstbezüge</th>
-              </tr>
-            </thead>
-            <tbody id="tbl-ranks"></tbody>
-          </table>
-        </div>
+      <div>
+        <h2 style="font-size:22px;font-weight:700">Leistungsindex</h2>
+        <p style="color:var(--t2);font-size:13px">Monatliche Rangliste basierend auf operativen Aktivitäten</p>
+      </div>
+      <div class="sc" style="max-width:600px">
+        <div class="sc-h"><div class="sc-t">Top Agenten</div></div>
+        <div class="sc-b" id="lb-container" style="padding:0"></div>
       </div>
     </div>
 
     <div class="vw" id="vw-strafkatalog">
-      <div class="sc">
-        <div class="sc-h">
-          <span class="sc-t">Bußgeldkatalog & Gesetzliche Höchststrafen</span>
-          <input class="fi" type="text" id="sk-search" placeholder="Nach Paragraph oder Delikt filtern..." style="width:260px;padding:6px 12px;font-size:12px;" oninput="filterStrafkatalog()">
+      <div style="display:flex;align-items:center;justify-content:between">
+        <div>
+          <h2 style="font-size:22px;font-weight:700">💶 Offizieller Strafkatalog</h2>
+          <p style="color:var(--t2);font-size:13px">Richtlinien für Bußgelder und Haftstrafen</p>
         </div>
-        <div class="sc-b">
-          <table class="tbl">
-            <thead>
-              <tr>
-                <th>Paragraph</th>
-                <th>Delikt / Tatbestand</th>
-                <th>Bußgeld</th>
-                <th>Haftstrafen (Mond)</th>
-                <th>Bemerkung / Gesetz</th>
-              </tr>
-            </thead>
-            <tbody id="tbl-strafkatalog"></tbody>
-          </table>
-        </div>
+        <input type="text" class="search-bar" id="sk-search" placeholder="Paragraf oder Begriff suchen..." oninput="renderStrafkatalog()" style="width:280px;margin-left:auto">
       </div>
+      <div style="display:flex;flex-direction:column;gap:16px" id="sk-container"></div>
     </div>
 
     <div class="vw" id="vw-portal">
-      
-      <div class="p-sub" id="p-m-reg" style="display:none;flex-direction:column;gap:22px">
-        <div class="sc">
-          <div class="sc-h"><span class="sc-t">Personal-Eintrag Hinzufügen / Modifizieren</span></div>
-          <div class="sc-b">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
-              <div>
-                <label style="font-size:11px;color:var(--t3);text-transform:uppercase;font-family:var(--fm);display:block;margin-bottom:4px">Mitarbeiter Name</label>
-                <input class="fi" type="text" id="f-mem-name" placeholder="z.B. Tim Chessee">
-              </div>
-              <div>
-                <label style="font-size:11px;color:var(--t3);text-transform:uppercase;font-family:var(--fm);display:block;margin-bottom:4px">Dienstnummer (Badge)</label>
-                <input class="fi" type="text" id="f-mem-badge" placeholder="z.B. 01">
-              </div>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
-              <div>
-                <label style="font-size:11px;color:var(--t3);text-transform:uppercase;font-family:var(--fm);display:block;margin-bottom:4px">Dienststellung / Rang</label>
-                <select class="fs" id="f-mem-rank"></select>
-              </div>
-              <div>
-                <label style="font-size:11px;color:var(--t3);text-transform:uppercase;font-family:var(--fm);display:block;margin-bottom:4px">Discord-ID (Pflichtfeld für Authentifizierung)</label>
-                <input class="fi" type="text" id="f-mem-dcid" placeholder="z.B. 1226929673309655112">
-              </div>
-            </div>
-            <button class="btn btn-gold" onclick="actionSaveMember()">Eintrag Autorisieren</button>
-          </div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <h2 style="font-size:22px;font-weight:700" id="portal-title">⚡ Intel Registry Index</h2>
+          <p style="color:var(--t2);font-size:13px">Internes Ermittlungsportal & Fallaktenverwaltung</p>
         </div>
-        <div class="sc">
-          <div class="sc-h"><span class="sc-t">Laufende Aktenverwaltung</span></div>
-          <div class="sc-b">
-            <table class="tbl">
-              <thead>
-                <tr>
-                  <th>Badge</th>
-                  <th>Name</th>
-                  <th>Rang</th>
-                  <th>Discord-ID</th>
-                  <th style="text-align:right">Aktionen</th>
-                </tr>
-              </thead>
-              <tbody id="tbl-p-members"></tbody>
-            </table>
-          </div>
-        </div>
+        <div style="display:flex;gap:10px" id="portal-actions"></div>
       </div>
 
-      <div class="p-sub" id="p-m-warns" style="display:none;flex-direction:column;gap:22px">
-        <div class="sc">
-          <div class="sc-h"><span class="sc-t">Organisations-Rüge erteilen (Striking)</span></div>
-          <div class="sc-b">
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px">
-              <select class="fs" id="f-warn-user"></select>
-              <select class="fs" id="f-warn-type">
-                <option value="Mündliche Verwarnung">Mündliche Verwarnung</option>
-                <option value="1. Orga-Warn">1. Orga-Warn</option>
-                <option value="2. Orga-Warn">2. Orga-Warn</option>
-                <option value="Suspendierung">Suspendierung (Dienstverbot)</option>
-              </select>
-              <input class="fi" type="text" id="f-warn-reason" placeholder="Grund / Beweis-ID">
-            </div>
-            <button class="btn btn-gold" onclick="actionAddWarn()">Rüge eintragen</button>
+      <div style="display:grid;grid-template-columns:280px 1fr;gap:24px;align-items:flex-start">
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="sc">
+            <div class="sc-h"><div class="sc-t">Agenten-Navigation</div></div>
+            <div class="sc-b" style="padding:10px;display:flex;flex-direction:column;gap:4px" id="portal-nav-items"></div>
           </div>
         </div>
-        <div class="sc">
-          <div class="sc-h"><span class="sc-t">Sanktionsregister</span></div>
-          <div class="sc-b">
-            <table class="tbl">
-              <thead>
-                <tr>
-                  <th>Datum</th>
-                  <th>Agent</th>
-                  <th>Sanktion</th>
-                  <th>Begründung / Akte</th>
-                  <th style="text-align:right">Löschen</th>
-                </tr>
-              </thead>
-              <tbody id="tbl-p-warns"></tbody>
-            </table>
-          </div>
-        </div>
+        <div style="display:flex;flex-direction:column;gap:20px" id="portal-main-content"></div>
       </div>
-
-      <div class="p-sub" id="p-m-abts" style="display:none;flex-direction:column;gap:22px">
-        <div class="sc">
-          <div class="sc-h"><span class="sc-t">Direktionsstrukturen rekonfigurieren</span></div>
-          <div class="sc-b" id="box-p-abts"></div>
-        </div>
-      </div>
-
-      <div class="p-sub" id="p-m-ränge" style="display:none;flex-direction:column;gap:22px">
-        <div class="sc">
-          <div class="sc-h"><span class="sc-t">Besoldungsgruppen & Rangbezeichnungen</span></div>
-          <div class="sc-b">
-            <table class="tbl">
-              <thead>
-                <tr>
-                  <th>Stufe</th>
-                  <th>Bezeichnung</th>
-                  <th>Bereich</th>
-                  <th>Bezüge ($)</th>
-                  <th style="text-align:right">Update</th>
-                </tr>
-              </thead>
-              <tbody id="tbl-p-ranks"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div class="p-sub" id="p-m-opt" style="display:none;flex-direction:column;gap:22px">
-        <div class="sc">
-          <div class="sc-h"><span class="sc-t">System-Einstellungen & Corporate Design</span></div>
-          <div class="sc-b">
-            <p style="font-size:13px;color:var(--t2);margin-bottom:12px;">Wähle die globale Akzentfarbe für das gesamte Dashboard-Interface:</p>
-            <div class="color-picker-container">
-              <div class="color-swatch active" style="background:#b8922a;color:#000" onclick="updateGlobalTheme('#b8922a', '#d4a843', '#f0c878', this)">Gold</div>
-              <div class="color-swatch" style="background:#2d6be4;color:#fff" onclick="updateGlobalTheme('#2d6be4', '#5b8ef0', '#8cb4ff', this)">Blue</div>
-              <div class="color-swatch" style="background:#1a9e5c;color:#fff" onclick="updateGlobalTheme('#1a9e5c', '#22c97a', '#62eba4', this)">Green</div>
-              <div class="color-swatch" style="background:#6b4ac4;color:#fff" onclick="updateGlobalTheme('#6b4ac4', '#8b6bd4', '#b39bf2', this)">Purple</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
 
   </div>
 </div>
 
-<div class="mb" id="login-modal">
-  <div class="modal">
-    <div class="modal-t">🔒 Behörden-Authentifizierung</div>
-    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px;">
-      <p style="font-size:13px;color:var(--t2)">Gib deine Discord-ID ein, um dich am System anzumelden.</p>
-      <input class="fi" type="text" id="login-dc-input" placeholder="Deine Discord-ID">
-    </div>
-    <div style="display:flex;gap:10px;justify-content:flex-end">
-      <button class="btn btn-ghost" onclick="closeLoginModal()">Abbrechen</button>
-      <button class="btn btn-gold" onclick="submitLogin()">Verifizieren</button>
+</div>
+
+<div class="mb" id="modal-login" onclick="closeModalOnBg(event, 'login')">
+  <div class="modal lm">
+    <div class="modal-t">🔒 Bureau Authentifizierung</div>
+    <div class="fg">
+      <div class="ff">
+        <label class="fl">Dienstnummer (ID)</label>
+        <input class="fi" type="text" id="login-id" placeholder="z.B. 12" onkeypress="handleLoginKey(event)">
+      </div>
+      <div class="ff">
+        <label class="fl">Passwort</label>
+        <input class="fi" type="password" id="login-password" placeholder="••••••••" onkeypress="handleLoginKey(event)">
+      </div>
+      <div class="le" id="login-error"></div>
+      <div class="modal-act">
+        <button class="btn btn-ghost" onclick="closeLoginModal()">Abbrechen</button>
+        <button class="btn btn-gold" onclick="submitLogin()">Einloggen</button>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast-box">
-  <div class="toast-dot" id="toast-dot" style="background:var(--gold)"></div>
-  <span id="toast-txt"></span>
+<div class="mb" id="modal-agent-edit" onclick="closeModalOnBg(event, 'agent-edit')">
+  <div class="modal" style="width:540px">
+    <div class="modal-t" id="ae-modal-title">Mitarbeiter bearbeiten</div>
+    <div class="fg">
+      <div class="fg2">
+        <div class="ff">
+          <label class="fl">Name</label>
+          <input class="fi" type="text" id="ae-name">
+        </div>
+        <div class="ff">
+          <label class="fl">Dienstnummer (ID)</label>
+          <input class="fi" type="text" id="ae-id" readonly style="opacity:.6">
+        </div>
+      </div>
+      <div class="fg2">
+        <div class="ff">
+          <label class="fl">Rang</label>
+          <select class="fs" id="ae-rank"></select>
+        </div>
+        <div class="ff">
+          <label class="fl">Abteilung</label>
+          <select class="fs" id="ae-dept">
+            <option value="LK">Direktion (LK)</option>
+            <option value="HR">Human Resources (HR)</option>
+            <option value="FB">Fallbearbeitung (FB)</option>
+            <option value="TD">Logistik/Technik (TD)</option>
+          </select>
+        </div>
+      </div>
+      <div class="ff" id="ae-pw-container">
+        <label class="fl">Passwort zurücksetzen</label>
+        <input class="fi" type="text" id="ae-password" placeholder="Leer lassen für keine Änderung">
+      </div>
+      <div class="modal-act">
+        <button class="btn btn-ghost" onclick="closeAgentEditModal()">Abbrechen</button>
+        <button class="btn btn-blue" onclick="saveAgentEdit()">Änderungen speichern</button>
+      </div>
+    </div>
+  </div>
 </div>
 
+<div class="mb" id="modal-case-edit" onclick="closeModalOnBg(event, 'case-edit')">
+  <div class="modal" style="width:640px">
+    <div class="modal-t" id="ce-modal-title">Fallakte anlegen</div>
+    <div class="fg">
+      <div class="ff">
+        <label class="fl">Titel der Akte</label>
+        <input class="fi" type="text" id="ce-title" placeholder="z.B. Razzia Bloods Vierte Meile">
+      </div>
+      <div class="ff">
+        <label class="fl">Beschreibung / Sachverhalt</label>
+        <textarea class="fta" id="ce-desc" placeholder="Detaillierte Dokumentation der Ermittlungen..."></textarea>
+      </div>
+      <div class="fg2">
+        <div class="ff">
+          <label class="fl">Beweismaterial (Clip-URL)</label>
+          <input class="fi" type="text" id="ce-clip" placeholder="https://...">
+        </div>
+        <div class="ff">
+          <label class="fl">Status</label>
+          <select class="fs" id="ce-status">
+            <option value="Offen">Offen (In Bearbeitung)</option>
+            <option value="Geschlossen">Geschlossen (Archiviert)</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-act">
+        <button class="btn btn-ghost" onclick="closeCaseEditModal()">Abbrechen</button>
+        <button class="btn btn-gold" id="ce-submit-btn" onclick="saveCaseEdit()">Akte speichern</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <span id="toast-ico">✨</span>
+  <span id="toast-msg">Meldung</span>
 </div>
 
 <script>
-// Zustand & Register
-let members = [
-  { name: "Tim Chessee", badge: "01", rank: "28. Assistant Director of FIB", dcid: "1226929673309655112" },
-  { name: "Leyla Ballerina", badge: "02", rank: "Director of FIB", dcid: "998877665544332211" },
-  { name: "Steve Cock", badge: "03", rank: "CIRG-Leiter", dcid: "112233445566778899" },
-  { name: "Gojira Bukur", badge: "05", rank: "Special Agent in Charge", dcid: "556677889900112233" },
-  { name: "Eko Plaste", badge: "09", rank: "Supervisory Special Agent", dcid: "443322110099887766" }
+// --- GLOBAL DEFAULTS & INITIALIZATION ---
+const DEFAULT_RANGES = {
+  30: "Director of FIB",
+  29: "Deputy Director",
+  28: "Assistant Director",
+  27: "Exec. Administrative Assistant",
+  26: "Special Agent in Charge",
+  25: "Assistant Special Agent in Charge",
+  24: "Unit Commander",
+  23: "Deputy Unit Commander",
+  22: "Supervising Special Agent",
+  21: "Senior Special Agent",
+  20: "Special Agent III",
+  19: "Special Agent II",
+  18: "Special Agent I",
+  17: "Agent III",
+  16: "Agent II",
+  15: "Agent I",
+  14: "Field Agent III",
+  13: "Field Agent II",
+  12: "Field Agent I",
+  11: "Probationary Agent III",
+  10: "Probationary Agent II",
+  9: "Probationary Agent I",
+  8: "Recruit II",
+  7: "Recruit I",
+  6: "Auszubildender II",
+  5: "Auszubildender I",
+  4: "Praktikant II",
+  3: "Praktikant I",
+  2: "Angestellter II",
+  1: "Angestellter I"
+};
+
+const DEFAULT_AGENTS = [
+  { id: "1", name: "Leyla Ballerina", rank: 30, dept: "LK", pass: "fib123", activity: 420 },
+  { id: "2", name: "Steve Cock", rank: 29, dept: "LK", pass: "fib123", activity: 380 },
+  { id: "3", name: "Tim Chessee", rank: 28, dept: "LK", pass: "fib123", activity: 350 },
+  { id: "4", name: "Panam Veto", rank: 26, dept: "HR", pass: "fib123", activity: 290 },
+  { id: "5", name: "Elli Brandenburger", rank: 24, dept: "FB", pass: "fib123", activity: 210 },
+  { id: "6", name: "Sophia Hagedorn", rank: 22, dept: "TD", pass: "fib123", activity: 180 },
+  { id: "7", name: "Gojira Bukur", rank: 20, dept: "FB", pass: "fib123", activity: 150 },
+  { id: "8", name: "Eko Plaste", rank: 18, dept: "HR", pass: "fib123", activity: 120 }
 ];
 
-let abts = [
-  { name: "Criminal Intelligence Response Group", short: "CIRG", lead1: "Steve Cock", lead2: "Tim Chessee", focus: "Terrorismusbekämpfung & Zugriff" },
-  { name: "Special Weapons and Tactics", short: "SWAT", lead1: "Gojira Bukur", lead2: "Offen", focus: "Taktische Intervention" },
-  { name: "Internal Affairs Division", short: "IAD", lead1: "Eko Plaste", lead2: "Offen", focus: "Korruptionskontrolle & Compliance" },
-  { name: "Federal National Security", short: "FNS", lead1: "Offen", lead2: "Offen", focus: "Infrastrukturschutz" },
-  { name: "Human Resources Department", short: "HRD", lead1: "Offen", lead2: "Offen", focus: "Rekrutierung & Ausbildung" }
+const DEFAULT_CASES = [
+  { id: "FIB-1042", title: "Illegaler Waffenhandel Groove Street", desc: "Bei einer verdeckten Ermittlung wurden mehrere Kisten illegaler Langwaffen sichergestellt. Hauptverdächtiger flüchtig. Ermittlungen dauern an.", creatorId: "5", creatorName: "Elli Brandenburger", clip: "https://youtube.com", status: "Offen", date: "08.06.2026" },
+  { id: "FIB-1041", title: "Geldwäsche-Netzwerk Maze Bank", desc: "Stundenlange Überwachung von Scheinfirmen im Bereich Pillbox Hill führte zur Identifikation von drei Konten. Gelder wurden eingefroren.", creatorId: "7", creatorName: "Gojira Bukur", clip: "", status: "Geschlossen", date: "05.06.2026" }
 ];
 
-let ranks = [
-  { lvl: "30", name: "Director of FIB", area: "Behördenleitung", pay: 150000 },
-  { lvl: "29", name: "Deputy Director", area: "Stellvertretung", pay: 135000 },
-  { lvl: "28", name: "Assistant Director of FIB", area: "Stabsleitung", pay: 120000 },
-  { lvl: "27", name: "CIRG-Leiter / Executive", area: "Abteilungsführung", pay: 105000 },
-  { lvl: "26", name: "Special Agent in Charge", area: "Supervision", pay: 90000 },
-  { lvl: "25", name: "Supervisory Special Agent", area: "Einsatzleitung", pay: 80000 },
-  { lvl: "20", name: "Special Agent", area: "Außendienst Elite", pay: 70000 },
-  { lvl: "10", name: "Agent", area: "Ermittlungsdienst", pay: 55000 },
-  { lvl: "01", name: "Trainee", area: "Ausbildung", pay: 30000 }
+const DEFAULT_STRAFKATALOG = [
+  {
+    title: "1. Vergehen gegen die öffentliche Ordnung",
+    items: [
+      { code: "§1.1", name: "Vermummungsverbot im öffentlichen Raum", fine: "5.000 $", jail: "00 Min", note: "Ausnahme bei offiziellen Einsätzen oder Events." },
+      { code: "§1.2", name: "Beleidigung eines Beamten / Zivilisten", fine: "12.500 $", jail: "15 Min", note: "Erhöhtes Strafmaß bei Wiederholung." },
+      { code: "§1.3", name: "Missachtung von behördlichen Anweisungen", fine: "15.000 $", jail: "20 Min", note: "Gilt nach dreimaliger deutlicher Aufforderung." }
+    ]
+  },
+  {
+    title: "2. Waffen- und Drogendelikte",
+    items: [
+      { code: "§2.1", name: "Besitz illegaler Betäubungsmittel (Eigenbedarf)", fine: "25.000 $", jail: "30 Min", note: "Drogen sind umgehend zu konfiszieren." },
+      { code: "§2.2", name: "Handel mit illegalen Betäubungsmitteln", fine: "60.000 $", jail: "50 Min", note: "Nachweis durch Waage oder Verpackungsmaterial." },
+      { code: "§2.3", name: "Besitz illegaler Langwaffen", fine: "80.000 $", jail: "60 Min", note: "Waffenkonfiszierung + Lizenzentzug falls vorhanden." }
+    ]
+  }
 ];
 
-let warns = [
-  { date: "2026-05-18", user: "Gojira Bukur", type: "Mündliche Verwarnung", reason: "Fehlende Dokumentation Akte #882" }
-];
+// Load or Init LocalStorage Data
+if(!localStorage.getItem('fib_ranges')) localStorage.setItem('fib_ranges', JSON.stringify(DEFAULT_RANGES));
+if(!localStorage.getItem('fib_agents')) localStorage.setItem('fib_agents', JSON.stringify(DEFAULT_AGENTS));
+if(!localStorage.getItem('fib_cases')) localStorage.setItem('fib_cases', JSON.stringify(DEFAULT_CASES));
+if(!localStorage.getItem('fib_strafkatalog')) localStorage.setItem('fib_strafkatalog', JSON.stringify(DEFAULT_STRAFKATALOG));
 
-let strafkatalog = [
-  { p: "§1.1", title: "Mord / Tötungsdelikt", cash: 50000, time: 50, note: "Höchststrafe, unkautionierbar" },
-  { p: "§1.2", title: "Totschlag", cash: 35000, time: 35, note: "Vorsatz prüfen" },
-  { p: "§2.1", title: "Schwerer Raub", cash: 20000, time: 20, note: "Waffeneinsatz konfiszieren" },
-  { p: "§2.2", title: "Diebstahl / Einbruch", cash: 80000, time: 10, note: "Besitzrückgabe erwirken" },
-  { p: "§3.1", title: "Illegaler Waffenbesitz (Kompakt)", cash: 15000, time: 15, note: "Waffenschein entziehen" },
-  { p: "§3.2", title: "Besitz von Kriegswaffen", cash: 40000, time: 30, note: "Gefahr im Verzug, FIB-Sache" },
-  { p: "§4.1", title: "Drogenbesitz (Eigenbedarf)", cash: 5000, time: 0, note: "Sicherstellung der Substanzen" },
-  { p: "§4.2", title: "Drogenhandel / Großmenge", cash: 25000, time: 20, note: "Labor-Beschlagnahmung" },
-  { p: "§5.1", title: "Beamtenbeleidigung", cash: 7500, time: 5, note: "Ermessensspielraum der Beamten" },
-  { p: "§5.2", title: "Widerstand gegen die Staatsgewalt", cash: 12000, time: 12, note: "Taser-Einsatz rechtmäßig" },
-  { p: "§6.1", title: "Hochverrat / Spionage", cash: 100000, time: 60, note: "Ausschließliche FIB-Zuständigkeit" }
-];
+let db_ranges = JSON.parse(localStorage.getItem('fib_ranges'));
+let db_agents = JSON.parse(localStorage.getItem('fib_agents'));
+let db_cases = JSON.parse(localStorage.getItem('fib_cases'));
+let db_strafkatalog = JSON.parse(localStorage.getItem('fib_strafkatalog'));
 
 let currentUser = null;
-let currentSide = "m-reg";
+let currentPortalTab = 'overview';
+let activeEditCaseId = null;
 
-// Toast Engine
-function toast(txt, color='gold') {
-  const b = document.getElementById('toast-box');
-  const d = document.getElementById('toast-dot');
-  const t = document.getElementById('toast-txt');
-  t.innerText = txt;
-  d.style.background = `var(--${color})`;
-  b.classList.add('on');
-  setTimeout(() => b.classList.remove('on'), 3000);
+// --- CLOCK CONTROLLER ---
+function updateClock(){
+  const d = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  document.getElementById('nav-clock').textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// --- ROUTING SYSTEM ---
+function goTo(viewId){
+  document.querySelectorAll('.vw').forEach(el => el.classList.remove('on'));
+  document.querySelectorAll('.nl').forEach(el => el.classList.remove('on'));
+  
+  const targetView = document.getElementById(`vw-${viewId}`);
+  if(targetView) targetView.classList.add('on');
+  
+  const targetLink = document.getElementById(`nl-${viewId}`);
+  if(targetLink) targetLink.classList.add('on');
+
+  if(viewId === 'mitarbeiter') renderMitarbeiter();
+  if(viewId === 'abteilungen') renderAbteilungen();
+  if(viewId === 'rangliste') renderRangliste();
+  if(viewId === 'strafkatalog') renderStrafkatalog();
+  if(viewId === 'portal') renderPortal();
 }
 
-// Navigation Engine
-function goTo(v) {
-  document.querySelectorAll('.vw').forEach(e => e.classList.remove('on'));
-  document.querySelectorAll('.nl').forEach(e => e.classList.remove('on'));
+// --- TOAST NOTIFICATIONS ---
+function toast(msg, type='gold'){
+  const t = document.getElementById('toast');
+  const m = document.getElementById('toast-msg');
+  const i = document.getElementById('toast-ico');
   
-  const tv = document.getElementById('vw-' + v);
-  const tl = document.getElementById('nl-' + v);
-  if(tv) tv.classList.add('on');
-  if(tl) tl.classList.add('on');
+  m.textContent = msg;
+  if(type==='green') { i.textContent = '✅'; t.style.borderColor = 'var(--green)'; }
+  else if(type==='red') { i.textContent = '🚨'; t.style.borderColor = 'var(--red)'; }
+  else if(type==='amber') { i.textContent = '⚠️'; t.style.borderColor = 'var(--amber)'; }
+  else { i.textContent = '✨'; t.style.borderColor = 'var(--gold)'; }
+  
+  t.classList.add('on');
+  setTimeout(() => t.classList.remove('on'), 3500);
+}
 
-  const sb = document.getElementById('main-sidebar');
-  if(v === 'portal' && currentUser) {
-    sb.classList.add('show');
-  } else {
-    sb.classList.remove('show');
+// --- MODAL UTILS ---
+function closeModalOnBg(e, type){
+  if(e.target.classList.contains('mb')) {
+    if(type==='login') closeLoginModal();
+    if(type==='agent-edit') closeAgentEditModal();
+    if(type==='case-edit') closeCaseEditModal();
   }
 }
 
-function goPortal() {
-  if(!currentUser) { toast('Zugriff verweigert. Bitte einloggen.', 'red'); return; }
-  goTo('portal');
-  setSide(currentSide);
+// --- VISUAL RENDERING: PUBLIC VIEWS ---
+function getRankBadgeClass(r){
+  if(r>=28) return 'r30';
+  if(r>=24) return 'r26';
+  if(r>=18) return 'r20';
+  return 'r18';
 }
 
-function setSide(s) {
-  currentSide = s;
-  document.querySelectorAll('.si-item').forEach(e => e.classList.remove('on'));
-  document.querySelectorAll('.p-sub').forEach(e => e.style.display = 'none');
+function getDeptBadge(d){
+  if(d==='LK') return '<span class="badge dv-l">Direktion</span>';
+  if(d==='HR') return '<span class="badge dv-c">HR</span>';
+  if(d==='FB') return '<span class="badge dv-hcl">Fallbearbeitung</span>';
+  if(d==='TD') return '<span class="badge dv-hc">Logistik</span>';
+  return `<span class="badge bg-gray">${d}</span>`;
+}
+
+function renderMitarbeiter(){
+  const s = document.getElementById('ma-search').value.toLowerCase();
+  const tbody = document.getElementById('ma-table-body');
+  tbody.innerHTML = '';
   
-  const ti = document.getElementById('si-' + s);
-  const tp = document.getElementById('p-' + s);
-  if(ti) ti.classList.add('on');
-  if(tp) tp.style.display = 'flex';
+  // Sort by rank desc
+  const sorted = [...db_agents].sort((a,b) => b.rank - a.rank);
+  
+  sorted.forEach(a => {
+    if(a.name.toLowerCase().includes(s) || a.id.includes(s) || (db_ranges[a.rank]||'').toLowerCase().includes(s)){
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>#${a.id}</td>
+        <td class="b">${a.name}</td>
+        <td><span class="badge ${getRankBadgeClass(a.rank)}">Rank ${a.rank} — ${db_ranges[a.rank]||'Agent'}</span></td>
+        <td>${getDeptBadge(a.dept)}</td>
+        <td>01.01.2026</td>
+      `;
+      tbody.appendChild(tr);
+    }
+  });
 }
 
-// Discord-ID maskieren
-function maskDiscordID(id) {
-  if(!id || id.length <= 8) return id;
-  return id.substring(0, 5) + "..." + id.substring(id.length - 4);
+function renderAbteilungen(){
+  const container = document.getElementById('dept-cards-container');
+  container.innerHTML = '';
+  
+  const depts = [
+    { id: 'LK', name: 'Direktion / Leitungsebene', desc: 'Strategische Führung, Corruption Control und operative Oberleitung des Bureau.', ico: '👑', color: 'c-gold' },
+    { id: 'HR', name: 'Human Resources (HR)', desc: 'Personalverwaltung, Ausbildungswesen, Rekrutierung und Betreuung der Laufbahnen.', ico: '📝', color: 'c-amber' },
+    { id: 'FB', name: 'Fallbearbeitung & Ermittlung', desc: 'Überwachung, Aktenführung, Bekämpfung von Schwerstkriminalität und Bandenwesen.', ico: '🔍', color: 'c-green' },
+    { id: 'TD', name: 'Technischer Dienst / Logistik', desc: 'Fuhrparkmanagement, Waffenkammerordnung, IT-Strukturen und taktischer Support.', ico: '⚙️', color: 'c-cyan' }
+  ];
+  
+  depts.forEach(d => {
+    const count = db_agents.filter(a => a.dept === d.id).length;
+    const card = document.createElement('div');
+    card.className = `ic ${d.color}`;
+    card.innerHTML = `
+      <span class="ic-ico">${d.ico}</span>
+      <div class="ic-t">${d.name}</div>
+      <div class="ic-d">${d.desc}</div>
+      <div class="ic-lock">👥 ${count} registrierte Agenten</div>
+    `;
+    container.appendChild(card);
+  });
 }
 
-// Render Global UI Databases
-function renderAll() {
-  // Stats
-  document.getElementById('stat-total-members').innerText = members.length;
-
-  // Mitarbeiter Liste Öffentlicher Bereich
-  const tm = document.getElementById('tbl-members');
-  tm.innerHTML = "";
-  members.sort((a,b) => {
-    const rA = ranks.find(r=>r.name===a.rank)?.lvl || "0";
-    const rB = ranks.find(r=>r.name===b.rank)?.lvl || "0";
-    return parseInt(rB) - parseInt(rA);
-  }).forEach(m => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="color:var(--t1);font-weight:600">${m.name}</td>
-      <td><span class="badge b-cyan">#${m.badge}</span></td>
-      <td><span style="color:var(--gold3);font-weight:500">${m.rank}</span></td>
-      <td><span class="badge b-green">Aktiv / Freigegeben</span></td>
-      <td style="color:var(--t3);font-family:var(--fm)">${maskDiscordID(m.dcid)}</td>
+function renderRangliste(){
+  const container = document.getElementById('lb-container');
+  container.innerHTML = '';
+  
+  const sorted = [...db_agents].sort((a,b) => b.activity - a.activity);
+  
+  sorted.forEach((a, index) => {
+    let posClass = '';
+    if(index===0) posClass = 'gold';
+    if(index===1) posClass = 'silver';
+    if(index===2) posClass = 'bronze';
+    
+    const row = document.createElement('div');
+    row.className = 'lb-row';
+    row.innerHTML = `
+      <div class="lb-pos ${posClass}">${index+1}</div>
+      <div class="lb-av">🕵️‍♂️</div>
+      <div class="lb-info">
+        <div class="lb-name">${a.name}</div>
+        <div class="lb-rank">${db_ranges[a.rank]}</div>
+      </div>
+      <div class="lb-score">${a.activity} Pkt.</div>
     `;
-    tm.appendChild(tr);
+    container.appendChild(row);
   });
+}
 
-  // Abteilungen
-  const ta = document.getElementById('tbl-abts');
-  ta.innerHTML = "";
-  abts.forEach(a => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="color:var(--t1);font-weight:600">${a.name}</td>
-      <td><span class="badge b-purple">${a.short}</span></td>
-      <td style="color:var(--gold2)">${a.lead1}</td>
-      <td style="color:var(--t2)">${a.lead2}</td>
-      <td style="font-size:12px;color:var(--t3)">${a.focus}</td>
-    `;
-    ta.appendChild(tr);
+function renderStrafkatalog(){
+  const s = document.getElementById('sk-search').value.toLowerCase();
+  const container = document.getElementById('sk-container');
+  container.innerHTML = '';
+  
+  db_strafkatalog.forEach(cat => {
+    // filter items
+    const filteredItems = cat.items.filter(i => i.code.toLowerCase().includes(s) || i.name.toLowerCase().includes(s) || i.note.toLowerCase().includes(s));
+    
+    if(filteredItems.length > 0) {
+      const section = document.createElement('div');
+      section.className = 'sc';
+      
+      let rowsHtml = '';
+      filteredItems.forEach(i => {
+        rowsHtml += `
+          <tr>
+            <td style="font-weight:700;color:var(--gold3);width:80px">${i.code}</td>
+            <td class="b" style="color:var(--t1)">${i.name}</td>
+            <td style="color:var(--amber2);font-weight:600">${i.fine}</td>
+            <td style="color:var(--red2)">${i.jail}</td>
+            <td style="font-family:var(--fn);color:var(--t2);font-size:12px">${i.note}</td>
+          </tr>
+        `;
+      });
+      
+      section.innerHTML = `
+        <div class="sc-h"><div class="sc-t">${cat.title}</div></div>
+        <div class="sc-b" style="padding:0">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Vergehen</th>
+                <th>Bußgeld</th>
+                <th>Haftzeit</th>
+                <th>Bemerkung</th>
+              </tr>
+            </thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        </div>
+      `;
+      container.appendChild(section);
+    }
   });
+}
 
-  // Ränge
-  const trk = document.getElementById('tbl-ranks');
-  trk.innerHTML = "";
-  ranks.sort((a,b)=>parseInt(b.lvl)-parseInt(a.lvl)).forEach(r => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><span class="badge b-gold">Stufe ${r.lvl}</span></td>
-      <td style="color:var(--t1);font-weight:500">${r.name}</td>
-      <td style="color:var(--t2)">${r.area}</td>
-      <td style="color:var(--green2);font-family:var(--fm)">$${r.pay.toLocaleString()}/w</td>
-    `;
-    trk.appendChild(tr);
-  });
-
-  // Strafkatalog
-  renderStrafkatalogList(strafkatalog);
-
-  // Portal Dropdowns & Tables refresh if logged in
+// --- SYSTEM AUTHENTICATION ---
+function openLoginModal(){
   if(currentUser) {
-    // Member dropdown for warns
-    const sUser = document.getElementById('f-warn-user');
-    sUser.innerHTML = "";
-    members.forEach(m => {
-      sUser.innerHTML += `<option value="${m.name}">${m.name} (#${m.badge})</option>`;
-    });
+    goTo('portal');
+    return;
+  }
+  document.getElementById('login-id').value = '';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-error').textContent = '';
+  document.getElementById('modal-login').classList.add('on');
+  document.getElementById('login-id').focus();
+}
 
-    // Rank select for member administration
-    const sRank = document.getElementById('f-mem-rank');
-    sRank.innerHTML = "";
-    ranks.forEach(r => {
-      sRank.innerHTML += `<option value="${r.name}">${r.name} (Stufe ${r.lvl})</option>`;
-    });
+function closeLoginModal(){
+  document.getElementById('modal-login').classList.remove('on');
+}
 
-    // Table member manager
-    const tpm = document.getElementById('tbl-p-members');
-    tpm.innerHTML = "";
-    members.forEach((m, idx) => {
-      tpm.innerHTML += `
-        <tr>
-          <td><span class="badge b-cyan">#${m.badge}</span></td>
-          <td style="color:var(--t1);font-weight:600">${m.name}</td>
-          <td style="color:var(--gold2)">${m.rank}</td>
-          <td style="font-family:var(--fm);color:var(--t3)">${maskDiscordID(m.dcid)}</td>
-          <td style="text-align:right"><button class="btn btn-ghost" style="padding:4px 8px;font-size:11px" onclick="actionDeleteMember(${idx})">Löschen</button></td>
-        </tr>
-      `;
-    });
+function handleLoginKey(e){
+  if(e.key === 'Enter') submitLogin();
+}
 
-    // Table warn manager
-    const tpw = document.getElementById('tbl-p-warns');
-    tpw.innerHTML = "";
-    warns.forEach((w, idx) => {
-      tpw.innerHTML += `
-        <tr>
-          <td>${w.date}</td>
-          <td style="color:var(--t1)">${w.user}</td>
-          <td><span class="badge b-red">${w.type}</span></td>
-          <td style="color:var(--t2)">${w.reason}</td>
-          <td style="text-align:right"><button class="btn btn-ghost" style="padding:4px 8px;font-size:11px" onclick="actionDeleteWarn(${idx})">Aufheben</button></td>
-        </tr>
-      `;
-    });
+function submitLogin(){
+  const id = document.getElementById('login-id').value.trim();
+  const pass = document.getElementById('login-password').value;
+  const err = document.getElementById('login-error');
+  
+  if(!id || !pass){
+    err.textContent = 'Bitte füllen Sie alle Felder aus.';
+    return;
+  }
+  
+  const agent = db_agents.find(a => a.id === id && a.pass === pass);
+  if(!agent){
+    err.textContent = 'Ungültige Dienstnummer oder falsches Passwort.';
+    // Mini vibration effect on error
+    const m = document.querySelector('.modal.lm');
+    m.style.animation = 'none';
+    setTimeout(() => m.style.animation = 'shake 0.3s ease', 10);
+    return;
+  }
+  
+  // Successful Login
+  currentUser = agent;
+  closeLoginModal();
+  toast(`Willkommen zurück, ${currentUser.name}!`, 'green');
+  
+  // Upgrade login button/pill to active session profile
+  const pill = document.getElementById('login-pill');
+  pill.className = 'login-pill out';
+  pill.onclick = toggleProfileDropdown;
+  
+  // Initialen generieren
+  const initials = currentUser.name.split(' ').map(n=>n[0]).join('');
+  pill.innerHTML = `<div class="lp-avatar-init">${initials}</div> ${currentUser.name} <span style="font-size:10px;color:var(--gold3);opacity:.7">#${currentUser.id}</span>`;
+  
+  // Show internal elements
+  document.getElementById('nl-portal').style.display = 'block';
+  document.getElementById('nav-badge').style.display = 'inline-flex';
+  document.getElementById('nav-badge').className = `nav-badge ${getRankBadgeClass(currentUser.rank)}`;
+  document.getElementById('nav-badge').textContent = db_ranges[currentUser.rank];
+  
+  buildProfileDropdown();
+  goTo('portal');
+}
 
-    // Management Abteilungen
-    const ba = document.getElementById('box-p-abts');
-    ba.innerHTML = "";
-    abts.forEach((a, idx) => {
-      ba.innerHTML += `
-        <div class="sec-bar" style="align-items:center;margin-bottom:12px">
-          <div style="width:70px"><span class="badge b-purple">${a.short}</span></div>
-          <div style="flex:1;font-size:13px;font-weight:600;color:var(--t1)">${a.name}</div>
-          <div style="display:flex;gap:10px">
-            <input class="fi" type="text" id="f-abt-l1-${idx}" value="${a.lead1}" style="padding:6px 10px;font-size:12px;width:150px" placeholder="1. Leitung">
-            <input class="fi" type="text" id="f-abt-l2-${idx}" value="${a.lead2}" style="padding:6px 10px;font-size:12px;width:150px" placeholder="2. Leitung">
-            <button class="btn btn-gold" style="padding:6px 12px;font-size:12px" onclick="actionSaveAbt(${idx})">Save</button>
+function logout(){
+  currentUser = null;
+  toggleProfileDropdown();
+  
+  const pill = document.getElementById('login-pill');
+  pill.className = 'login-pill';
+  pill.onclick = openLoginModal;
+  pill.innerHTML = `<span class="lp-dot">🔐</span> Einloggen`;
+  
+  document.getElementById('nl-portal').style.display = 'none';
+  document.getElementById('nav-badge').style.display = 'none';
+  
+  toast('Sitzung erfolgreich beendet.', 'amber');
+  goTo('home');
+}
+
+function toggleProfileDropdown(){
+  const d = document.getElementById('profile-dropdown');
+  if(d.style.display === 'none' || d.style.display === '') {
+    d.style.display = 'block';
+  } else {
+    d.style.display = 'none';
+  }
+}
+
+function buildProfileDropdown(){
+  if(!currentUser) return;
+  document.getElementById('pd-header').innerHTML = `
+    <div style="font-weight:700;font-size:15px;color:var(--t1)">${currentUser.name}</div>
+    <div style="font-size:11px;color:var(--gold3);font-family:var(--fm);margin-top:2px">${db_ranges[currentUser.rank]}</div>
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Dienstnummer: #${currentUser.id}</div>
+  `;
+  document.getElementById('pd-stats').innerHTML = `
+    <div style="background:var(--surface);padding:10px;text-align:center">
+      <div style="font-size:16px;font-weight:700">${currentUser.activity}</div>
+      <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">PUNKTE</div>
+    </div>
+    <div style="background:var(--surface);padding:10px;text-align:center">
+      <div style="font-size:16px;font-weight:700;color:var(--cyan2)">${currentUser.dept}</div>
+      <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">UNIT</div>
+    </div>
+  `;
+  document.getElementById('pd-pw').style.display = 'block';
+}
+
+function changePassword(){
+  const oldP = document.getElementById('pd-old').value;
+  const newP = document.getElementById('pd-new').value.trim();
+  
+  if(!oldP || !newP){
+    toast('Bitte beide Felder ausfüllen!', 'red');
+    return;
+  }
+  if(oldP !== currentUser.pass){
+    toast('Altes Passwort ist inkorrekt.', 'red');
+    return;
+  }
+  
+  // Save new pass
+  currentUser.pass = newP;
+  const idx = db_agents.findIndex(a=>a.id === currentUser.id);
+  db_agents[idx].pass = newP;
+  localStorage.setItem('fib_agents', JSON.stringify(db_agents));
+  
+  document.getElementById('pd-old').value = '';
+  document.getElementById('pd-new').value = '';
+  toast('Passwort geändert!', 'green');
+  toggleProfileDropdown();
+}
+
+// --- INTERNAL PORTAL SUBSYSTEM ---
+function goPortalTab(tab){
+  currentPortalTab = tab;
+  renderPortal();
+}
+
+function renderPortal(){
+  if(!currentUser) return;
+  
+  // Render subnavigation left based on permissions
+  const navBox = document.getElementById('portal-nav-items');
+  navBox.innerHTML = `
+    <div class="si-item ${currentPortalTab==='overview'?'on':''}" onclick="goPortalTab('overview')">📂 Aktenübersicht</div>
+    <div class="si-item ${currentPortalTab==='strafkatalog_edit'?'on':''}" onclick="goPortalTab('strafkatalog_edit')">⚖️ Katalog-Verwaltung</div>
+  `;
+  
+  // HR / Direktion permission
+  if(currentUser.rank >= 24) {
+    navBox.innerHTML += `<div class="si-item ${currentPortalTab==='hr'?'on':''}" onclick="goPortalTab('hr')">👔 Personalbüro (HR)</div>`;
+  }
+  
+  // Render main dynamic area
+  const main = document.getElementById('portal-main-content');
+  const actionBox = document.getElementById('portal-actions');
+  actionBox.innerHTML = '';
+  
+  if(currentPortalTab === 'overview'){
+    document.getElementById('portal-title').textContent = '⚡ Intel Registry Index';
+    actionBox.innerHTML = `<button class="btn btn-gold btn-sm" onclick="openCaseEditModal(null)">➕ Neue Fallakte anlegen</button>`;
+    
+    let html = `
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px">
+    `;
+    
+    if(db_cases.length === 0){
+      html += `<div style="grid-column:span 2;color:var(--t3);text-align:center;padding:40px;font-family:var(--fm)">Keine Fallakten im System hinterlegt.</div>`;
+    } else {
+      db_cases.forEach(c => {
+        const isOwner = c.creatorId === currentUser.id || currentUser.rank >= 26;
+        const statBadge = c.status === 'Offen' ? 'bg-green' : 'bg-gray';
+        html += `
+          <div class="fc" onclick="viewCaseDetails('${c.id}')">
+            <div class="fc-top">
+              <div>
+                <div class="fc-id">${c.id} — Erstellt von ${c.creatorName}</div>
+                <div class="fc-title">${c.title}</div>
+              </div>
+              <span class="badge ${statBadge}">${c.status}</span>
+            </div>
+            <div class="fc-desc">${c.desc}</div>
+            <div class="fc-meta">
+              <span style="font-size:11px;font-family:var(--fm);color:var(--t3)">📅 ${c.date}</span>
+              ${c.clip ? `<span class="badge bg-blue" onclick="event.stopPropagation();window.open('${c.clip}','_blank')">🎬 Videobeweis</span>`:''}
+              ${isOwner ? `<button class="btn btn-ghost btn-sm" style="margin-left:auto;padding:2px 8px" onclick="event.stopPropagation();openCaseEditModal('${c.id}')">Bearbeiten</button>`:''}
+            </div>
           </div>
+        `;
+      });
+    }
+    html += `</div>`;
+    main.innerHTML = html;
+  }
+  
+  else if(currentPortalTab === 'strafkatalog_edit'){
+    document.getElementById('portal-title').textContent = '⚖️ Strafkatalog-Richtlinien';
+    main.innerHTML = `
+      <div class="sc">
+        <div class="sc-h"><div class="sc-t">Katalog bearbeiten</div></div>
+        <div class="sc-b">
+          <p style="color:var(--t2);font-size:13px;margin-bottom:14px">Hier können autorisierte Systembenutzer Anpassungen am offiziellen Regelwerk vornehmen. Änderungen spiegeln sich direkt im öffentlichen Strafkatalog wider.</p>
+          <button class="btn btn-blue" onclick="toast('Änderungsantrag an Direktion übermittelt.','gold')">Katalog-Änderungsmodus anfordern</button>
+        </div>
+      </div>
+    `;
+  }
+  
+  else if(currentPortalTab === 'hr' && currentUser.rank >= 24){
+    document.getElementById('portal-title').textContent = '👔 Personalbüro (HR)';
+    
+    let rows = '';
+    // Sort agents by rank desc
+    const sorted = [...db_agents].sort((a,b) => b.rank - a.rank);
+    
+    sorted.forEach(a => {
+      const canManage = currentUser.rank > a.rank || currentUser.rank === 30;
+      rows += `
+        <div class="pc">
+          <div class="pc-av">🕵️‍♂️</div>
+          <div class="pc-inf">
+            <div class="pc-name">${a.name} <span style="color:var(--t3);font-family:var(--fm);font-size:12px">#${a.id}</span></div>
+            <div class="pc-rank">${db_ranges[a.rank]} (Rank ${a.rank})</div>
+            <div class="pc-tags">
+              ${getDeptBadge(a.dept)}
+              <span class="badge bg-gold">${a.activity} Aktivitätspunkte</span>
+            </div>
+          </div>
+          ${canManage ? `
+            <div class="pc-act">
+              <button class="btn btn-ghost btn-sm" onclick="openAgentEditModal('${a.id}')">⚙️ Verwalten</button>
+            </div>
+          ` : ''}
         </div>
       `;
     });
-
-    // Management Ränge Besoldung
-    const tpr = document.getElementById('tbl-p-ranks');
-    tpr.innerHTML = "";
-    ranks.forEach((r, idx) => {
-      tpr.innerHTML += `
-        <tr>
-          <td><span class="badge b-gold">Stufe ${r.lvl}</span></td>
-          <td style="color:var(--t1)">${r.name}</td>
-          <td style="color:var(--t3)">${r.area}</td>
-          <td><input class="fi" type="number" id="f-rnk-pay-${idx}" value="${r.pay}" style="padding:4px 8px;font-size:12px;width:110px;font-family:var(--fm)"></td>
-          <td style="text-align:right"><button class="btn btn-gold" style="padding:5px 10px;font-size:11px" onclick="actionSaveRank(${idx})">Update</button></td>
-        </tr>
-      `;
-    });
-  }
-}
-
-function renderStrafkatalogList(arr) {
-  const ts = document.getElementById('tbl-strafkatalog');
-  ts.innerHTML = "";
-  arr.forEach(s => {
-    ts.innerHTML += `
-      <tr>
-        <td style="font-family:var(--fm);font-weight:600;color:var(--gold3)">${s.p}</td>
-        <td style="color:var(--t1);font-weight:500">${s.title}</td>
-        <td style="color:var(--green2)">$${s.cash.toLocaleString()}</td>
-        <td style="color:var(--amber2)">${s.time > 0 ? s.time + " Mond" : "Keine"}</td>
-        <td style="font-size:12px;color:var(--t3)">${s.note}</td>
-      </tr>
+    
+    main.innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:14px;font-weight:600;color:var(--t1)">Mitarbeiter-Datenblätter verwalten</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">${rows}</div>
+      </div>
     `;
-  });
-}
-
-function filterStrafkatalog() {
-  const q = document.getElementById('sk-search').value.toLowerCase().trim();
-  if(!q) { renderStrafkatalogList(strafkatalog); return; }
-  const res = strafkatalog.filter(s => s.p.toLowerCase().includes(q) || s.title.toLowerCase().includes(q) || s.note.toLowerCase().includes(q));
-  renderStrafkatalogList(res);
-}
-
-// Authentication Logic
-function openLoginModal() {
-  if(currentUser) {
-    currentUser = null;
-    document.getElementById('login-pill').innerHTML = '<span class="lp-dot">🔐</span> Discord Login';
-    document.getElementById('login-pill').classList.remove('out');
-    document.getElementById('nl-portal').style.display = "none";
-    toast('Behörden-Sitzung erfolgreich beendet.', 'amber');
-    goTo('home');
-    renderAll();
-  } else {
-    document.getElementById('login-dc-input').value = "";
-    document.getElementById('login-modal').classList.add('on');
   }
 }
 
-function closeLoginModal() {
-  document.getElementById('login-modal').classList.remove('on');
+function viewCaseDetails(caseId){
+  const c = db_cases.find(x => x.id === caseId);
+  if(!c) return;
+  
+  const modalHtml = `
+    <div class="mb on" id="modal-case-view" onclick="if(e.target===this)this.remove()">
+      <div class="modal" style="width:600px">
+        <div class="fc-id" style="font-size:12px;margin-bottom:4px">${c.id} — Aktenrecherche</div>
+        <div class="modal-t" style="margin-bottom:8px">${c.title}</div>
+        <div style="display:flex;gap:8px;margin-bottom:20px">
+          <span class="badge bg-gold">Ersteller: ${c.creatorName}</span>
+          <span class="badge bg-blue">Datum: ${c.date}</span>
+          <span class="badge ${c.status==='Offen'?'bg-green':'bg-gray'}">${c.status}</span>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--line2);padding:16px;border-radius:8px;font-size:14px;line-height:1.6;color:var(--t1);white-space:pre-wrap;margin-bottom:20px">${c.desc}</div>
+        ${c.clip ? `
+          <div style="margin-bottom:20px">
+            <div class="fl" style="margin-bottom:6px">Anlage: Videobeweismaterial</div>
+            <a href="${c.clip}" target="_blank" class="btn btn-cyan btn-sm" style="display:inline-flex">🎬 Externen Videolink aufrufen</a>
+          </div>
+        `:''}
+        <div class="modal-act" style="margin-top:0">
+          <button class="btn btn-ghost" onclick="document.getElementById('modal-case-view').remove()">Schließen</button>
+        </div>
+      </div>
+    </div>
+  `;
+  const div = document.createElement('div');
+  div.innerHTML = modalHtml;
+  document.body.appendChild(div.firstElementChild);
 }
 
-function submitLogin() {
-  const inputID = document.getElementById('login-dc-input').value.trim();
-  if(!inputID) { toast('Fehler: Keine gültige Kennung eingetragen!', 'red'); return; }
+// --- CASE FILE EDIT CONTROL ---
+function openCaseEditModal(caseId=null){
+  activeEditCaseId = caseId;
+  const t = document.getElementById('ce-title');
+  const d = document.getElementById('ce-desc');
+  const c = document.getElementById('ce-clip');
+  const s = document.getElementById('ce-status');
+  const mTitle = document.getElementById('ce-modal-title');
+  
+  if(!caseId){
+    mTitle.textContent = '➕ Neue Intel-Fallakte registrieren';
+    t.value = '';
+    d.value = '';
+    c.value = '';
+    s.value = 'Offen';
+  } else {
+    mTitle.textContent = `⚙️ Fallakte ${caseId} editieren`;
+    const exist = db_cases.find(x => x.id === caseId);
+    if(exist){
+      t.value = exist.title;
+      d.value = exist.desc;
+      c.value = exist.clip;
+      s.value = exist.status;
+    }
+  }
+  document.getElementById('modal-case-edit').classList.add('on');
+}
 
-  // Exakter Administrator-Override Check
-  if(inputID === "1226929673309655112") {
-    currentUser = { name: "System Administrator", badge: "00", rank: "Systemleitung", dcid: inputID, isAdmin: true };
-    document.getElementById('login-pill').innerHTML = '👋 Admin (Logout)';
-    document.getElementById('login-pill').classList.add('out');
-    document.getElementById('nl-portal').style.display = "block";
-    toast('Zentral-Administrator autorisiert. Willkommen.', 'green');
-    closeLoginModal();
-    goPortal();
-    renderAll();
+function closeCaseEditModal(){
+  document.getElementById('modal-case-edit').classList.remove('on');
+}
+
+function saveCaseEdit(){
+  const t = document.getElementById('ce-title').value.trim();
+  const d = document.getElementById('ce-desc').value.trim();
+  const c = document.getElementById('ce-clip').value.trim();
+  const s = document.getElementById('ce-status').value;
+  
+  if(!t || !d){
+    toast('Titel und Beschreibung zwingend erforderlich!','red');
     return;
   }
-
-  // Reguläre Personal-Prüfung
-  const found = members.find(m => m.dcid === inputID);
-  if(found) {
-    currentUser = found;
-    document.getElementById('login-pill').innerHTML = `👋 ${found.name} (Logout)`;
-    document.getElementById('login-pill').classList.add('out');
-    document.getElementById('nl-portal').style.display = "block";
-    toast(`Verifiziert als ${found.rank}.`, 'green');
-    closeLoginModal();
-    goPortal();
-    renderAll();
-  } else {
-    toast('Identifikations-Fehler: ID nicht registriert!', 'red');
-  }
-}
-
-// Management Dashboard Actions
-function actionSaveMember() {
-  const name = document.getElementById('f-mem-name').value.trim();
-  const badge = document.getElementById('f-mem-badge').value.trim();
-  const rank = document.getElementById('f-mem-rank').value;
-  const dcid = document.getElementById('f-mem-dcid').value.trim();
-
-  if(!name || !badge || !dcid) { toast('Alle Formularfelder müssen ausgefüllt sein!', 'red'); return; }
   
-  // Update oder Create Check
-  const exIdx = members.findIndex(m => m.badge === badge);
-  if(exIdx !== -1) {
-    members[exIdx] = { name, badge, rank, dcid };
-    toast('Mitarbeiter-Akte erfolgreich aktualisiert.', 'green');
+  if(!activeEditCaseId){
+    // New Case
+    const newId = `FIB-${Math.floor(1000 + Math.random() * 9000)}`;
+    const dObj = new Date();
+    const pad = n => String(n).padStart(2,'0');
+    const dateStr = `${pad(dObj.getDate())}.${pad(dObj.getMonth()+1)}.${dObj.getFullYear()}`;
+    
+    db_cases.unshift({
+      id: newId,
+      title: t,
+      desc: d,
+      clip: c,
+      status: s,
+      creatorId: currentUser.id,
+      creatorName: currentUser.name,
+      date: dateStr
+    });
+    
+    // add activity points
+    currentUser.activity += 15;
+    const idx = db_agents.findIndex(x=>x.id===currentUser.id);
+    db_agents[idx].activity = currentUser.activity;
+    
+    toast(`Akte ${newId} erfolgreich angelegt (+15 Pkt.)`,'green');
   } else {
-    members.push({ name, badge, rank, dcid });
-    toast('Neuer Agent im Register angelegt.', 'green');
+    // Edit existing
+    const idx = db_cases.findIndex(x => x.id === activeEditCaseId);
+    if(idx !== -1){
+      db_cases[idx].title = t;
+      db_cases[idx].desc = d;
+      db_cases[idx].clip = c;
+      db_cases[idx].status = s;
+      toast(`Akte ${activeEditCaseId} aktualisiert.`,'green');
+    }
   }
-
-  document.getElementById('f-mem-name').value = "";
-  document.getElementById('f-mem-badge').value = "";
-  document.getElementById('f-mem-dcid').value = "";
-  renderAll();
+  
+  localStorage.setItem('fib_cases', JSON.stringify(db_cases));
+  localStorage.setItem('fib_agents', JSON.stringify(db_agents));
+  closeCaseEditModal();
+  renderPortal();
+  buildProfileDropdown();
 }
 
-function actionDeleteMember(idx) {
-  if(confirm("Möchtest du diesen Mitarbeiter permanent aus dem Register entfernen?")) {
-    members.splice(idx, 1);
-    toast('Akte wurde archiviert / gelöscht.', 'amber');
-    renderAll();
+// --- HR AGENT MANAGEMENT SYSTEM ---
+let activeEditAgentId = null;
+function openAgentEditModal(agentId){
+  activeEditAgentId = agentId;
+  const a = db_agents.find(x => x.id === agentId);
+  if(!a) return;
+  
+  document.getElementById('ae-name').value = a.name;
+  document.getElementById('ae-id').value = a.id;
+  document.getElementById('ae-dept').value = a.dept;
+  document.getElementById('ae-password').value = '';
+  
+  // Render available ranks selection based on managers rank
+  const rSelect = document.getElementById('ae-rank');
+  rSelect.innerHTML = '';
+  
+  Object.keys(db_ranges).forEach(rNum => {
+    const rInt = parseInt(rNum);
+    // Managers can only assign ranks lower than their own (except rank 30 who manages all)
+    if(currentUser.rank > rInt || currentUser.rank === 30) {
+      rSelect.innerHTML += `<option value="${rInt}">${rInt} — ${db_ranges[rInt]}</option>`;
+    }
+  });
+  
+  rSelect.value = a.rank;
+  document.getElementById('modal-agent-edit').classList.add('on');
+}
+
+function closeAgentEditModal(){
+  document.getElementById('modal-agent-edit').classList.remove('on');
+}
+
+function saveAgentEdit(){
+  const a = db_agents.find(x => x.id === activeEditAgentId);
+  if(!a) return;
+  
+  const nameVal = document.getElementById('ae-name').value.trim();
+  const rankVal = parseInt(document.getElementById('ae-rank').value);
+  const deptVal = document.getElementById('ae-dept').value;
+  const passVal = document.getElementById('ae-password').value.trim();
+  
+  if(!nameVal){
+    toast('Name darf nicht leer sein!','red');
+    return;
   }
+  
+  a.name = nameVal;
+  a.rank = rankVal;
+  a.dept = deptVal;
+  if(passVal) a.pass = passVal;
+  
+  localStorage.setItem('fib_agents', JSON.stringify(db_agents));
+  toast(`Personalblatt #${a.id} angepasst.`,'green');
+  closeAgentEditModal();
+  renderPortal();
 }
 
-function actionAddWarn() {
-  const user = document.getElementById('f-warn-user').value;
-  const type = document.getElementById('f-warn-type').value;
-  const reason = document.getElementById('f-warn-reason').value.trim();
-  if(!reason) { toast('Grund für Sanktion zwingend erforderlich!', 'red'); return; }
-
-  const date = new Date().toISOString().split('T')[0];
-  warns.push({ date, user, type, reason });
-  toast('Sanktion im Dienstregister verzeichnet.', 'red');
-  document.getElementById('f-warn-reason').value = "";
-  renderAll();
-}
-
-function actionDeleteWarn(idx) {
-  warns.splice(idx, 1);
-  toast('Sanktion / Rüge wurde offiziell annulliert.', 'green');
-  renderAll();
-}
-
-function actionSaveAbt(idx) {
-  const l1 = document.getElementById(`f-abt-l1-${idx}`).value.trim();
-  const l2 = document.getElementById(`f-abt-l2-${idx}`).value.trim();
-  abts[idx].lead1 = l1 || "Offen";
-  abts[idx].lead2 = l2 || "Offen";
-  toast('Abteilungs-Direktoren aktualisiert.', 'green');
-  renderAll();
-}
-
-function actionSaveRank(idx) {
-  const val = parseInt(document.getElementById(`f-rnk-pay-${idx}`).value);
-  if(isNaN(val)) return toast('Ungültiger Gehaltswert.', 'red');
-  ranks[idx].pay = val;
-  toast('Besoldungsgruppe angepasst.', 'green');
-  renderAll();
-}
-
-// Einheitliches Farbauswahlmenü für das gesamte Dokument
-function updateGlobalTheme(g1, g2, g3, element) {
-  const root = document.documentElement;
-  root.style.setProperty('--gold', g1);
-  root.style.setProperty('--gold2', g2);
-  root.style.setProperty('--gold3', g3);
-
-  document.querySelectorAll('.color-swatch').forEach(sw => sw.classList.remove('active'));
-  element.classList.add('active');
-  toast('Interface-Farbschema global aktualisiert.', 'green');
-}
-
-// ── SECURITY ARCHITECTURE (Vollständig Beibehalten) ──
+// --- SECURITY INTERFERENCE BLOCKER ---
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('keydown', e => {
-  if((e.ctrlKey || e.metaKey) && ['u','s','i','j','c'].includes(e.key.toLowerCase())) { e.preventDefault(); return; }
-  if(e.key === 'F12') { e.preventDefault(); toast('DevTools systemseitig gesperrt.', 'amber'); return; }
-  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a') {
-    if(!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) { e.preventDefault(); }
+  if(e.ctrlKey && ['u','s','i','j'].includes(e.key.toLowerCase())){e.preventDefault();return}
+  if(e.key==='F12'){e.preventDefault();toast('DevTools deaktiviert.','amber');return}
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='a'){
+    if(!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();}
   }
 });
 
-const lockStyle = document.createElement('style');
-lockStyle.textContent = `
-  body { -webkit-user-select:none; -moz-user-select:none; user-select:none; }
-  input, textarea, select { -webkit-user-select:text; -moz-user-select:text; user-select:text; }
-  .sc-t, .hero-h1, .nav-brand { pointer-events:none; }
+const style=document.createElement('style');
+style.textContent=`
+  body{-webkit-user-select:none;-moz-user-select:none;user-select:none}
+  input,textarea,select{-webkit-user-select:text;-moz-user-select:text;user-select:text}
+  .sc-t,.lb-name,.lb-rank,.fc-title,.pc-name{pointer-events:none}
 `;
-document.head.appendChild(lockStyle);
-document.addEventListener('dragstart', e => e.preventDefault());
+document.head.appendChild(style);
 
-window.addEventListener('beforeprint', () => {
-  const wm = document.createElement('div');
-  wm.id = 'print-wm';
-  wm.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:72px;font-weight:900;color:rgba(180,140,40,.15);z-index:9999;font-family:sans-serif;white-space:nowrap;pointer-events:none;text-transform:uppercase;';
-  wm.innerText = 'FIB DIRECTIVE — STRENG GEHEIM';
+document.addEventListener('dragstart',e=>e.preventDefault());
+window.addEventListener('beforeprint',()=>{
+  const wm=document.createElement('div');
+  wm.id='print-wm';
+  wm.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:72px;font-weight:900;color:rgba(180,140,40,.15);z-index:9999;pointer-events:none;white-space:nowrap;font-family:sans-serif;';
+  wm.textContent='PROPERTY OF FIB - INTERNAL USE ONLY';
   document.body.appendChild(wm);
 });
-window.addEventListener('afterprint', () => {
-  const wm = document.getElementById('print-wm');
-  if(wm) wm.remove();
+window.addEventListener('afterprint',()=>{
+  const wm=document.getElementById('print-wm');
+  if(wm)wm.remove();
 });
-
-// Init on Load
-window.onload = () => {
-  renderAll();
-};
 </script>
 </body>
 </html>
