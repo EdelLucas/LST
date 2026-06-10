@@ -3702,6 +3702,21 @@ function setBg(n,bg,sf,cd){setPickerValue('cp-bg','cp-bg-hex',bg);setPickerValue
 
 // ═══ INIT ═══
 loadSavedSettings();
+
+// Ersten Account automatisch anlegen falls noch keiner existiert
+(async function initFirstAccount(){
+  if(getMembers().length===0){
+    await createMemberAccount(
+      'Assan Diop',   // Name
+      '156935',       // Agenten-ID
+      'feethunter.23',// Passwort
+      'leaderschaft', // Rolle
+      30,             // Rang
+      'Leaderschaft'  // Division
+    );
+    console.log('✅ Initialer Leaderschaft-Account erstellt.');
+  }
+})();
 // Letzte Seite wiederherstellen
 const _lastPage=localStorage.getItem('fib_lastPage');
 // Nur öffentliche Seiten beim Start
