@@ -121,10 +121,10 @@ nav::before{
   background:rgba(194,59,59,0.15);
   border-color:var(--red2);
 }
-.lp-dot{
-  font-size:14px;
-  display:inline-block;
-}
+.lp-dot{font-size:14px;display:inline-block}
+
+/* ── MAIN CONTAINER ── */
+.main{display:flex;flex:1;overflow:hidden}
 
 /* ── SIDEBAR ── */
 .sidebar{
@@ -153,7 +153,7 @@ nav::before{
   border-left:2px solid var(--gold2);padding-left:12px;
 }
 
-/* ── PAGE ── */
+/* ── PAGE CONTAINER ── */
 .page-wrap{flex:1;overflow-y:auto;padding:28px 32px 60px;display:flex;flex-direction:column;gap:22px}
 
 /* ── VIEWS ── */
@@ -200,7 +200,7 @@ nav::before{
 .hero-h1 em{font-style:normal;color:var(--gold2)}
 .hero-p{font-size:15px;color:var(--t2);margin-bottom:32px;line-height:1.7;font-weight:400;max-width:460px}
 
-/* ── INFO CARDS ── */
+/* ── CARDS / STATS ── */
 .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .ic{
   background:rgba(18,21,25,0.7);border:1px solid var(--line2);border-radius:12px;
@@ -210,13 +210,21 @@ nav::before{
 .ic::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;opacity:.7}
 .ic:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,.35)}
 .ic.c-gold::after{background:linear-gradient(90deg,var(--gold),transparent)}
+.ic.c-blue::after{background:linear-gradient(90deg,var(--blue),transparent)}
+.ic.c-purple::after{background:linear-gradient(90deg,var(--purple),transparent)}
 
-/* ── CLEAN RECHTECKIGES DESIGN FÜR FORMULARE & TABELLEN ── */
+.ic-lbl{font-size:11px;font-family:var(--fm);color:var(--t3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px}
+.ic-val{font-size:28px;font-weight:700;color:var(--t1);letter-spacing:-.02em;font-family:var(--fm);line-height:1.2}
+.ic-sub{font-size:12px;color:var(--t2);margin-top:4px}
+.ic-sub span{font-family:var(--fm);font-weight:500}
+
+/* ── RECHTECKIGES DESIGN FÜR FORMULARE & TABELLEN ── */
 .sc{background:rgba(18,21,25,0.6);border:1px solid var(--line2);border-radius:12px;overflow:hidden;backdrop-filter:blur(10px)}
 .sc-h{padding:16px 20px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.15)}
 .sc-t{font-size:14px;font-weight:600;letter-spacing:.02em;color:var(--t1);text-transform:uppercase;font-family:var(--fm)}
 .sc-b{padding:20px}
 
+/* ── TABELLEN ── */
 .tbl{width:100%;border-collapse:collapse}
 .tbl thead th{
   font-size:11px;font-family:var(--fm);letter-spacing:.12em;color:var(--t3);
@@ -228,9 +236,7 @@ nav::before{
 .tbl td{padding:12px 14px;font-size:13px;font-family:var(--fm);color:var(--t2);vertical-align:middle}
 
 /* UNIFIED COLOR PICKER MENU */
-.color-picker-container {
-  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;
-}
+.color-picker-container {display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
 .color-swatch {
   height:40px;border-radius:6px;cursor:pointer;border:2px solid transparent;
   display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;
@@ -262,12 +268,29 @@ nav::before{
 .btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--line2)}
 .btn-ghost:hover{background:var(--card2);color:var(--t1);border-color:var(--line3)}
 
-/* MODAL & TOAST */
+/* ── OVERLAYS ── */
 .mb{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(12px)}
 .mb.on{display:flex}
 .modal{background:var(--surface);border:1px solid var(--line2);border-radius:14px;padding:32px;width:480px;box-shadow:0 40px 80px rgba(0,0,0,.7)}
+.modal-t{font-size:18px;font-weight:700;letter-spacing:-.01em;margin-bottom:14px;color:var(--t1)}
+
 .toast{position:fixed;bottom:28px;right:28px;z-index:500;background:var(--card);border:1px solid var(--line3);padding:13px 20px;border-radius:9px;font-size:14px;font-weight:500;transform:translateY(100px);opacity:0;transition:all .3s cubic-bezier(.34,1.4,.64,1);display:flex;align-items:center;gap:10px}
 .toast.on{transform:translateY(0);opacity:1}
+.toast-dot{width:6px;height:6px;border-radius:50%}
+
+/* ── SPECIAL DECORATIONS ── */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;font-family:var(--fm);text-transform:uppercase}
+.b-gold{background:rgba(180,140,40,.1);color:var(--gold3);border:1px solid rgba(180,140,40,.2)}
+.b-blue{background:rgba(45,107,228,.1);color:var(--blue2);border:1px solid rgba(45,107,228,.2)}
+.b-green{background:rgba(26,158,92,.1);color:var(--green2);border:1px solid rgba(26,158,92,.2)}
+.b-red{background:rgba(194,59,59,.1);color:var(--red2);border:1px solid rgba(194,59,59,.2)}
+.b-cyan{background:rgba(16,152,168,.1);color:var(--cyan2);border:1px solid rgba(16,152,168,.2)}
+.b-purple{background:rgba(107,74,196,.1);color:var(--purple2);border:1px solid rgba(107,74,196,.2)}
+
+.sec-bar{display:flex;gap:14px;background:var(--card);padding:14px;border-radius:10px;border:1px solid var(--line);margin-bottom:14px}
+.sb-it{flex:1;background:var(--surface);border:1px solid var(--line2);padding:12px;border-radius:8px;text-align:center}
+.sb-it div:first-child{font-size:10px;font-family:var(--fm);color:var(--t3);text-transform:uppercase}
+.sb-it div:last-child{font-size:16px;font-weight:700;color:var(--t1);font-family:var(--fm);margin-top:2px}
 </style>
 </head>
 <body>
@@ -298,70 +321,260 @@ nav::before{
   </div>
 </nav>
 
-<div class="page-wrap">
-  
-  <div class="vw on" id="vw-home">
-    <div class="hero">
-      <div class="hero-glow"></div>
-      <div class="hero-lines"></div>
-      <div class="hero-inner">
-        <div class="hero-pill"><div class="hero-dot"></div>System Aktiviert</div>
-        <h1 class="hero-h1">Federal <em>Investigation</em> Bureau</h1>
-        <p class="hero-p">Willkommen im zentralen Daten- und Verwaltungsindex des FIB. Verwalte Akten, kontrolliere Dienstzeiten und koordiniere Abteilungen.</p>
-      </div>
-    </div>
+<div class="main">
+  <div class="sidebar" id="main-sidebar">
+    <div class="sg">Management</div>
+    <div class="si-item on" id="si-m-reg" onclick="setSide('m-reg')">Mitarbeiter Register</div>
+    <div class="si-item" id="si-m-warns" onclick="setSide('m-warns')">Orga-Warns / Striking</div>
+    <div class="sg">Strukturen</div>
+    <div class="si-item" id="si-m-abts" onclick="setSide('m-abts')">Abteilungsleiter</div>
+    <div class="si-item" id="si-m-ränge" onclick="setSide('m-ränge')">Ränge Editieren</div>
+    <div class="sg">Präferenzen</div>
+    <div class="si-item" id="si-m-opt" onclick="setSide('m-opt')">Einstellungen</div>
   </div>
 
-  <div class="vw" id="vw-mitarbeiter">
-    <div class="sc">
-      <div class="sc-h"><span class="sc-t">Mitarbeiterdatenbank</span></div>
-      <div class="sc-b">
-        <table class="tbl" id="mitarbeiter-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Dienstnummer</th>
-              <th>Rang</th>
-              <th>Discord-ID (Geschützt)</th>
-            </tr>
-          </thead>
-          <tbody id="mitarbeiter-list">
-            </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+  <div class="page-wrap">
 
-  <div class="vw" id="vw-portal">
-    <div class="sc">
-      <div class="sc-h"><span class="sc-t">Neuen Mitarbeiter registrieren</span></div>
-      <div class="sc-b">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
-          <input class="fi" type="text" id="add-name" placeholder="Name">
-          <input class="fi" type="text" id="add-badge" placeholder="Dienstnummer">
+    <div class="vw on" id="vw-home">
+      <div class="hero">
+        <div class="hero-glow"></div>
+        <div class="hero-lines"></div>
+        <div class="hero-inner">
+          <div class="hero-pill"><div class="hero-dot"></div>Zentralcomputer Synchron</div>
+          <h1 class="hero-h1">Federal <em>Investigation</em> Bureau</h1>
+          <p class="hero-p">Willkommen im abhörsicheren Mainframe des FIB. Koordiniere Agenten, verwalte Personalstrukturen und überwache interne Abläufe in Echtzeit.</p>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
-          <input class="fi" type="text" id="add-rank" placeholder="Rang">
-          <input class="fi" type="text" id="add-dcid" placeholder="Discord-ID (z.B. 1226929673309655112)">
-        </div>
-        <button class="btn btn-gold" onclick="saveNewMember()">Eintrag hinzufügen</button>
       </div>
-    </div>
-
-    <div class="sc">
-      <div class="sc-h"><span class="sc-t">System-Einstellungen & Corporate Design</span></div>
-      <div class="sc-b">
-        <p style="font-size:13px;color:var(--t2);margin-bottom:10px;">Wähle die globale Akzentfarbe für das gesamte Dashboard-Interface:</p>
-        <div class="color-picker-container">
-          <div class="color-swatch active" style="background:#b8922a;color:#000" onclick="updateGlobalTheme('#b8922a', '#d4a843', '#f0c878', this)">Gold</div>
-          <div class="color-swatch" style="background:#2d6be4;color:#fff" onclick="updateGlobalTheme('#2d6be4', '#5b8ef0', '#8cb4ff', this)">Blue</div>
-          <div class="color-swatch" style="background:#1a9e5c;color:#fff" onclick="updateGlobalTheme('#1a9e5c', '#22c97a', '#62eba4', this)">Green</div>
-          <div class="color-swatch" style="background:#6b4ac4;color:#fff" onclick="updateGlobalTheme('#6b4ac4', '#8b6bd4', '#b39bf2', this)">Purple</div>
+      <div class="card-grid">
+        <div class="ic c-gold" onclick="goTo('mitarbeiter')">
+          <div class="ic-lbl">Eingeschriebenes Personal</div>
+          <div class="ic-val" id="stat-total-members">0</div>
+          <div class="ic-sub">Davon im Dienst: <span style="color:var(--green2)">Aktiv</span></div>
+        </div>
+        <div class="ic c-blue" onclick="goTo('abteilungen')">
+          <div class="ic-lbl">Spezial-Direktionen</div>
+          <div class="ic-val">5</div>
+          <div class="ic-sub">Fokus: <span style="color:var(--blue2)">Operative Härte</span></div>
+        </div>
+        <div class="ic c-purple" onclick="goTo('rangliste')">
+          <div class="ic-lbl">Führungsebene (Administration)</div>
+          <div class="ic-val">04</div>
+          <div class="ic-sub">Hierarchischer Status: <span style="color:var(--purple2)">Stabil</span></div>
         </div>
       </div>
     </div>
-  </div>
 
+    <div class="vw" id="vw-mitarbeiter">
+      <div class="sc">
+        <div class="sc-h"><span class="sc-t">Mitarbeiter-Datenbank (Synchronisiert)</span></div>
+        <div class="sc-b">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Dienstnummer</th>
+                <th>Rang</th>
+                <th>Status / Freigabe</th>
+                <th>Discord-ID (Geschützt)</th>
+              </tr>
+            </thead>
+            <tbody id="tbl-members"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="vw" id="vw-abteilungen">
+      <div class="sc">
+        <div class="sc-h"><span class="sc-t">Strategische Direktionen & Divisionsleiter</span></div>
+        <div class="sc-b">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Abteilung</th>
+                <th>Kürzel</th>
+                <th>Leitung (1. Lead)</th>
+                <th>Stellvertretung (2. Lead)</th>
+                <th>Fokus-Direktive</th>
+              </tr>
+            </thead>
+            <tbody id="tbl-abts"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="vw" id="vw-rangliste">
+      <div class="sc">
+        <div class="sc-h"><span class="sc-t">Offizielle Ranghierarchie & Gehaltsgefüge</span></div>
+        <div class="sc-b">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Rang-Stufe</th>
+                <th>Bezeichnung</th>
+                <th>Verantwortungsbereich</th>
+                <th>Dienstbezüge</th>
+              </tr>
+            </thead>
+            <tbody id="tbl-ranks"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="vw" id="vw-strafkatalog">
+      <div class="sc">
+        <div class="sc-h">
+          <span class="sc-t">Bußgeldkatalog & Gesetzliche Höchststrafen</span>
+          <input class="fi" type="text" id="sk-search" placeholder="Nach Paragraph oder Delikt filtern..." style="width:260px;padding:6px 12px;font-size:12px;" oninput="filterStrafkatalog()">
+        </div>
+        <div class="sc-b">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Paragraph</th>
+                <th>Delikt / Tatbestand</th>
+                <th>Bußgeld</th>
+                <th>Haftstrafen (Mond)</th>
+                <th>Bemerkung / Gesetz</th>
+              </tr>
+            </thead>
+            <tbody id="tbl-strafkatalog"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="vw" id="vw-portal">
+      
+      <div class="p-sub" id="p-m-reg" style="display:none;flex-direction:column;gap:22px">
+        <div class="sc">
+          <div class="sc-h"><span class="sc-t">Personal-Eintrag Hinzufügen / Modifizieren</span></div>
+          <div class="sc-b">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+              <div>
+                <label style="font-size:11px;color:var(--t3);text-transform:uppercase;font-family:var(--fm);display:block;margin-bottom:4px">Mitarbeiter Name</label>
+                <input class="fi" type="text" id="f-mem-name" placeholder="z.B. Tim Chessee">
+              </div>
+              <div>
+                <label style="font-size:11px;color:var(--t3);text-transform:uppercase;font-family:var(--fm);display:block;margin-bottom:4px">Dienstnummer (Badge)</label>
+                <input class="fi" type="text" id="f-mem-badge" placeholder="z.B. 01">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+              <div>
+                <label style="font-size:11px;color:var(--t3);text-transform:uppercase;font-family:var(--fm);display:block;margin-bottom:4px">Dienststellung / Rang</label>
+                <select class="fs" id="f-mem-rank"></select>
+              </div>
+              <div>
+                <label style="font-size:11px;color:var(--t3);text-transform:uppercase;font-family:var(--fm);display:block;margin-bottom:4px">Discord-ID (Pflichtfeld für Authentifizierung)</label>
+                <input class="fi" type="text" id="f-mem-dcid" placeholder="z.B. 1226929673309655112">
+              </div>
+            </div>
+            <button class="btn btn-gold" onclick="actionSaveMember()">Eintrag Autorisieren</button>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="sc-h"><span class="sc-t">Laufende Aktenverwaltung</span></div>
+          <div class="sc-b">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Badge</th>
+                  <th>Name</th>
+                  <th>Rang</th>
+                  <th>Discord-ID</th>
+                  <th style="text-align:right">Aktionen</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-p-members"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-sub" id="p-m-warns" style="display:none;flex-direction:column;gap:22px">
+        <div class="sc">
+          <div class="sc-h"><span class="sc-t">Organisations-Rüge erteilen (Striking)</span></div>
+          <div class="sc-b">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px">
+              <select class="fs" id="f-warn-user"></select>
+              <select class="fs" id="f-warn-type">
+                <option value="Mündliche Verwarnung">Mündliche Verwarnung</option>
+                <option value="1. Orga-Warn">1. Orga-Warn</option>
+                <option value="2. Orga-Warn">2. Orga-Warn</option>
+                <option value="Suspendierung">Suspendierung (Dienstverbot)</option>
+              </select>
+              <input class="fi" type="text" id="f-warn-reason" placeholder="Grund / Beweis-ID">
+            </div>
+            <button class="btn btn-gold" onclick="actionAddWarn()">Rüge eintragen</button>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="sc-h"><span class="sc-t">Sanktionsregister</span></div>
+          <div class="sc-b">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Datum</th>
+                  <th>Agent</th>
+                  <th>Sanktion</th>
+                  <th>Begründung / Akte</th>
+                  <th style="text-align:right">Löschen</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-p-warns"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-sub" id="p-m-abts" style="display:none;flex-direction:column;gap:22px">
+        <div class="sc">
+          <div class="sc-h"><span class="sc-t">Direktionsstrukturen rekonfigurieren</span></div>
+          <div class="sc-b" id="box-p-abts"></div>
+        </div>
+      </div>
+
+      <div class="p-sub" id="p-m-ränge" style="display:none;flex-direction:column;gap:22px">
+        <div class="sc">
+          <div class="sc-h"><span class="sc-t">Besoldungsgruppen & Rangbezeichnungen</span></div>
+          <div class="sc-b">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Stufe</th>
+                  <th>Bezeichnung</th>
+                  <th>Bereich</th>
+                  <th>Bezüge ($)</th>
+                  <th style="text-align:right">Update</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-p-ranks"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-sub" id="p-m-opt" style="display:none;flex-direction:column;gap:22px">
+        <div class="sc">
+          <div class="sc-h"><span class="sc-t">System-Einstellungen & Corporate Design</span></div>
+          <div class="sc-b">
+            <p style="font-size:13px;color:var(--t2);margin-bottom:12px;">Wähle die globale Akzentfarbe für das gesamte Dashboard-Interface:</p>
+            <div class="color-picker-container">
+              <div class="color-swatch active" style="background:#b8922a;color:#000" onclick="updateGlobalTheme('#b8922a', '#d4a843', '#f0c878', this)">Gold</div>
+              <div class="color-swatch" style="background:#2d6be4;color:#fff" onclick="updateGlobalTheme('#2d6be4', '#5b8ef0', '#8cb4ff', this)">Blue</div>
+              <div class="color-swatch" style="background:#1a9e5c;color:#fff" onclick="updateGlobalTheme('#1a9e5c', '#22c97a', '#62eba4', this)">Green</div>
+              <div class="color-swatch" style="background:#6b4ac4;color:#fff" onclick="updateGlobalTheme('#6b4ac4', '#8b6bd4', '#b39bf2', this)">Purple</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
 </div>
 
 <div class="mb" id="login-modal">
@@ -379,53 +592,286 @@ nav::before{
 </div>
 
 <div class="toast" id="toast-box">
+  <div class="toast-dot" id="toast-dot" style="background:var(--gold)"></div>
   <span id="toast-txt"></span>
 </div>
 
 </div>
 
 <script>
-// Mock-Datenbank für Mitarbeiter
+// Zustand & Register
 let members = [
-  { name: "Tim Chessee", badge: "01", rank: "Director of FIB", dcid: "1226929673309655112" },
-  { name: "Alex Ramirez", badge: "12", rank: "Agent", dcid: "449201948572019482" }
+  { name: "Tim Chessee", badge: "01", rank: "28. Assistant Director of FIB", dcid: "1226929673309655112" },
+  { name: "Leyla Ballerina", badge: "02", rank: "Director of FIB", dcid: "998877665544332211" },
+  { name: "Steve Cock", badge: "03", rank: "CIRG-Leiter", dcid: "112233445566778899" },
+  { name: "Gojira Bukur", badge: "05", rank: "Special Agent in Charge", dcid: "556677889900112233" },
+  { name: "Eko Plaste", badge: "09", rank: "Supervisory Special Agent", dcid: "443322110099887766" }
+];
+
+let abts = [
+  { name: "Criminal Intelligence Response Group", short: "CIRG", lead1: "Steve Cock", lead2: "Tim Chessee", focus: "Terrorismusbekämpfung & Zugriff" },
+  { name: "Special Weapons and Tactics", short: "SWAT", lead1: "Gojira Bukur", lead2: "Offen", focus: "Taktische Intervention" },
+  { name: "Internal Affairs Division", short: "IAD", lead1: "Eko Plaste", lead2: "Offen", focus: "Korruptionskontrolle & Compliance" },
+  { name: "Federal National Security", short: "FNS", lead1: "Offen", lead2: "Offen", focus: "Infrastrukturschutz" },
+  { name: "Human Resources Department", short: "HRD", lead1: "Offen", lead2: "Offen", focus: "Rekrutierung & Ausbildung" }
+];
+
+let ranks = [
+  { lvl: "30", name: "Director of FIB", area: "Behördenleitung", pay: 150000 },
+  { lvl: "29", name: "Deputy Director", area: "Stellvertretung", pay: 135000 },
+  { lvl: "28", name: "Assistant Director of FIB", area: "Stabsleitung", pay: 120000 },
+  { lvl: "27", name: "CIRG-Leiter / Executive", area: "Abteilungsführung", pay: 105000 },
+  { lvl: "26", name: "Special Agent in Charge", area: "Supervision", pay: 90000 },
+  { lvl: "25", name: "Supervisory Special Agent", area: "Einsatzleitung", pay: 80000 },
+  { lvl: "20", name: "Special Agent", area: "Außendienst Elite", pay: 70000 },
+  { lvl: "10", name: "Agent", area: "Ermittlungsdienst", pay: 55000 },
+  { lvl: "01", name: "Trainee", area: "Ausbildung", pay: 30000 }
+];
+
+let warns = [
+  { date: "2026-05-18", user: "Gojira Bukur", type: "Mündliche Verwarnung", reason: "Fehlende Dokumentation Akte #882" }
+];
+
+let strafkatalog = [
+  { p: "§1.1", title: "Mord / Tötungsdelikt", cash: 50000, time: 50, note: "Höchststrafe, unkautionierbar" },
+  { p: "§1.2", title: "Totschlag", cash: 35000, time: 35, note: "Vorsatz prüfen" },
+  { p: "§2.1", title: "Schwerer Raub", cash: 20000, time: 20, note: "Waffeneinsatz konfiszieren" },
+  { p: "§2.2", title: "Diebstahl / Einbruch", cash: 80000, time: 10, note: "Besitzrückgabe erwirken" },
+  { p: "§3.1", title: "Illegaler Waffenbesitz (Kompakt)", cash: 15000, time: 15, note: "Waffenschein entziehen" },
+  { p: "§3.2", title: "Besitz von Kriegswaffen", cash: 40000, time: 30, note: "Gefahr im Verzug, FIB-Sache" },
+  { p: "§4.1", title: "Drogenbesitz (Eigenbedarf)", cash: 5000, time: 0, note: "Sicherstellung der Substanzen" },
+  { p: "§4.2", title: "Drogenhandel / Großmenge", cash: 25000, time: 20, note: "Labor-Beschlagnahmung" },
+  { p: "§5.1", title: "Beamtenbeleidigung", cash: 7500, time: 5, note: "Ermessensspielraum der Beamten" },
+  { p: "§5.2", title: "Widerstand gegen die Staatsgewalt", cash: 12000, time: 12, note: "Taser-Einsatz rechtmäßig" },
+  { p: "§6.1", title: "Hochverrat / Spionage", cash: 100000, time: 60, note: "Ausschließliche FIB-Zuständigkeit" }
 ];
 
 let currentUser = null;
+let currentSide = "m-reg";
 
-function showToast(txt) {
-  const t = document.getElementById('toast-box');
-  document.getElementById('toast-txt').innerText = txt;
-  t.classList.add('on');
-  setTimeout(() => t.classList.remove('on'), 3000);
+// Toast Engine
+function toast(txt, color='gold') {
+  const b = document.getElementById('toast-box');
+  const d = document.getElementById('toast-dot');
+  const t = document.getElementById('toast-txt');
+  t.innerText = txt;
+  d.style.background = `var(--${color})`;
+  b.classList.add('on');
+  setTimeout(() => b.classList.remove('on'), 3000);
 }
 
-function goTo(view) {
-  document.querySelectorAll('.vw').forEach(v => v.classList.remove('on'));
-  document.querySelectorAll('.nl').forEach(n => n.classList.remove('on'));
+// Navigation Engine
+function goTo(v) {
+  document.querySelectorAll('.vw').forEach(e => e.classList.remove('on'));
+  document.querySelectorAll('.nl').forEach(e => e.classList.remove('on'));
   
-  const targetView = document.getElementById('vw-' + view);
-  const targetLink = document.getElementById('nl-' + view);
-  
-  if(targetView) targetView.classList.add('on');
-  if(targetLink) targetLink.classList.add('on');
+  const tv = document.getElementById('vw-' + v);
+  const tl = document.getElementById('nl-' + v);
+  if(tv) tv.classList.add('on');
+  if(tl) tl.classList.add('on');
+
+  const sb = document.getElementById('main-sidebar');
+  if(v === 'portal' && currentUser) {
+    sb.classList.add('show');
+  } else {
+    sb.classList.remove('show');
+  }
 }
 
 function goPortal() {
-  document.querySelectorAll('.vw').forEach(v => v.classList.remove('on'));
-  document.getElementById('vw-portal').classList.add('on');
+  if(!currentUser) { toast('Zugriff verweigert. Bitte einloggen.', 'red'); return; }
+  goTo('portal');
+  setSide(currentSide);
 }
 
+function setSide(s) {
+  currentSide = s;
+  document.querySelectorAll('.si-item').forEach(e => e.classList.remove('on'));
+  document.querySelectorAll('.p-sub').forEach(e => e.style.display = 'none');
+  
+  const ti = document.getElementById('si-' + s);
+  const tp = document.getElementById('p-' + s);
+  if(ti) ti.classList.add('on');
+  if(tp) tp.style.display = 'flex';
+}
+
+// Discord-ID maskieren
+function maskDiscordID(id) {
+  if(!id || id.length <= 8) return id;
+  return id.substring(0, 5) + "..." + id.substring(id.length - 4);
+}
+
+// Render Global UI Databases
+function renderAll() {
+  // Stats
+  document.getElementById('stat-total-members').innerText = members.length;
+
+  // Mitarbeiter Liste Öffentlicher Bereich
+  const tm = document.getElementById('tbl-members');
+  tm.innerHTML = "";
+  members.sort((a,b) => {
+    const rA = ranks.find(r=>r.name===a.rank)?.lvl || "0";
+    const rB = ranks.find(r=>r.name===b.rank)?.lvl || "0";
+    return parseInt(rB) - parseInt(rA);
+  }).forEach(m => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="color:var(--t1);font-weight:600">${m.name}</td>
+      <td><span class="badge b-cyan">#${m.badge}</span></td>
+      <td><span style="color:var(--gold3);font-weight:500">${m.rank}</span></td>
+      <td><span class="badge b-green">Aktiv / Freigegeben</span></td>
+      <td style="color:var(--t3);font-family:var(--fm)">${maskDiscordID(m.dcid)}</td>
+    `;
+    tm.appendChild(tr);
+  });
+
+  // Abteilungen
+  const ta = document.getElementById('tbl-abts');
+  ta.innerHTML = "";
+  abts.forEach(a => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="color:var(--t1);font-weight:600">${a.name}</td>
+      <td><span class="badge b-purple">${a.short}</span></td>
+      <td style="color:var(--gold2)">${a.lead1}</td>
+      <td style="color:var(--t2)">${a.lead2}</td>
+      <td style="font-size:12px;color:var(--t3)">${a.focus}</td>
+    `;
+    ta.appendChild(tr);
+  });
+
+  // Ränge
+  const trk = document.getElementById('tbl-ranks');
+  trk.innerHTML = "";
+  ranks.sort((a,b)=>parseInt(b.lvl)-parseInt(a.lvl)).forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="badge b-gold">Stufe ${r.lvl}</span></td>
+      <td style="color:var(--t1);font-weight:500">${r.name}</td>
+      <td style="color:var(--t2)">${r.area}</td>
+      <td style="color:var(--green2);font-family:var(--fm)">$${r.pay.toLocaleString()}/w</td>
+    `;
+    trk.appendChild(tr);
+  });
+
+  // Strafkatalog
+  renderStrafkatalogList(strafkatalog);
+
+  // Portal Dropdowns & Tables refresh if logged in
+  if(currentUser) {
+    // Member dropdown for warns
+    const sUser = document.getElementById('f-warn-user');
+    sUser.innerHTML = "";
+    members.forEach(m => {
+      sUser.innerHTML += `<option value="${m.name}">${m.name} (#${m.badge})</option>`;
+    });
+
+    // Rank select for member administration
+    const sRank = document.getElementById('f-mem-rank');
+    sRank.innerHTML = "";
+    ranks.forEach(r => {
+      sRank.innerHTML += `<option value="${r.name}">${r.name} (Stufe ${r.lvl})</option>`;
+    });
+
+    // Table member manager
+    const tpm = document.getElementById('tbl-p-members');
+    tpm.innerHTML = "";
+    members.forEach((m, idx) => {
+      tpm.innerHTML += `
+        <tr>
+          <td><span class="badge b-cyan">#${m.badge}</span></td>
+          <td style="color:var(--t1);font-weight:600">${m.name}</td>
+          <td style="color:var(--gold2)">${m.rank}</td>
+          <td style="font-family:var(--fm);color:var(--t3)">${maskDiscordID(m.dcid)}</td>
+          <td style="text-align:right"><button class="btn btn-ghost" style="padding:4px 8px;font-size:11px" onclick="actionDeleteMember(${idx})">Löschen</button></td>
+        </tr>
+      `;
+    });
+
+    // Table warn manager
+    const tpw = document.getElementById('tbl-p-warns');
+    tpw.innerHTML = "";
+    warns.forEach((w, idx) => {
+      tpw.innerHTML += `
+        <tr>
+          <td>${w.date}</td>
+          <td style="color:var(--t1)">${w.user}</td>
+          <td><span class="badge b-red">${w.type}</span></td>
+          <td style="color:var(--t2)">${w.reason}</td>
+          <td style="text-align:right"><button class="btn btn-ghost" style="padding:4px 8px;font-size:11px" onclick="actionDeleteWarn(${idx})">Aufheben</button></td>
+        </tr>
+      `;
+    });
+
+    // Management Abteilungen
+    const ba = document.getElementById('box-p-abts');
+    ba.innerHTML = "";
+    abts.forEach((a, idx) => {
+      ba.innerHTML += `
+        <div class="sec-bar" style="align-items:center;margin-bottom:12px">
+          <div style="width:70px"><span class="badge b-purple">${a.short}</span></div>
+          <div style="flex:1;font-size:13px;font-weight:600;color:var(--t1)">${a.name}</div>
+          <div style="display:flex;gap:10px">
+            <input class="fi" type="text" id="f-abt-l1-${idx}" value="${a.lead1}" style="padding:6px 10px;font-size:12px;width:150px" placeholder="1. Leitung">
+            <input class="fi" type="text" id="f-abt-l2-${idx}" value="${a.lead2}" style="padding:6px 10px;font-size:12px;width:150px" placeholder="2. Leitung">
+            <button class="btn btn-gold" style="padding:6px 12px;font-size:12px" onclick="actionSaveAbt(${idx})">Save</button>
+          </div>
+        </div>
+      `;
+    });
+
+    // Management Ränge Besoldung
+    const tpr = document.getElementById('tbl-p-ranks');
+    tpr.innerHTML = "";
+    ranks.forEach((r, idx) => {
+      tpr.innerHTML += `
+        <tr>
+          <td><span class="badge b-gold">Stufe ${r.lvl}</span></td>
+          <td style="color:var(--t1)">${r.name}</td>
+          <td style="color:var(--t3)">${r.area}</td>
+          <td><input class="fi" type="number" id="f-rnk-pay-${idx}" value="${r.pay}" style="padding:4px 8px;font-size:12px;width:110px;font-family:var(--fm)"></td>
+          <td style="text-align:right"><button class="btn btn-gold" style="padding:5px 10px;font-size:11px" onclick="actionSaveRank(${idx})">Update</button></td>
+        </tr>
+      `;
+    });
+  }
+}
+
+function renderStrafkatalogList(arr) {
+  const ts = document.getElementById('tbl-strafkatalog');
+  ts.innerHTML = "";
+  arr.forEach(s => {
+    ts.innerHTML += `
+      <tr>
+        <td style="font-family:var(--fm);font-weight:600;color:var(--gold3)">${s.p}</td>
+        <td style="color:var(--t1);font-weight:500">${s.title}</td>
+        <td style="color:var(--green2)">$${s.cash.toLocaleString()}</td>
+        <td style="color:var(--amber2)">${s.time > 0 ? s.time + " Mond" : "Keine"}</td>
+        <td style="font-size:12px;color:var(--t3)">${s.note}</td>
+      </tr>
+    `;
+  });
+}
+
+function filterStrafkatalog() {
+  const q = document.getElementById('sk-search').value.toLowerCase().trim();
+  if(!q) { renderStrafkatalogList(strafkatalog); return; }
+  const res = strafkatalog.filter(s => s.p.toLowerCase().includes(q) || s.title.toLowerCase().includes(q) || s.note.toLowerCase().includes(q));
+  renderStrafkatalogList(res);
+}
+
+// Authentication Logic
 function openLoginModal() {
-  if (currentUser) {
-    // Logout ausführen
+  if(currentUser) {
     currentUser = null;
     document.getElementById('login-pill').innerHTML = '<span class="lp-dot">🔐</span> Discord Login';
     document.getElementById('login-pill').classList.remove('out');
-    document.getElementById('nl-portal').style.display = 'none';
-    showToast("Erfolgreich abgemeldet.");
+    document.getElementById('nl-portal').style.display = "none";
+    toast('Behörden-Sitzung erfolgreich beendet.', 'amber');
     goTo('home');
+    renderAll();
   } else {
+    document.getElementById('login-dc-input').value = "";
     document.getElementById('login-modal').classList.add('on');
   }
 }
@@ -435,76 +881,105 @@ function closeLoginModal() {
 }
 
 function submitLogin() {
-  const idInput = document.getElementById('login-dc-input').value.trim();
-  if(!idInput) return showToast("Bitte gültige ID eingeben.");
+  const inputID = document.getElementById('login-dc-input').value.trim();
+  if(!inputID) { toast('Fehler: Keine gültige Kennung eingetragen!', 'red'); return; }
 
-  // Prüfe den exakten Admin-Override
-  if(idInput === "1226929673309655112") {
-    currentUser = { name: "System Administrator", dcid: idInput, isAdmin: true };
+  // Exakter Administrator-Override Check
+  if(inputID === "1226929673309655112") {
+    currentUser = { name: "System Administrator", badge: "00", rank: "Systemleitung", dcid: inputID, isAdmin: true };
     document.getElementById('login-pill').innerHTML = '👋 Admin (Logout)';
     document.getElementById('login-pill').classList.add('out');
-    document.getElementById('nl-portal').style.display = 'block';
-    showToast("Willkommen zurück, Administrator.");
+    document.getElementById('nl-portal').style.display = "block";
+    toast('Zentral-Administrator autorisiert. Willkommen.', 'green');
     closeLoginModal();
     goPortal();
+    renderAll();
     return;
   }
 
-  // Normaler Member Check
-  const found = members.find(m => m.dcid === idInput);
+  // Reguläre Personal-Prüfung
+  const found = members.find(m => m.dcid === inputID);
   if(found) {
     currentUser = found;
     document.getElementById('login-pill').innerHTML = `👋 ${found.name} (Logout)`;
     document.getElementById('login-pill').classList.add('out');
-    document.getElementById('nl-portal').style.display = 'block';
-    showToast(`Erfolgreich als ${found.rank} verifiziert.`);
+    document.getElementById('nl-portal').style.display = "block";
+    toast(`Verifiziert als ${found.rank}.`, 'green');
     closeLoginModal();
+    goPortal();
+    renderAll();
   } else {
-    showToast("Discord-ID nicht im Register hinterlegt!");
+    toast('Identifikations-Fehler: ID nicht registriert!', 'red');
   }
 }
 
-// Discord-ID schützen (Mittelteil verstecken)
-function maskDiscordID(id) {
-  if(id.length <= 8) return id;
-  return id.substring(0, 5) + "..." + id.substring(id.length - 4);
-}
+// Management Dashboard Actions
+function actionSaveMember() {
+  const name = document.getElementById('f-mem-name').value.trim();
+  const badge = document.getElementById('f-mem-badge').value.trim();
+  const rank = document.getElementById('f-mem-rank').value;
+  const dcid = document.getElementById('f-mem-dcid').value.trim();
 
-function renderMitarbeiter() {
-  const container = document.getElementById('mitarbeiter-list');
-  container.innerHTML = "";
-  members.forEach(m => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="color:var(--t1); font-weight:600;">${m.name}</td>
-      <td>#${m.badge}</td>
-      <td><span style="color:var(--gold3); font-weight:500;">${m.rank}</span></td>
-      <td style="font-family:var(--fm); color:var(--t3);">${maskDiscordID(m.dcid)}</td>
-    `;
-    container.appendChild(tr);
-  });
-}
-
-function saveNewMember() {
-  const name = document.getElementById('add-name').value.trim();
-  const badge = document.getElementById('add-badge').value.trim();
-  const rank = document.getElementById('add-rank').value.trim();
-  const dcid = document.getElementById('add-dcid').value.trim();
-
-  if(!name || !badge || !rank || !dcid) {
-    return showToast("Bitte alle Felder ausfüllen!");
-  }
-
-  members.push({ name, badge, rank, dcid });
-  showToast("Mitarbeiter erfolgreich im Register angelegt.");
+  if(!name || !badge || !dcid) { toast('Alle Formularfelder müssen ausgefüllt sein!', 'red'); return; }
   
-  // Inputs leeren
-  document.getElementById('add-name').value = "";
-  document.getElementById('add-badge').value = "";
-  document.getElementById('add-rank').value = "";
-  document.getElementById('add-dcid').value = "";
+  // Update oder Create Check
+  const exIdx = members.findIndex(m => m.badge === badge);
+  if(exIdx !== -1) {
+    members[exIdx] = { name, badge, rank, dcid };
+    toast('Mitarbeiter-Akte erfolgreich aktualisiert.', 'green');
+  } else {
+    members.push({ name, badge, rank, dcid });
+    toast('Neuer Agent im Register angelegt.', 'green');
+  }
 
-  renderMitarbeiter();
+  document.getElementById('f-mem-name').value = "";
+  document.getElementById('f-mem-badge').value = "";
+  document.getElementById('f-mem-dcid').value = "";
+  renderAll();
+}
+
+function actionDeleteMember(idx) {
+  if(confirm("Möchtest du diesen Mitarbeiter permanent aus dem Register entfernen?")) {
+    members.splice(idx, 1);
+    toast('Akte wurde archiviert / gelöscht.', 'amber');
+    renderAll();
+  }
+}
+
+function actionAddWarn() {
+  const user = document.getElementById('f-warn-user').value;
+  const type = document.getElementById('f-warn-type').value;
+  const reason = document.getElementById('f-warn-reason').value.trim();
+  if(!reason) { toast('Grund für Sanktion zwingend erforderlich!', 'red'); return; }
+
+  const date = new Date().toISOString().split('T')[0];
+  warns.push({ date, user, type, reason });
+  toast('Sanktion im Dienstregister verzeichnet.', 'red');
+  document.getElementById('f-warn-reason').value = "";
+  renderAll();
+}
+
+function actionDeleteWarn(idx) {
+  warns.splice(idx, 1);
+  toast('Sanktion / Rüge wurde offiziell annulliert.', 'green');
+  renderAll();
+}
+
+function actionSaveAbt(idx) {
+  const l1 = document.getElementById(`f-abt-l1-${idx}`).value.trim();
+  const l2 = document.getElementById(`f-abt-l2-${idx}`).value.trim();
+  abts[idx].lead1 = l1 || "Offen";
+  abts[idx].lead2 = l2 || "Offen";
+  toast('Abteilungs-Direktoren aktualisiert.', 'green');
+  renderAll();
+}
+
+function actionSaveRank(idx) {
+  const val = parseInt(document.getElementById(`f-rnk-pay-${idx}`).value);
+  if(isNaN(val)) return toast('Ungültiger Gehaltswert.', 'red');
+  ranks[idx].pay = val;
+  toast('Besoldungsgruppe angepasst.', 'green');
+  renderAll();
 }
 
 // Einheitliches Farbauswahlmenü für das gesamte Dokument
@@ -516,12 +991,43 @@ function updateGlobalTheme(g1, g2, g3, element) {
 
   document.querySelectorAll('.color-swatch').forEach(sw => sw.classList.remove('active'));
   element.classList.add('active');
-  showToast("Interface-Farbschema aktualisiert.");
+  toast('Interface-Farbschema global aktualisiert.', 'green');
 }
 
-// Initialisierung
+// ── SECURITY ARCHITECTURE (Vollständig Beibehalten) ──
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+  if((e.ctrlKey || e.metaKey) && ['u','s','i','j','c'].includes(e.key.toLowerCase())) { e.preventDefault(); return; }
+  if(e.key === 'F12') { e.preventDefault(); toast('DevTools systemseitig gesperrt.', 'amber'); return; }
+  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a') {
+    if(!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) { e.preventDefault(); }
+  }
+});
+
+const lockStyle = document.createElement('style');
+lockStyle.textContent = `
+  body { -webkit-user-select:none; -moz-user-select:none; user-select:none; }
+  input, textarea, select { -webkit-user-select:text; -moz-user-select:text; user-select:text; }
+  .sc-t, .hero-h1, .nav-brand { pointer-events:none; }
+`;
+document.head.appendChild(lockStyle);
+document.addEventListener('dragstart', e => e.preventDefault());
+
+window.addEventListener('beforeprint', () => {
+  const wm = document.createElement('div');
+  wm.id = 'print-wm';
+  wm.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:72px;font-weight:900;color:rgba(180,140,40,.15);z-index:9999;font-family:sans-serif;white-space:nowrap;pointer-events:none;text-transform:uppercase;';
+  wm.innerText = 'FIB DIRECTIVE — STRENG GEHEIM';
+  document.body.appendChild(wm);
+});
+window.addEventListener('afterprint', () => {
+  const wm = document.getElementById('print-wm');
+  if(wm) wm.remove();
+});
+
+// Init on Load
 window.onload = () => {
-  renderMitarbeiter();
+  renderAll();
 };
 </script>
 </body>
