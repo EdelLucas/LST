@@ -502,6 +502,16 @@ nav::before{
       ">
         <!-- Profil-Header -->
         <div id="pd-header" style="padding:16px;border-bottom:1px solid var(--line2)"></div>
+        <!-- Profilbild -->
+        <div id="pd-avatar-section" style="display:none;padding:12px 16px;border-top:1px solid var(--line2)">
+          <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.1em;margin-bottom:8px">PROFILBILD</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="file" id="pd-avatar-input" accept="image/*" style="display:none" onchange="uploadProfilePic(this)">
+            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('pd-avatar-input').click()" style="flex:1;justify-content:center;font-size:12px">📷 Bild wählen</button>
+            <button class="btn btn-red btn-sm" onclick="removeProfilePic()" style="font-size:12px">✕</button>
+          </div>
+          <div style="font-size:10px;color:var(--t3);margin-top:6px;line-height:1.4">Wird in der Mitarbeiterliste angezeigt.</div>
+        </div>
         <!-- Stats -->
         <div id="pd-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2)"></div>
         <!-- Passwort -->
@@ -1438,52 +1448,18 @@ nav::before{
 
 <!-- ═ LOGIN MODAL ═ -->
 <div class="mb" id="login-mb">
-  <div class="modal" style="width:400px">
+  <div class="modal" style="width:380px">
 
     <div style="text-align:center;margin-bottom:22px">
+      <div style="width:52px;height:52px;border-radius:13px;background:rgba(180,140,40,.12);border:1px solid var(--gold);display:inline-flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:12px">🔐</div>
       <div style="font-size:20px;font-weight:700;color:var(--t1)">FIB Portal</div>
       <div style="font-size:12px;color:var(--t3);margin-top:4px;font-family:var(--fm);letter-spacing:.06em">ZUGANG ERFORDERLICH</div>
     </div>
 
-    <!-- DISCORD (Primär) -->
-    <button onclick="discordLogin()" id="dc-btn" style="
-      display:flex;align-items:center;justify-content:center;gap:12px;
-      width:100%;padding:13px;border-radius:9px;border:none;
-      background:#5865F2;color:#fff;cursor:pointer;
-      font-family:var(--fn);font-size:15px;font-weight:700;
-      transition:all .2s;margin-bottom:10px;
-    " onmouseover="this.style.background='#4752c4';this.style.transform='translateY(-2px)'"
-       onmouseout="this.style.background='#5865F2';this.style.transform='none'">
-      <svg width="22" height="17" viewBox="0 0 127.14 96.36" fill="white">
-        <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
-      </svg>
-      Mit Discord einloggen
-    </button>
-
-    <!-- Loading -->
-    <div id="dc-loading" style="display:none;text-align:center;padding:12px 0;color:var(--t2);font-size:13px">
-      <div style="display:inline-block;width:18px;height:18px;border:2px solid var(--line2);border-top-color:#5865F2;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:8px"></div>
-      Discord wird verbunden…
-    </div>
-
-    <!-- Error -->
-    <div id="dc-error" style="display:none;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:10px 14px;margin-bottom:10px">
-      <div style="font-size:12px;font-weight:600;color:var(--red2);margin-bottom:2px">Kein Zugang</div>
-      <div id="dc-error-msg" style="font-size:12px;color:var(--t2)">Dein Discord-Account ist nicht registriert. Wende dich an die Leaderschaft.</div>
-    </div>
-
-    <!-- Divider -->
-    <div style="display:flex;align-items:center;gap:10px;margin:14px 0">
-      <div style="flex:1;height:1px;background:var(--line2)"></div>
-      <span style="font-size:11px;color:var(--t3);font-family:var(--fm)">ODER MIT PASSWORT</span>
-      <div style="flex:1;height:1px;background:var(--line2)"></div>
-    </div>
-
-    <!-- Passwort-Login (Fallback) -->
-    <div class="fg" style="gap:10px;margin-bottom:12px">
+    <div class="fg" style="gap:12px;margin-bottom:12px">
       <div class="ff">
         <div class="fl">Agenten-ID</div>
-        <input class="fi" id="li-id" placeholder="z.B. 123456" autocomplete="username"
+        <input class="fi" id="li-id" placeholder="z.B. 156935" autocomplete="off"
           onkeydown="if(event.key==='Enter')document.getElementById('li-pw').focus()">
       </div>
       <div class="ff">
@@ -1500,12 +1476,12 @@ nav::before{
     <div id="li-err" style="font-size:12px;color:var(--red2);font-family:var(--fm);min-height:14px;margin-bottom:8px;text-align:center"></div>
 
     <button onclick="doMemberLogin()" style="
-      width:100%;padding:11px;border-radius:8px;border:1px solid var(--gold);
-      background:transparent;color:var(--gold3);
-      font-family:var(--fn);font-size:14px;font-weight:600;
+      width:100%;padding:12px;border-radius:8px;border:none;
+      background:var(--gold);color:#07080a;
+      font-family:var(--fn);font-size:15px;font-weight:700;
       cursor:pointer;transition:all .18s;
-    " onmouseover="this.style.background='rgba(180,140,40,.1)'"
-       onmouseout="this.style.background='transparent'">
+    " onmouseover="this.style.background='var(--gold2)';this.style.transform='translateY(-1px)'"
+       onmouseout="this.style.background='var(--gold)';this.style.transform='none'">
       Einloggen
     </button>
 
@@ -1628,6 +1604,42 @@ async function changeOwnPassword(){
   logAdd('Passwort geändert: '+currentMember.name);
 }
 
+// ── Profilbild Upload ──
+function uploadProfilePic(input){
+  const file=input.files[0];if(!file)return;
+  if(file.size>2*1024*1024){toast('Bild zu groß (max. 2 MB).','red');return;}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const dataUrl=e.target.result;
+    // Bild verkleinern für localStorage (max 200px)
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+      const size=200;
+      const scale=Math.min(size/img.width,size/img.height,1);
+      canvas.width=img.width*scale;canvas.height=img.height*scale;
+      const ctx=canvas.getContext('2d');
+      ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      const small=canvas.toDataURL('image/jpeg',0.82);
+      // Im Account speichern
+      const ms=getMembers();const m=ms.find(x=>x.agentId===currentMember.agentId);
+      if(m){m.avatar=small;sv('members',ms);currentMember.avatar=small;}
+      buildProfileDropdown();
+      toast('📷 Profilbild gesetzt!','green');
+      logAdd('Profilbild geändert: '+currentMember.name);
+    };
+    img.src=dataUrl;
+  };
+  reader.readAsDataURL(file);
+}
+function removeProfilePic(){
+  if(!currentMember)return;
+  const ms=getMembers();const m=ms.find(x=>x.agentId===currentMember.agentId);
+  if(m){delete m.avatar;sv('members',ms);delete currentMember.avatar;}
+  buildProfileDropdown();
+  toast('Profilbild entfernt.','amber');
+}
+
 let compactMode=false;
 function toggleCompact(btn){
   compactMode=!compactMode;
@@ -1638,15 +1650,6 @@ function toggleCompact(btn){
 function toggleCompactMode(){toggleCompact(null);}
 
 // LOGIN TAB
-function loginTab(tab){
-  const panels=['lp-discord','lp-member','lp-dept'];
-  panels.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
-  const show=tab==='discord'?'lp-discord':tab==='member'?'lp-member':'lp-dept';
-  const el=document.getElementById(show);if(el)el.style.display='';
-  if(tab==='member')setTimeout(()=>document.getElementById('li-id')?.focus(),50);
-  if(tab==='dept')setTimeout(()=>document.getElementById('pw')?.focus(),50);
-}
-
 // PASSWORT TOGGLE
 
 // MITGLIED LOGIN
@@ -1702,8 +1705,10 @@ function buildProfileDropdown(){
   const myLogs=ld('activity_logs').filter(l=>l.agent===m.name).length;
   const hdr=document.getElementById('pd-header');
   if(hdr){
-    const init=`<div style="width:44px;height:44px;border-radius:50%;background:${r.color}22;border:2px solid ${r.color};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:${r.color};flex-shrink:0">${(m.name||'?')[0].toUpperCase()}</div>`;
-    hdr.innerHTML=`<div style="display:flex;align-items:center;gap:12px">${init}<div>
+    const avatarHtml=m.avatar
+      ?`<img src="${m.avatar}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid ${r.color};flex-shrink:0">`
+      :`<div style="width:44px;height:44px;border-radius:50%;background:${r.color}22;border:2px solid ${r.color};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:${r.color};flex-shrink:0">${(m.name||'?')[0].toUpperCase()}</div>`;
+    hdr.innerHTML=`<div style="display:flex;align-items:center;gap:12px">${avatarHtml}<div>
       <div style="font-size:14px;font-weight:700;color:var(--t1)">${m.name}</div>
       <div style="font-size:11px;color:var(--t3);font-family:var(--fm)">ID ${m.agentId}</div>
       ${m.discordName?`<div style="font-size:11px;color:#93b8ff;font-family:var(--fm);margin-top:2px">
@@ -1712,6 +1717,7 @@ function buildProfileDropdown(){
       <div style="margin-top:5px"><span class="badge" style="background:${r.color}15;color:${r.color};border-color:${r.color}30;font-size:10px">${r.icon} ${r.label}</span></div>
     </div></div>`;
   }
+  const avSec=document.getElementById('pd-avatar-section');if(avSec)avSec.style.display='';
   const stats=document.getElementById('pd-stats');
   if(stats){
     const items=[
@@ -1746,96 +1752,11 @@ function buildMemberSidebar(m){
 }
 
 // ╔══════════════════════════════════════════════════════╗
-// ║         AUTH — Discord OAuth + Passwort-Fallback     ║
+// ║              AUTH — ID + Passwort Login              ║
 // ╚══════════════════════════════════════════════════════╝
+function checkSession(){} // kein Discord/Supabase mehr
 
-const SUPABASE_URL  = 'https://expttnyskasmxwiqkaky.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4cHR0bnlza2FzbXh3aXFrYWt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4Mzc1NjksImV4cCI6MjA5NjQxMzU2OX0.3q78VZYVxVTxvy4K2UmjCI5OOpoJWR8DGQkxRVozh58';
-const NETLIFY_URL   = 'https://lst-grand.netlify.app/';
-
-let _sb=null;
-async function getSB(){
-  if(_sb)return _sb;
-  if(!window.supabase){
-    await new Promise((res,rej)=>{
-      const s=document.createElement('script');
-      s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
-      s.onload=res;s.onerror=rej;
-      document.head.appendChild(s);
-    });
-  }
-  _sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
-  return _sb;
-}
-
-// ── Discord Login ──
-async function discordLogin(){
-  const btn=document.getElementById('dc-btn');
-  const loading=document.getElementById('dc-loading');
-  const errBox=document.getElementById('dc-error');
-  if(btn)btn.style.display='none';
-  if(loading)loading.style.display='';
-  if(errBox)errBox.style.display='none';
-  const sb=await getSB();
-  const{error}=await sb.auth.signInWithOAuth({
-    provider:'discord',
-    options:{redirectTo:NETLIFY_URL,scopes:'identify'}
-  });
-  if(error){
-    if(btn)btn.style.display='';
-    if(loading)loading.style.display='none';
-    toast('Discord-Fehler: '+error.message,'red');
-  }
-}
-
-// ── Session nach Redirect prüfen ──
-async function checkSession(){
-  const sb=await getSB();
-  sb.auth.onAuthStateChange(async(event,session)=>{
-    if(event==='SIGNED_IN'&&session)await handleDiscordUser(session);
-    if(event==='SIGNED_OUT')doLogout();
-  });
-  const{data:{session}}=await sb.auth.getSession();
-  if(session)await handleDiscordUser(session);
-}
-
-// ── Discord User verarbeiten ──
-async function handleDiscordUser(session){
-  const user=session.user;
-  const discordId=user.user_metadata?.provider_id||user.identities?.[0]?.id||user.id;
-  const discordName=user.user_metadata?.full_name||user.user_metadata?.name||'Unbekannt';
-  const discordAvatar=user.user_metadata?.avatar_url||'';
-
-  // In localStorage nach passendem Account suchen (via Discord-ID)
-  const m=getMembers().find(x=>x.discordId===discordId);
-  if(!m){
-    // Kein lokaler Account mit dieser Discord-ID
-    const errBox=document.getElementById('dc-error');
-    const errMsg=document.getElementById('dc-error-msg');
-    const loading=document.getElementById('dc-loading');
-    const btn=document.getElementById('dc-btn');
-    if(loading)loading.style.display='none';
-    if(btn)btn.style.display='';
-    if(errBox)errBox.style.display='';
-    if(errMsg)errMsg.textContent='Discord-ID '+discordId+' ist nicht registriert. Leaderschaft muss deinen Account anlegen und die Discord-ID eintragen.';
-    const sb=await getSB();await sb.auth.signOut();
-    return;
-  }
-  // Admin-Check
-  if(ADMIN_DISCORD_IDS.includes(discordId)&&m.role!=='leaderschaft'){
-    const ms=getMembers();const found=ms.find(x=>x.discordId===discordId);
-    if(found){found.role='leaderschaft';sv('members',ms);m.role='leaderschaft';}
-  }
-  // Avatar aus Discord übernehmen
-  m.avatar=discordAvatar;
-  currentMember=m;dept=m.role||'member';
-  closeLogin();
-  openPortalAsMember(m);
-  toast('Willkommen, '+m.name+'! ✅','green');
-  logAdd('Discord-Login: '+m.name+' ('+discordId+') · '+m.role);
-}
-
-// ── Passwort-Login (Fallback) ──
+// ── Passwort-Login ──
 async function doMemberLogin(){
   const agentId=document.getElementById('li-id')?.value.trim();
   const pw=document.getElementById('li-pw')?.value;
@@ -1849,6 +1770,7 @@ async function doMemberLogin(){
     if(modal){modal.style.animation='none';modal.offsetHeight;modal.style.animation='shake .3s ease';}
     return;
   }
+  // Admin-Discord-ID → automatisch Leaderschaft
   if(m.discordId&&ADMIN_DISCORD_IDS.includes(m.discordId)&&m.role!=='leaderschaft'){
     const ms=getMembers();const found=ms.find(x=>x.agentId===m.agentId);
     if(found){found.role='leaderschaft';sv('members',ms);m.role='leaderschaft';}
@@ -1981,13 +1903,21 @@ function parseRankN(rankStr){
   return m?parseInt(m[1]):0;
 }
 function renderM(){
+  // Profilbilder aus members-Accounts laden (per Name + ID verknüpft)
+  const memberAvatars={};
+  getMembers().forEach(m=>{
+    if(m.avatar){
+      memberAvatars[m.agentId]=m.avatar;
+      memberAvatars[(m.name||'').toLowerCase()]=m.avatar;
+    }
+  });
   const hrPersons=ld('hr_persons').map(p=>({
     id:p.agentId||'—', name:p.name||'—',
     rankN:parseRankN(p.rank||p.rankN), rank:p.rank||'',
     dn:p.dn||'—',
     div:p.div||p.dept||'—', strike:parseInt(p.strike)||0,
     invite:p.date||p.created||'—', abt:p.abt||'',
-    // Discord-ID wird NICHT in die öffentliche Liste übertragen
+    avatar:memberAvatars[p.agentId]||memberAvatars[(p.name||'').toLowerCase()]||'',
     _fromHR:true,
   }));
   // Absteigend nach Rang sortieren (30 oben)
@@ -2030,7 +1960,14 @@ function renderM(){
     const cbVal=(key)=>a._fromHR?!!agentAusb[AUSB_MAP[key]]:!!(a[key]);
     return`<tr>
       <td style="font-family:var(--fm);font-size:11px;color:var(--t3)">${a.id}</td>
-      <td class="b">${a.name}</td>
+      <td class="b">
+        <div style="display:flex;align-items:center;gap:8px">
+          ${a.avatar
+            ?`<img src="${a.avatar}" style="width:26px;height:26px;border-radius:50%;object-fit:cover;border:1px solid var(--line2);flex-shrink:0">`
+            :`<div style="width:26px;height:26px;border-radius:50%;background:var(--card2);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--t3);flex-shrink:0">${(a.name||'?')[0].toUpperCase()}</div>`}
+          <span>${a.name}</span>
+        </div>
+      </td>
       <td><span class="badge ${rc}" style="font-size:9px;white-space:nowrap">${rl2}</span></td>
       <td style="font-family:var(--fm);color:var(--t3)">${a.dn}</td>
       <td><span class="badge ${dv}" style="font-size:9px">${a.div}</span></td>
@@ -2366,8 +2303,6 @@ function closeLogin(){document.getElementById('login-mb').classList.remove('on')
 
 function doLogout(){
   currentMember=null; dept=null;
-  // Supabase Discord-Session beenden
-  getSB().then(sb=>{if(sb)sb.auth.signOut();}).catch(()=>{});
   closeProfileDropdown();
   const pill=document.getElementById('login-pill');
   pill.innerHTML='<div class="lp-dot">🔐</div> Einloggen';
@@ -3065,6 +3000,17 @@ const LAW_DATA=[
 ];
 
 // STATE
+const GROUP_COLORS={
+  'Psychische & Physische Integrität (StGB)':'#f87171',
+  'Wirtschaftskriminalität (StGB)':'#fb923c',
+  'Umgang mit Beamten (StGB)':'#fbbf24',
+  'Straßenverkehrsordnung (StVO)':'#38bdf8',
+  'Waffengesetz (WaffG)':'#e879f9',
+  'Sperrzonen / Kapitalverbrechen (StGB)':'#f43f5e',
+  'Betäubungsmittelgesetz (BtMG)':'#a78bfa',
+  'Strafprozessordnung (StPO)':'#ef4444',
+  'Beamtendienstgesetzbuch (BDG)':'#64748b',
+};
 let skSelected={}; // id → {law, grayWanted}
 let skRemorse=false;
 let skRights=false;
@@ -3221,6 +3167,35 @@ function skCopy(){
   if(skRemorse)text+=` (§35 Abs.1 Reue, −2★ min.1★)`;
   if(sysW>0)text+=` (+${sysW}★ System)`;
   navigator.clipboard.writeText(text).then(()=>toast('📋 Strafakte kopiert!','green')).catch(()=>toast('Kopieren fehlgeschlagen.','red'));
+}
+
+function skSetToggle(id,on,col){
+  const t=document.getElementById(id);if(!t)return;
+  t.style.background=on?col:'var(--line2)';
+  const knob=t.querySelector('div');
+  if(knob){knob.style.left=on?'20px':'4px';knob.style.background=on?'#07080a':'var(--t3)';}
+}
+function skToggleRemorse(){
+  skRemorse=!skRemorse;
+  skSetToggle('sk-remorse-toggle',skRemorse,'var(--gold)');
+  skCalc();
+}
+function skToggleRights(){
+  skRights=!skRights;
+  skSetToggle('sk-rights-toggle',skRights,'var(--green2)');
+  const w=document.getElementById('sk-rights-warn');if(w)w.style.display='none';
+}
+function skReset(){
+  skSelected={};skRemorse=false;skRights=false;
+  skSetToggle('sk-remorse-toggle',false,'var(--gold)');
+  skSetToggle('sk-rights-toggle',false,'var(--green2)');
+  const az=document.getElementById('sk-az');if(az)az.value='';
+  const sw=document.getElementById('sk-syswanted');if(sw)sw.value='0';
+  const w=document.getElementById('sk-rights-warn');if(w)w.style.display='none';
+  const srch=document.getElementById('sk-search');if(srch)srch.value='';
+  const cat=document.getElementById('sk-catalog');if(cat)cat.innerHTML='';
+  skInit();skCalc();skRenderSelected();
+  toast('Strafkatalog zurückgesetzt.','amber');
 }
 function tdLookupAgent(){
   const id=document.getElementById('td-agentid')?.value.trim();
@@ -3576,19 +3551,37 @@ function gradPreview(){
   applyGradientLive();
 }
 
-// Gradient auf CSS-Variablen anwenden (live, ohne speichern)
+// Gradient auf CSS-Variablen + ganze Seite anwenden
 function applyGradientLive(){
   const r=document.documentElement;
-  // Akzente: dunkelste, mittlere, hellste Farbe aus dem Verlauf
   const dark=gradColors[0];
   const mid=gradColors[Math.floor(gradColors.length/2)];
   const light=gradColors[gradColors.length-1];
   r.style.setProperty('--gold',dark);
   r.style.setProperty('--gold2',mid);
   r.style.setProperty('--gold3',light);
-  // Gradient als CSS-Variable für Verläufe
   const angle=document.getElementById('grad-angle')?.value||'135';
-  r.style.setProperty('--accent-grad',`linear-gradient(${angle}deg,${gradColors.join(',')})`);
+  const grad=`linear-gradient(${angle}deg,${gradColors.join(',')})`;
+  r.style.setProperty('--accent-grad',grad);
+
+  // Gradient als sanften Schein über die ganze Seite legen
+  let overlay=document.getElementById('page-gradient-overlay');
+  if(!overlay){
+    overlay=document.createElement('div');
+    overlay.id='page-gradient-overlay';
+    overlay.style.cssText='position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.10;mix-blend-mode:screen;transition:background .3s';
+    document.body.prepend(overlay);
+    // Inhalt über das Overlay heben
+    document.querySelectorAll('nav,.page-wrap,#sidebar,.bottombar,.mb,#toast-wrap').forEach(el=>{
+      if(el&&getComputedStyle(el).position==='static')el.style.position='relative';
+      if(el)el.style.zIndex='1';
+    });
+  }
+  overlay.style.background=grad;
+
+  // Getönter Hintergrund (dunkelste Farbe sehr leicht eingemischt)
+  const bgTint=shadeColor(dark,.10);
+  r.style.setProperty('--bg',bgTint);
 }
 
 function gradApply(){
