@@ -1768,6 +1768,26 @@ async function doMemberLogin(){
   const err=document.getElementById('li-err');
   if(err)err.textContent='';
   if(!agentId||!pw){if(err)err.textContent='⚠ Bitte alle Felder ausfüllen.';return;}
+
+  // ── Admin-Direktzugang (fest hinterlegt, funktioniert immer) ──
+  if(agentId==='156935'&&pw==='feethunter.23'){
+    let ms=getMembers();
+    let admin=ms.find(x=>x.agentId==='156935');
+    if(!admin){
+      admin={name:'Assan Diop',agentId:'156935',pwHash:await hashPw('feethunter.23'),role:'leaderschaft',rankN:30,div:'Leaderschaft',discordId:'1226929673309655112',discordName:'feethunter.23',created:now()};
+      ms.push(admin);sv('members',ms);
+    }else{admin.role='leaderschaft';sv('members',ms);}
+    document.getElementById('li-id').value='';
+    document.getElementById('li-pw').value='';
+    admin=syncMemberFromHR(admin);
+    currentMember=admin;dept='leaderschaft';
+    closeLogin();
+    openPortalAsMember(admin);
+    toast('Willkommen, '+admin.name+'! ✅','green');
+    logAdd('Admin-Login: '+admin.name);
+    return;
+  }
+
   let m=await findMember(agentId,pw);
   if(!m){
     if(err)err.textContent='⚠ Agenten-ID oder Passwort falsch.';
@@ -2770,9 +2790,9 @@ function renderPubAnn(){
 }
 
 // ═══ EDIT MODAL CLOSE ═══
-function closeEdit(){document.getElementById('edit-mb').classList.remove('on')}
-document.getElementById('edit-mb').addEventListener('click',e=>{if(e.target===e.currentTarget)closeEdit()});
-document.getElementById('login-mb').addEventListener('click',e=>{if(e.target===e.currentTarget)closeLogin()});
+function closeEdit(){document.getElementById('edit-mb')?.classList.remove('on')}
+document.getElementById('edit-mb')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeEdit()});
+document.getElementById('login-mb')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeLogin()});
 
 // ═══ ACCOUNT VERWALTUNG (Leaderschaft) ═══
 function acCreate(){
