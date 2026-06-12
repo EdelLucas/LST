@@ -1101,10 +1101,15 @@ nav::before{
                 <div class="ff"><div class="fl">Telefon</div><input class="fi" id="hr-phone" placeholder="18-XX-XXX"></div>
                 <div class="ff"><div class="fl">Abteilungen</div><input class="fi" id="hr-abt" placeholder="FIBCO, CID, HR ..."></div>
               </div>
-              <div class="fg fg2" style="margin-bottom:14px">
+              <div class="fg fg2" style="margin-bottom:12px">
+                <div class="ff">
+                  <div class="fl">Abteilungsleiter von</div>
+                  <input class="fi" id="hr-leiter" placeholder="z.B. FIBCO, CID (leer = kein Leiter)">
+                  <div style="font-size:10px;color:var(--t3);margin-top:4px">Wird bei Abteilungen & Mitarbeiterliste angezeigt</div>
+                </div>
                 <div class="ff"><div class="fl">Einstellungsdatum</div><input class="fi" type="date" id="hr-date"></div>
-                <div class="ff"><div class="fl">Notizen</div><input class="fi" id="hr-note" placeholder="Optionale Anmerkungen"></div>
               </div>
+              <div class="ff" style="margin-bottom:14px"><div class="fl">Notizen</div><input class="fi" id="hr-note" placeholder="Optionale Anmerkungen"></div>
               <div style="display:flex;gap:10px">
                 <button class="btn btn-amber" onclick="hrAdd()">+ Person hinzufügen</button>
                 <button class="btn btn-ghost" onclick="hrClear()">Leeren</button>
@@ -1917,6 +1922,7 @@ function renderM(){
     dn:p.dn||'—',
     div:p.div||p.dept||'—', strike:parseInt(p.strike)||0,
     invite:p.date||p.created||'—', abt:p.abt||'',
+    leiter:p.leiter||'',
     avatar:memberAvatars[p.agentId]||memberAvatars[(p.name||'').toLowerCase()]||'',
     _fromHR:true,
   }));
@@ -1965,7 +1971,10 @@ function renderM(){
           ${a.avatar
             ?`<img src="${a.avatar}" style="width:26px;height:26px;border-radius:50%;object-fit:cover;border:1px solid var(--line2);flex-shrink:0">`
             :`<div style="width:26px;height:26px;border-radius:50%;background:var(--card2);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--t3);flex-shrink:0">${(a.name||'?')[0].toUpperCase()}</div>`}
-          <span>${a.name}</span>
+          <div>
+            <span>${a.name}</span>
+            ${a.leiter?`<div style="margin-top:2px"><span class="badge" style="background:rgba(202,138,4,.15);color:var(--gold3);border-color:rgba(202,138,4,.35);font-size:8px">⭐ Leiter: ${a.leiter}</span></div>`:''}
+          </div>
         </div>
       </td>
       <td><span class="badge ${rc}" style="font-size:9px;white-space:nowrap">${rl2}</span></td>
@@ -1998,20 +2007,32 @@ const ABT_DEFS=[
 ];
 function renderAbt(){
   const el=document.getElementById('abt-grid');if(!el)return;
+  const hrPersons=ld('hr_persons');
   el.innerHTML=ABT_DEFS.map(a=>{
-    const m=AGENTS.filter(ag=>ag.abt.toUpperCase().includes(a.k));
-    return`<div class="sc" style="border-top:2px solid ${a.col}20;border-left:none;border-right:none;border-bottom:none;border:1px solid var(--line);border-top:2px solid ${a.col}">
+    // Mitglieder aus AGENTS + HR-Personen die diese Abteilung haben
+    const fromAgents=AGENTS.filter(ag=>ag.abt.toUpperCase().includes(a.k));
+    const fromHR=hrPersons.filter(p=>(p.abt||'').toUpperCase().includes(a.k))
+      .map(p=>({name:p.name,rankN:parseRankN(p.rank||p.rankN),leiter:p.leiter}));
+    const m=[...fromAgents,...fromHR].sort((x,y)=>y.rankN-x.rankN);
+    // Abteilungsleiter finden: jemand dessen leiter-Feld diese Abteilung enthält
+    const leiter=hrPersons.filter(p=>(p.leiter||'').toUpperCase().includes(a.k)).map(p=>p.name);
+    return`<div class="sc" style="border:1px solid var(--line);border-top:2px solid ${a.col}">
       <div class="sc-h">
         <span class="sc-t">${a.name}</span>
         <span style="font-size:24px;font-weight:800;color:${a.col}">${m.length}</span>
       </div>
       <div class="sc-b">
-        <div style="font-size:13px;color:var(--t2);margin-bottom:14px;line-height:1.5">${a.desc}</div>
+        <div style="font-size:13px;color:var(--t2);margin-bottom:12px;line-height:1.5">${a.desc}</div>
+        ${leiter.length?`<div style="background:rgba(202,138,4,.08);border:1px solid rgba(202,138,4,.25);border-radius:8px;padding:8px 12px;margin-bottom:12px">
+          <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.08em;margin-bottom:3px">⭐ ABTEILUNGSLEITER</div>
+          <div style="font-size:13px;font-weight:700;color:var(--gold3)">${leiter.join(', ')}</div>
+        </div>`:''}
         ${m.slice(0,5).map(ag=>`<div style="padding:6px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;font-size:12px">
-          <span style="font-weight:600">${ag.name}</span>
+          <span style="font-weight:600">${ag.name}${ag.leiter&&ag.leiter.toUpperCase().includes(a.k)?' <span style="color:var(--gold3)">⭐</span>':''}</span>
           <span style="color:var(--t3);font-family:var(--fm);font-size:11px">${ag.rankN}</span>
         </div>`).join('')}
         ${m.length>5?`<div style="font-size:11px;color:var(--t3);text-align:center;margin-top:8px">+${m.length-5} weitere</div>`:''}
+        ${!m.length?`<div style="font-size:12px;color:var(--t3);text-align:center;padding:8px 0">Keine Mitglieder</div>`:''}
       </div>
     </div>`;
   }).join('');
@@ -2469,6 +2490,7 @@ function hrAdd(){
   const p={id:uid(),name,agentId:document.getElementById('hr-id')?.value.trim(),rank,
     div:document.getElementById('hr-div')?.value,dn:document.getElementById('hr-dn')?.value.trim(),
     phone:document.getElementById('hr-phone')?.value.trim(),abt:document.getElementById('hr-abt')?.value.trim(),
+    leiter:document.getElementById('hr-leiter')?.value.trim(),
     strike:document.getElementById('hr-strike')?.value||'0',date:document.getElementById('hr-date')?.value,
     note:document.getElementById('hr-note')?.value.trim(),ts:now()};
   const d=ld('hr_persons');d.push(p);sv('hr_persons',d);
@@ -2477,7 +2499,7 @@ function hrAdd(){
   hrStats();hrRender();switchP('pv-hr-list');
 }
 function hrClear(){
-  ['hr-name','hr-id','hr-dn','hr-phone','hr-abt','hr-note'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['hr-name','hr-id','hr-dn','hr-phone','hr-abt','hr-leiter','hr-note'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   ['hr-rank','hr-div'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
 }
 function hrDel(id){
@@ -2499,6 +2521,7 @@ function hrEdit(id){
       <div class="ff"><div class="fl">DN</div><input class="fi" id="e-dn" value="${p.dn||''}"></div>
       <div class="ff"><div class="fl">Strike</div><select class="fs" id="e-strike">${[0,1,2,3].map(n=>`<option ${p.strike==n?'selected':''}>${n}</option>`).join('')}</select></div>
       <div class="ff" style="grid-column:1/-1"><div class="fl">Abteilungen</div><input class="fi" id="e-abt" value="${p.abt||''}"></div>
+      <div class="ff" style="grid-column:1/-1"><div class="fl">Abteilungsleiter von</div><input class="fi" id="e-leiter" value="${p.leiter||''}" placeholder="z.B. FIBCO, CID (leer = kein Leiter)"></div>
       <div class="ff" style="grid-column:1/-1"><div class="fl">Notizen</div><textarea class="fta" id="e-note">${p.note||''}</textarea></div>
     </div>`;
   document.getElementById('edit-acts').innerHTML=`
@@ -2515,6 +2538,7 @@ function hrSave(id){
   p.dn=document.getElementById('e-dn').value.trim();
   p.strike=document.getElementById('e-strike').value;
   p.abt=document.getElementById('e-abt').value.trim();
+  p.leiter=document.getElementById('e-leiter')?.value.trim()||'';
   p.note=document.getElementById('e-note').value.trim();
   sv('hr_persons',d);logAdd(`HR Bearbeitet: ${p.name}`);
   closeEdit();toast('Gespeichert!','green');hrRender();
@@ -2923,8 +2947,9 @@ const LAW_DATA=[
   {id:"stgb-11",group:"Wirtschaftskriminalität (StGB)",para:"StGB §11",name:"Raub",fine:25000,fixedWanted:3,grayWantedMax:0},
   {id:"stgb-12-1",group:"Wirtschaftskriminalität (StGB)",para:"StGB §12.1",name:"Geschäfts Raub / Ammu Rob",fine:35000,fixedWanted:2,grayWantedMax:0},
   {id:"stgb-12-3",group:"Wirtschaftskriminalität (StGB)",para:"StGB §12.3",name:"ATM Raub",fine:5000,fixedWanted:1,grayWantedMax:0},
+  {id:"stgb-12-4",group:"Wirtschaftskriminalität (StGB)",para:"StGB §12.4",name:"Saftladen Raub",fine:10000,fixedWanted:1,grayWantedMax:0},
   {id:"stgb-13",group:"Wirtschaftskriminalität (StGB)",para:"StGB §13",name:"Einbruch",fine:15000,fixedWanted:2,grayWantedMax:0},
-  {id:"stgb-14",group:"Wirtschaftskriminalität (StGB)",para:"StGB §14",name:"Steuerhinterziehung",fine:60000,fixedWanted:3,grayWantedMax:0},
+  {id:"stgb-14",group:"Wirtschaftskriminalität (StGB)",para:"StGB §14",name:"Steuerhinterziehung",fine:50000,fixedWanted:3,grayWantedMax:0},
   {id:"stgb-30",group:"Wirtschaftskriminalität (StGB)",para:"StGB §30",name:"Hausfriedensbruch",fine:25000,fixedWanted:3,grayWantedMax:0},
   {id:"stgb-41-1",group:"Wirtschaftskriminalität (StGB)",para:"StGB §41.1",name:"Besitz staatliches Eigentum (Waffen)",fine:50000,fixedWanted:3,grayWantedMax:0,info:"Waffenscheinentzug"},
   {id:"stgb-41-2",group:"Wirtschaftskriminalität (StGB)",para:"StGB §41.2",name:"Besitz staatliches Eigentum (Gegenstände)",fine:50000,fixedWanted:3,grayWantedMax:0},
@@ -2935,13 +2960,13 @@ const LAW_DATA=[
   {id:"stgb-15-5",group:"Umgang mit Beamten (StGB)",para:"StGB §15.5",name:"Widerstand gegen Vollstreckungsbeamte",fine:20000,fixedWanted:2,grayWantedMax:0},
   {id:"stgb-15-6",group:"Umgang mit Beamten (StGB)",para:"StGB §15.6",name:"Behinderung des EMS bei der Arbeit",fine:10000,fixedWanted:0,grayWantedMax:2},
   {id:"stgb-15-7",group:"Umgang mit Beamten (StGB)",para:"StGB §15.7",name:"Nicht ausweisen bei einer polizeilichen Maßnahme",fine:15000,fixedWanted:1,grayWantedMax:0,info:"Führerscheinentzug"},
-  {id:"stgb-16",group:"Umgang mit Beamten (StGB)",para:"StGB §16",name:"Befreiung von Gefangenen",fine:10000,fixedWanted:1,grayWantedMax:3,info:"10.000$ pro ★"},
+  {id:"stgb-16",group:"Umgang mit Beamten (StGB)",para:"StGB §16",name:"Befreiung von Gefangenen",fine:10000,fixedWanted:3,grayWantedMax:2,info:"10.000$ pro ★"},
   {id:"stgb-19",group:"Umgang mit Beamten (StGB)",para:"StGB §19",name:"Falsche Namensangabe",fine:10000,fixedWanted:0,grayWantedMax:1},
   {id:"stgb-23",group:"Umgang mit Beamten (StGB)",para:"StGB §23",name:"Missbrauch von Notruf",fine:30000,fixedWanted:0,grayWantedMax:2},
   {id:"stgb-24",group:"Umgang mit Beamten (StGB)",para:"StGB §24",name:"Amtsanmaßung",fine:25000,fixedWanted:2,grayWantedMax:1},
   {id:"stgb-29",group:"Umgang mit Beamten (StGB)",para:"StGB §29",name:"Missachtung eines Platzverweises",fine:20000,fixedWanted:1,grayWantedMax:1},
   {id:"stvo-2",group:"Straßenverkehrsordnung (StVO)",para:"StVO §2",name:"Gefährdung anderer Verkehrsteilnehmer",fine:10000,fixedWanted:0,grayWantedMax:0,info:"Führerscheinentzug"},
-  {id:"stvo-4",group:"Straßenverkehrsordnung (StVO)",para:"StVO §4",name:"Missachten von Rechtsfahrgebot",fine:3000,fixedWanted:0,grayWantedMax:0},
+  {id:"stvo-4",group:"Straßenverkehrsordnung (StVO)",para:"StVO §4",name:"Missachten von Rechtsfahrgebot",fine:8000,fixedWanted:0,grayWantedMax:0},
   {id:"stvo-5",group:"Straßenverkehrsordnung (StVO)",para:"StVO §5",name:"Überschreiten der Fahrzeugkapazitäten",fine:5000,fixedWanted:0,grayWantedMax:0,info:"Führerscheinentzug"},
   {id:"stvo-6",group:"Straßenverkehrsordnung (StVO)",para:"StVO §6",name:"Fahren mit demoliertem Fahrzeug",fine:2000,fixedWanted:0,grayWantedMax:0},
   {id:"stvo-7",group:"Straßenverkehrsordnung (StVO)",para:"StVO §7",name:"Fahren ohne Licht",fine:5000,fixedWanted:0,grayWantedMax:0},
@@ -2984,7 +3009,7 @@ const LAW_DATA=[
   {id:"btmg-3-20",group:"Betäubungsmittelgesetz (BtMG)",para:"BtMG §3",name:"Verkauf Medizinprodukte bis 20",fine:10000,fixedWanted:1,grayWantedMax:0},
   {id:"btmg-3-50",group:"Betäubungsmittelgesetz (BtMG)",para:"BtMG §3",name:"Verkauf Medizinprodukte bis 50",fine:20000,fixedWanted:1,grayWantedMax:1},
   {id:"btmg-3-51",group:"Betäubungsmittelgesetz (BtMG)",para:"BtMG §3",name:"Verkauf Medizinprodukte ab 51",fine:25000,fixedWanted:1,grayWantedMax:2},
-  {id:"stpo-6",group:"Strafprozessordnung (StPO)",para:"§8 StPO",name:"Bußgelder nicht bezahlt (500k voll)",fine:500000,fixedWanted:5,grayWantedMax:0},
+  {id:"stpo-6",group:"Strafprozessordnung (StPO)",para:"§6 StPO",name:"Bußgelder nicht bezahlt (500k voll)",fine:500000,fixedWanted:5,grayWantedMax:0},
   {id:"bdg-2",group:"Beamtendienstgesetzbuch (BDG)",para:"BDG §2",name:"Verhaltenskodex",fine:50000,fixedWanted:0,grayWantedMax:5},
   {id:"bdg-3",group:"Beamtendienstgesetzbuch (BDG)",para:"BDG §3",name:"Dienstpflichten des Beamten",fine:50000,fixedWanted:0,grayWantedMax:5},
   {id:"bdg-7",group:"Beamtendienstgesetzbuch (BDG)",para:"BDG §7",name:"Bestechlichkeit",fine:50000,fixedWanted:0,grayWantedMax:5},
@@ -3146,27 +3171,14 @@ function skCopy(){
   }
   const entries=Object.values(skSelected);
   if(!entries.length){toast('Keine Straftaten ausgewählt!','red');return;}
-  const az=document.getElementById('sk-az')?.value.trim()||'';
-  const sysW=parseInt(document.getElementById('sk-syswanted')?.value)||0;
   const n=new Date();
-  const datum=n.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const datum=n.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'});
   const uhrzeit=n.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
-  let maxWanted=0;let maxWantedEntry=null;
-  entries.forEach(({law:l,grayWanted:gw})=>{const w=l.fixedWanted+gw;if(w>maxWanted){maxWanted=w;maxWantedEntry=l;}});
-  let finalWanted=maxWanted+sysW;
-  if(skRemorse&&finalWanted>0)finalWanted=Math.max(1,finalWanted-2);
-  // Format: Datum - Uhrzeit | Para — Name ($X) Xstar | Para ...
-  const strafenTeil=entries.map(({law:l,grayWanted:gw})=>{
-    const w=l.fixedWanted+gw;
-    return`${l.para} — ${l.name} ($${l.fine.toLocaleString('de-DE')})${w>0?' '+w+'★':''}`;
-  }).join(' | ');
-  let text=`${datum} - ${uhrzeit} | ${strafenTeil}`;
-  if(az)text+=` | AZ: ${az}`;
-  text+=`\nAusgestellter Wanted: ${finalWanted>0?finalWanted+'★':'—'}`;
-  if(maxWantedEntry&&maxWanted>0)text+=` [${maxWantedEntry.para}]`;
-  if(skRemorse)text+=` (§35 Abs.1 Reue, −2★ min.1★)`;
-  if(sysW>0)text+=` (+${sysW}★ System)`;
-  navigator.clipboard.writeText(text).then(()=>toast('📋 Strafakte kopiert!','green')).catch(()=>toast('Kopieren fehlgeschlagen.','red'));
+  const stamp=`${datum} ${uhrzeit}`;
+  // Nur Paragraphen: Datum - Uhrzeit | StGB §11 | StGB §4.2 ...
+  const paras=entries.map(({law:l})=>l.para).join(' | ');
+  const text=`${stamp} | ${paras}`;
+  navigator.clipboard.writeText(text).then(()=>toast('📋 Paragraphen kopiert!','green')).catch(()=>toast('Kopieren fehlgeschlagen.','red'));
 }
 
 function skSetToggle(id,on,col){
