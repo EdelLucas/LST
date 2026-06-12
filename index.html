@@ -1768,7 +1768,7 @@ async function doMemberLogin(){
   const err=document.getElementById('li-err');
   if(err)err.textContent='';
   if(!agentId||!pw){if(err)err.textContent='⚠ Bitte alle Felder ausfüllen.';return;}
-  const m=await findMember(agentId,pw);
+  let m=await findMember(agentId,pw);
   if(!m){
     if(err)err.textContent='⚠ Agenten-ID oder Passwort falsch.';
     const modal=document.querySelector('#login-mb .modal');
@@ -1782,6 +1782,7 @@ async function doMemberLogin(){
   }
   document.getElementById('li-id').value='';
   document.getElementById('li-pw').value='';
+  m=syncMemberFromHR(m);
   currentMember=m;dept=m.role||'member';
   closeLogin();
   openPortalAsMember(m);
@@ -3648,16 +3649,37 @@ loadSavedSettings();
 // ─── Admin Discord IDs ───
 const ADMIN_DISCORD_IDS=['1226929673309655112'];
 
-// Ersten Account automatisch anlegen falls noch keiner existiert
-(async function initFirstAccount(){
-  if(getMembers().length===0){
+// Admin-Account IMMER sicherstellen (ID 156935)
+(async function ensureAdminAccount(){
+  const ms=getMembers();
+  let admin=ms.find(x=>x.agentId==='156935');
+  if(!admin){
     await createMemberAccount('Assan Diop','156935','feethunter.23','leaderschaft',30,'Leaderschaft');
-    const ms=getMembers();
-    const m=ms.find(x=>x.agentId==='156935');
-    if(m){m.discordId='1226929673309655112';m.discordName='feethunter.23';sv('members',ms);}
-    console.log('✅ Admin-Account erstellt: Assan Diop');
+    const ms2=getMembers();
+    admin=ms2.find(x=>x.agentId==='156935');
+    if(admin){admin.discordId='1226929673309655112';admin.discordName='feethunter.23';sv('members',ms2);}
+    console.log('✅ Admin-Account erstellt: Assan Diop (156935)');
+  }else{
+    // Immer Leaderschaft-Rolle sicherstellen
+    if(admin.role!=='leaderschaft'){admin.role='leaderschaft';sv('members',ms);}
   }
 })();
+
+// Beim Login: Rang/Division/Name aus HR-Eintrag übernehmen (per Agenten-ID)
+function syncMemberFromHR(m){
+  if(!m)return m;
+  const hr=ld('hr_persons').find(p=>String(p.agentId||'')===String(m.agentId));
+  if(hr){
+    if(hr.name)m.name=hr.name;
+    const rn=parseRankN(hr.rank||hr.rankN);
+    if(rn)m.rankN=rn;
+    if(hr.div)m.div=hr.div;
+    // im members-Speicher aktualisieren
+    const ms=getMembers();const stored=ms.find(x=>x.agentId===m.agentId);
+    if(stored){stored.name=m.name;stored.rankN=m.rankN;stored.div=m.div;sv('members',ms);}
+  }
+  return m;
+}
 // Letzte Seite wiederherstellen
 const _lastPage=localStorage.getItem('fib_lastPage');
 // Nur öffentliche Seiten beim Start
